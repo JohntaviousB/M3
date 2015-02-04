@@ -77,7 +77,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         cancelButton = (Button) findViewById(R.id.cancelButton);
-        cancelButton.setEnabled(false);
+        cancelButton.setEnabled(true);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,8 +87,11 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         cancelButton.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View view) {
-                        mAuthTask.cancel(true);
-                        cancelButton.setEnabled(false);
+                        finish();
+                        intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+//                        mAuthTask.cancel(false);
+//                        cancelButton.setEnabled(false);
                     }
                 }
         );
@@ -145,7 +148,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
-            cancelButton.setEnabled(false);
+            cancelButton.setEnabled(true);
         } else {
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
@@ -312,6 +315,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         protected void onCancelled() {
             mAuthTask = null;
             showProgress(false);
+//            finish();
+//            intent = new Intent(LoginActivity.this, MainActivity.class);
+//            startActivity(intent);
+
         }
     }
 }
