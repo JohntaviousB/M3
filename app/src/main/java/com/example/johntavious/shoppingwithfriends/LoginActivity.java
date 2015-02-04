@@ -315,9 +315,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         protected void onCancelled() {
             mAuthTask = null;
             showProgress(false);
-//            finish();
-//            intent = new Intent(LoginActivity.this, MainActivity.class);
-//            startActivity(intent);
 
         }
     }
