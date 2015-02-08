@@ -19,6 +19,7 @@ public class MainActivity extends ActionBarActivity {
         Button registerButton = (Button) findViewById(R.id.register);
 
         final Intent intent = new Intent(this, LoginActivity.class);
+        final Intent intent2 = new Intent(this, RegistrationActivity.class);
 
         loginButton.setOnClickListener(
                 new Button.OnClickListener() {
@@ -27,12 +28,14 @@ public class MainActivity extends ActionBarActivity {
                     }
                 }
         );
-        //registerButton.setOnClickListener((view -> {
-            //Intent intent = new Intent(this, Registration.class);
-          //  startActivity(intent);
-        //}));
+        registerButton.setOnClickListener(
+                new Button.OnClickListener() {
+                    public void onClick(View view) {
+                        startActivity(intent2);
+                    }
+                }
+        );
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

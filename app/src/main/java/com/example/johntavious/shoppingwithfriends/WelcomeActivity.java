@@ -1,9 +1,12 @@
 package com.example.johntavious.shoppingwithfriends;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 
 public class WelcomeActivity extends ActionBarActivity {
@@ -12,6 +15,13 @@ public class WelcomeActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        Bundle extras = getIntent().getExtras();
+        String userName = "";
+        if (extras != null) {
+            userName = extras.getString("user");
+        }
+        TextView welcomeText = (TextView)findViewById(R.id.welcome_text);
+        welcomeText.setText("Welcome, " + userName);
     }
 
 
@@ -35,5 +45,9 @@ public class WelcomeActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    public void onSignOutClick(View view) {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 }

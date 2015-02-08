@@ -8,5 +8,7 @@
     <string name="Title">Shopping With Friends</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_activity_welcome">Welcome</string>
+    <string name="title_activity_registration">RegistrationActivity</string>
+    <string name="email_taken">This email is already taken or invalid</string>
 
 </resources>

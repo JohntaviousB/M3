@@ -36,13 +36,7 @@ import java.util.List;
  */
 public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "user:pass"
-    };
+    private static final ArrayList<User> REGISTERED_USERS = new ArrayList<>();
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -54,11 +48,23 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private View mProgressView;
     private View mLoginFormView;
     private Intent intent;
+    private String name = "";
+
+    protected static void addUser(User u) {
+        REGISTERED_USERS.add(u);
+    }
+    protected static boolean emailValid(String e) {
+        for (User user : REGISTERED_USERS) {
+            if (user.getEmail().equals(e)) {
+                return false;
+            }
+        }
+        return e.contains("@") && e.contains(".");
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -159,13 +165,17 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        //return email.contains("");
-        return true;
+        for (User user : REGISTERED_USERS) {
+            if (user.getEmail().equals(email)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() >= 4;
+        return password.length() >= 1;
     }
 
     /**
@@ -283,15 +293,14 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
+            for (User user : REGISTERED_USERS) {
+                if (user.getEmail().equals(mEmail)) {
                     // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
+                    name = user.getName();
+                    return user.getPassword().equals(mPassword);
                 }
             }
 
-            // TODO: register the new account here.
             return false;
         }
 
@@ -303,11 +312,11 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             if (success) {
                 finish();
                 intent = new Intent(LoginActivity.this, WelcomeActivity.class);
+                intent.putExtra("user", name);
                 startActivity(intent);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
-                cancelButton.setEnabled(false);
             }
         }
 
