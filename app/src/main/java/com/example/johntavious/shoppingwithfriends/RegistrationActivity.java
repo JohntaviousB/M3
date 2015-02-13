@@ -40,11 +40,21 @@ public class RegistrationActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Cancels the Registration Activity and returns User
+     * to the opening page
+     * @param view the cancel button click
+     */
     public void onCancelClick(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Attempts to create a new User once "done" is clicked
+     * and log him into the system
+     * @param view the done button click
+     */
     public void onDoneClick(View view) {
         String name = ((EditText)findViewById(R.id.name_field)).getText().toString();
         String email = ((EditText)findViewById(R.id.email_field)).getText().toString();
