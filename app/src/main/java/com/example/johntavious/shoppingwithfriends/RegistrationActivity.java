@@ -55,11 +55,16 @@ public class RegistrationActivity extends ActionBarActivity {
      * and log him into the system
      * @param view the done button click
      */
+    /**TODO: also check Username uniqueness"**/
     public void onDoneClick(View view) {
         String name = ((EditText)findViewById(R.id.name_field)).getText().toString();
         String email = ((EditText)findViewById(R.id.email_field)).getText().toString();
         String password = ((EditText)findViewById(R.id.password_field)).getText().toString();
-        if (LoginActivity.emailValid(email)) {
+        if (name == "") {
+            EditText nameView = (EditText)findViewById(R.id.name_field);
+            nameView.setError("This field is invalid or taken");
+            nameView.requestFocus();
+        } else if (LoginActivity.emailValid(email)) {
             User user = new User(name, email, password);
             LoginActivity.addUser(user);
             Intent intent = new Intent(this, WelcomeActivity.class);
