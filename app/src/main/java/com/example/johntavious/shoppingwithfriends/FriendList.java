@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class FriendList extends ActionBarActivity {
 
@@ -21,7 +23,20 @@ public class FriendList extends ActionBarActivity {
         TextView header = (TextView) findViewById(R.id.friend_list_header_text);
         header.setText(userName + "'s Friends");
 
+        // Dummy data for friends list
+        String[] friends = {
+            "Patrick",
+            "Johntavious",
+            "Hosna",
+            "Somayeh",
+            "Clay"
+        };
 
+        // Populating the ListView with an adapter
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, friends);
+        ListView listView = (ListView) findViewById(R.id.list_of_friends);
+        listView.setAdapter(adapter);
     }
 
 

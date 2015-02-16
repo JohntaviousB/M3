@@ -24,5 +24,13 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="77dp" />
 
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/list_of_friends"
+        android:layout_below="@+id/friend_list_header_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="48dp" />
+
 
 </RelativeLayout>
