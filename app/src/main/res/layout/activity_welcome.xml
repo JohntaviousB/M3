@@ -36,7 +36,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Friend's List"
+        android:text="Friends List"
         android:id="@+id/friend_list_button"
         android:layout_below="@+id/welcome_text"
         android:layout_centerHorizontal="true"

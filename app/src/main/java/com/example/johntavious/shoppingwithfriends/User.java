@@ -1,15 +1,74 @@
 package com.example.johntavious.shoppingwithfriends;
 
+import android.os.Parcelable;
+import android.os.Parcel;
+import java.util.ArrayList;
+
 /**
  * Created by Johntavious on 2/8/2015.
  */
-public class User {
+public class User implements Parcelable {
     private String name, email, password;
+    private ArrayList<User> friends;
 
     protected User(String n, String e, String p) {
         this.name = n;
         this.email = e;
         this.password = p;
+        friends = new ArrayList<User>();
+
+    }
+
+ //   public User(Parcel in) {
+ //       readFromParcel(in);
+ //   }
+
+    // Parcelable allows us to pass User objects between Activities
+    // Parcelable methods
+    public int describeContents() {
+        return 0;
+    }
+
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeString(name);
+        out.writeString(email);
+        out.writeString(password);
+        out.writeTypedList(friends);
+    }
+
+    public void readFromParcel(Parcel in) {
+        name = in.readString();
+        email = in.readString();
+        password = in.readString();
+        in.readTypedList(friends, User.CREATOR);
+    }
+
+        public static final Parcelable.Creator<User> CREATOR
+            = new Parcelable.Creator<User>() {
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+        public User(Parcel in) {
+            name = in.readString();
+            email = in.readString();
+            password = in.readString();
+            in.readTypedList(friends, User.CREATOR);
+
+        }
+
+
+
+
+
+
+        protected void addFriend(User friend) {
+        friends.add(friend);
     }
 
     /**

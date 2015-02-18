@@ -4,7 +4,11 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.view.View;
 
 public class FriendList extends ActionBarActivity {
 
@@ -21,7 +25,20 @@ public class FriendList extends ActionBarActivity {
         TextView header = (TextView) findViewById(R.id.friend_list_header_text);
         header.setText(userName + "'s Friends");
 
+        // Dummy data for friends list
+        String[] friends = {
+            "Patrick",
+            "Johntavious",
+            "Hosna",
+            "Somayeh",
+            "Clay"
+        };
 
+        // Populating the ListView with an adapter
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, friends);
+        ListView listView = (ListView) findViewById(R.id.list_of_friends);
+        listView.setAdapter(adapter);
     }
 
 
@@ -45,5 +62,10 @@ public class FriendList extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onSearchClick(View view) {
+        String searchText = ((EditText)findViewById(R.id.search_for_friend)).getText().toString();
+        User friend = LoginActivity.getUser(searchText);
     }
 }

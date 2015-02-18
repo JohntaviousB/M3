@@ -49,6 +49,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private View mLoginFormView;
     private Intent intent;
     private String name = "";
+    private String email ="";
+    private String password = "";
 
     protected static void addUser(User u) {
         REGISTERED_USERS.add(u);
@@ -61,6 +63,17 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         }
         return e.contains("@") && e.contains(".");
     }
+
+    protected static User getUser(String text) {
+        User person = null;
+        for (User user : REGISTERED_USERS) {
+            if (user.getName().equals(text) || user.getEmail().equals(text)) {
+                person = user;
+            }
+        }
+        return person;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -297,6 +310,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 if (user.getEmail().equals(mEmail)) {
                     // Account exists, return true if the password matches.
                     name = user.getName();
+
+                    //Testing
+                    email = user.getEmail();
+                    password = user.getPassword();
                     return user.getPassword().equals(mPassword);
                 }
             }
@@ -311,8 +328,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
             if (success) {
                 finish();
+                User temp = new User(name, email, password);
                 intent = new Intent(LoginActivity.this, WelcomeActivity.class);
-                intent.putExtra("user", name);
+                intent.putExtra("user_object", temp);  // My code
+//              intent.putExtra("user", name);  // Original code
                 startActivity(intent);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

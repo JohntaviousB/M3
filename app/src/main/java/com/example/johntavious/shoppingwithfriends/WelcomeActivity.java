@@ -15,11 +15,19 @@ public class WelcomeActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        Bundle extras = getIntent().getExtras();
+
+        // Original code to retrieve userName from Intent
+/*      Bundle extras = getIntent().getExtras();
         String userName = "";
         if (extras != null) {
             userName = extras.getString("user");
         }
+        String userName = user.getName();
+*/
+        // My code to retrieve user object from Intent
+        Bundle extras = getIntent().getExtras();
+        User user = extras.getParcelable("user_object");
+        String userName = user.getName();
         TextView welcomeText = (TextView)findViewById(R.id.welcome_text);
         welcomeText.setText("Welcome, " + userName);
 
