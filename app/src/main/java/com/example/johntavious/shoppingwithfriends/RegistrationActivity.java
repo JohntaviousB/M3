@@ -70,7 +70,13 @@ public class RegistrationActivity extends ActionBarActivity {
                 User user = new User(name, email, password);
                 LoginActivity.addUser(user);
                 Intent intent = new Intent(this, WelcomeActivity.class);
-                intent.putExtra("user", user.getName());
+                Bundle extras = new Bundle();
+                extras.putString("user", user.getName());
+                extras.putString("userEmail", user.getEmail());
+                intent.putExtras(extras);
+
+//                intent.putExtra("user", user.getName());
+//                intent.putExtra("userEmail", user.getEmail());
                 startActivity(intent);
             } else {
                 EditText emailView = (EditText) findViewById(R.id.email_field);

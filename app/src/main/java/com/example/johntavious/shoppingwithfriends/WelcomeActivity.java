@@ -15,18 +15,33 @@ public class WelcomeActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        Bundle extras = getIntent().getExtras();
-        String userName = "";
-        if (extras != null) {
-            userName = extras.getString("user");
-        }
+        Intent intent_ = getIntent();
+        Bundle extras = intent_.getExtras();
+        String userName = extras.getString("user");
+        String userEmail = extras.getString("userEmail");
+
+
+//        Bundle extras = getIntent().getExtras();
+//        String userName = "";
+//        String userEmail ="";
+//        if (extras != null) {
+//            userName = extras.getString("user");
+//            userEmail = extras.getString("userEmail");
+//        }
         TextView welcomeText = (TextView)findViewById(R.id.welcome_text);
         welcomeText.setText("Welcome, " + userName);
 
         // Friend's List
         Button friend_list_button = (Button) findViewById(R.id.friend_list_button);
         final Intent goToFriendList = new Intent(this, FriendList.class);
+//        Bundle extras_ = new Bundle();
+//        extras_.putString("user", userName);
+//        System.out.println("Putting " + userEmail + " in the bundle!");
+//        extras_.putString("userEmail", userEmail);
+//        goToFriendList.putExtras(extras_);
+
         goToFriendList.putExtra("name", userName);
+        goToFriendList.putExtra("userEmail", userEmail);
         friend_list_button.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View view) {

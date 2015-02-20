@@ -11,5 +11,6 @@
     <string name="title_activity_registration">RegistrationActivity</string>
     <string name="email_taken">This email is already taken or invalid</string>
     <string name="title_activity_friend_list">FriendList</string>
+    <string name="title_activity_friend_message">FriendMessage</string>
 
 </resources>

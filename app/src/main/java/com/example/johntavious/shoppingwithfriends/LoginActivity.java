@@ -49,6 +49,18 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private View mLoginFormView;
     private Intent intent;
     private String name = "";
+    private String email = "";
+
+    // Getter for temp workaround M5
+    protected static boolean searchUser(String name, String email) {
+        boolean found = false;
+        for (User user : REGISTERED_USERS) {
+            if (user.getName().equals(name) && user.getEmail().equals(email)){
+                found = true;
+            }
+        }
+        return found;
+    }
 
     protected static void addUser(User u) {
         REGISTERED_USERS.add(u);
@@ -297,6 +309,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 if (user.getEmail().equals(mEmail)) {
                     // Account exists, return true if the password matches.
                     name = user.getName();
+                    email = user.getEmail();
                     return user.getPassword().equals(mPassword);
                 }
             }
@@ -312,7 +325,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             if (success) {
                 finish();
                 intent = new Intent(LoginActivity.this, WelcomeActivity.class);
-                intent.putExtra("user", name);
+                Bundle extras = new Bundle();
+                extras.putString("user", name);
+                extras.putString("userEmail", email);
+                intent.putExtras(extras);
+//                intent.putExtra("user", name);
+//                intent.putExtra("userEmail", email);
                 startActivity(intent);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
