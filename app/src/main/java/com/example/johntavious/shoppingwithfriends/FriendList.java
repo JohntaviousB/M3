@@ -1,42 +1,54 @@
 package com.example.johntavious.shoppingwithfriends;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class FriendList extends ActionBarActivity {
+import org.w3c.dom.Text;
 
+import java.util.NoSuchElementException;
+
+/**
+ * Represents the screen that will be displayed when a User wants to
+ * view a list of his/her friends
+ * @version 1.0
+ */
+public class FriendList extends ActionBarActivity {
+    private User user;
+    ArrayAdapter<User> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_list);
 
         Bundle extras = getIntent().getExtras();
-        String userName = "";
         if (extras != null) {
-            userName = extras.getString("name");
+            user = LoginActivity.getUser(extras.getString("name"));
         }
         TextView header = (TextView) findViewById(R.id.friend_list_header_text);
-        header.setText(userName + "'s Friends");
+        header.setText(user.getName() + "'s Friends");
 
         // Dummy data for friends list
-        String[] friends = {
-            "Patrick",
-            "Johntavious",
-            "Hosna",
-            "Somayeh",
-            "Clay"
-        };
+//        String[] friends = {
+//            "Patrick",
+//            "Johntavious",
+//            "Hosna",
+//            "Somayeh",
+//            "Clay"
+//        };
+            // Populating the ListView with an adapter
+            adapter = new ArrayAdapter<>(this,
+                    android.R.layout.simple_list_item_1, user.getFriends());
+            ListView listView = (ListView) findViewById(R.id.list_of_friends);
+            listView.setAdapter(adapter);
 
-        // Populating the ListView with an adapter
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, friends);
-        ListView listView = (ListView) findViewById(R.id.list_of_friends);
-        listView.setAdapter(adapter);
     }
 
 
@@ -61,4 +73,46 @@ public class FriendList extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Attempts to add a new friend to the User's list of friends
+     * @param view the Add Friend button click
+     */
+    public void onAddFriendClick(View view) {
+        EditText addFriendText = (EditText)findViewById(R.id.add_friend_text);
+        String searchName = addFriendText.getText().toString();
+        User friendToAdd;
+        if (!searchName.trim().equals("")) { // to avoid searching for no-name queries
+            try {
+                friendToAdd = LoginActivity.getUser(searchName);
+                if (!friendToAdd.equals(user) && !user.getFriends().contains(friendToAdd)){
+                    adapter.add(friendToAdd);
+                    friendToAdd.addFriend(user);
+                }
+            } catch (NoSuchElementException e) {
+                addFriendText.setError("No username " + searchName + " exists");
+                addFriendText.requestFocus();
+            }
+        }
+    }
+
+    /**
+     * Returns the User to his/her homepage
+     * @param view the Home Button click
+     */
+    public void onHomeClick(View view) {
+        Intent goHome = new Intent(this, WelcomeActivity.class);
+        goHome.putExtra("user", user.getName());
+        startActivity(goHome);
+    }
+
+    /**
+     * Signs the User out of the app
+     * @param view the Sign Out Button click
+     */
+    public void onSignOutClick(View view) {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
 }

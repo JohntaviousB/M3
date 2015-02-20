@@ -34,6 +34,7 @@ import java.util.NoSuchElementException;
 
 /**
  * A login screen that offers login via email/password.
+ * @version 1.0
  */
 public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 

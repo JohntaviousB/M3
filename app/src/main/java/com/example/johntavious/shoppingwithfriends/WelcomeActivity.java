@@ -10,7 +10,8 @@ import android.widget.TextView;
 import android.widget.Button;
 
 /**
- * The Application for a logged-in User
+ * The hompe page of a logged-in user
+ * @version 1.0
  */
 public class WelcomeActivity extends ActionBarActivity {
 
