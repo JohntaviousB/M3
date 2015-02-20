@@ -8,6 +8,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+/**
+ * Represents the registration activity of the application
+ */
 
 public class RegistrationActivity extends ActionBarActivity {
 
@@ -58,7 +61,6 @@ public class RegistrationActivity extends ActionBarActivity {
     /**TODO: also check Username uniqueness, password filled out, and fix bug allowing empty names"**/
     public void onDoneClick(View view) {
         String name = ((EditText)findViewById(R.id.name_field)).getText().toString();
-        System.out.println("@@@@@@@@@@@@@@@@@@@@" + name + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + name.equals(""));
         String email = ((EditText)findViewById(R.id.email_field)).getText().toString();
         String password = ((EditText)findViewById(R.id.password_field)).getText().toString();
         if (name.trim() == "") {

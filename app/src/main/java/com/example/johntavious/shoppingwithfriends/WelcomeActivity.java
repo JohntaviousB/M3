@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Button;
 
+/**
+ * The Application for a logged-in User
+ */
 public class WelcomeActivity extends ActionBarActivity {
 
     @Override
@@ -58,6 +61,11 @@ public class WelcomeActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Signs the user out of the app, returns to login screen
+     * @param view the signout button click
+     */
     public void onSignOutClick(View view) {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);

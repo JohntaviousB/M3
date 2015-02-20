@@ -1,15 +1,15 @@
 package com.example.johntavious.shoppingwithfriends;
 
 /**
- * Created by Johntavious on 2/8/2015.
+ * Represents a non-admin user of the application
  */
 public class User {
     private String name, email, password;
 
     protected User(String n, String e, String p) {
-        this.name = n;
-        this.email = e;
-        this.password = p;
+        setName(n);
+        setEmail(e);
+        setPassword(p);
     }
 
     /**
@@ -17,7 +17,9 @@ public class User {
      * @param n The new name
      */
     protected void setName(String n) {
-        this.name = n;
+        if (n != null && !n.equals("")) {
+            this.name = n;
+        }
     }
 
     /**
@@ -25,7 +27,9 @@ public class User {
      * @param e The new email address
      */
     protected void setEmail(String e) {
-        this.email = e;
+        if (e != null && !e.equals("")) {
+            this.email = e;
+        }
     }
 
     /**
@@ -33,7 +37,9 @@ public class User {
      * @param p The new password
      */
     protected void setPassword(String p) {
-        this.password = p;
+        if (p != null && p.length() >= 4) {
+            this.password = p;
+        }
     }
 
     /**

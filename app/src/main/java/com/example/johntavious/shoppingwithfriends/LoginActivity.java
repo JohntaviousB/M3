@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 /**
@@ -50,9 +51,33 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private Intent intent;
     private String name = "";
 
+    /**
+     * Adds a new User to the list of registered users
+     * @param u the new User to add
+     */
     protected static void addUser(User u) {
         REGISTERED_USERS.add(u);
     }
+
+    /**
+     * Returns a User associated with a username
+     * @param username the username associated with the User to be returned
+     * @return the User associated with the username--throws a NoSuchElementException
+     * if there is no such User
+     */
+    protected static User getUser(String username) {
+        for (User user : REGISTERED_USERS) {
+            if (user.getName().equals(username)) {
+                return user;
+            }
+        }
+        throw new NoSuchElementException("The Username does not exist");
+    }
+    /**
+     * Determines if an email is valid (checks if taken already and if formatted properly)
+     * @param e the String representation of the email
+     * @return true if the email is valid, false otherwise
+     */
     protected static boolean emailValid(String e) {
         for (User user : REGISTERED_USERS) {
             if (user.getEmail().equals(e)) {
