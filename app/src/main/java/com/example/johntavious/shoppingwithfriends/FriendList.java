@@ -32,7 +32,7 @@ public class FriendList extends ActionBarActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            user = LoginActivity.getUser(extras.getString("userName"));
+            user = LoginActivity.getUser(extras.getString("user"));
         }
         TextView header = (TextView) findViewById(R.id.friend_list_header_text);
         header.setText(user.getName() + "'s Friends");
@@ -50,11 +50,12 @@ public class FriendList extends ActionBarActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     TextView textView = (TextView) view;
-                    String friendName = textView.getText().toString().split(" ")[0];//gets the friend's name
+                    User otherUser =
+                       LoginActivity.getUser(textView.getText().toString().split(" ")[0]);
                     Intent friendProfile = new Intent(FriendList.this, FriendProfileActivity.class);
-                    friendProfile.putExtra("otherUserName", friendName);
+                    friendProfile.putExtra("otherUser", otherUser.getName());
 //                    Log.d("DEBUG", friendName);
-                    friendProfile.putExtra("userName", user.getName());
+                    friendProfile.putExtra("user", user.getName());
                     startActivity(friendProfile);
                 }
             }
@@ -79,7 +80,7 @@ public class FriendList extends ActionBarActivity {
         int id = item.getItemId();
         if (id == R.id.action_home) {
             Intent returnHome = new Intent(this, WelcomeActivity.class);
-            returnHome.putExtra("userName", user.getName());
+            returnHome.putExtra("user", user.getName());
             startActivity(returnHome);
         }
         if (id == R.id.action_logout) {

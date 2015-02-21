@@ -1,5 +1,9 @@
 package com.example.johntavious.shoppingwithfriends;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,19 +13,18 @@ import java.util.Map;
  * Represents a non-admin user of the application
  * @version 1.1
  */
-public class User {
+public class User implements Parcelable {
     private String name, email, password;
-    private List<User> friends;
-    private Map<User, Integer> salesSharedByUser; // a map of friends who shared sales with this User
+    private List<User> friends = new ArrayList<>();
+    private Map<User, Integer> salesSharedByUser = new HashMap<>();
+                    // a map of friends who shared sales with this User
     private int totalOfRatings, numOfRatings;
 
-    protected User(String n, String e, String p) {
+    public User(String n, String e, String p) {
         this.name = n;
         this.email = e;
         setPassword(p);
         totalOfRatings = 0;
-        friends = new ArrayList<>();
-        salesSharedByUser = new HashMap<>();
     }
 
     /**
@@ -29,7 +32,7 @@ public class User {
      * @param n The new name
      * @return true if successful, false otherwise;
      */
-    protected boolean setName(String n) {
+    public boolean setName(String n) {
         if (n != null && !n.equals("") && RegistrationActivity.isValidUsername(n)) {
             this.name = n;
             return true;
@@ -42,7 +45,7 @@ public class User {
      * @param e The new email address
      * @return true if successful, false otherwise
      */
-    protected boolean setEmail(String e) {
+    public boolean setEmail(String e) {
         if (LoginActivity.emailValid(e)) {
             this.email = e;
             return true;
@@ -55,7 +58,7 @@ public class User {
      * @param p The new password
      * @return true if successful, false otherwise
      */
-    protected boolean setPassword(String p) {
+    public boolean setPassword(String p) {
         if (p != null && p.length() >= 4) {
             this.password = p;
             return true;
@@ -67,7 +70,7 @@ public class User {
      * Returns the User's name
      * @return the User's name
      */
-    protected String getName() {
+    public String getName() {
         return this.name;
     }
 
@@ -75,7 +78,7 @@ public class User {
      * Returns the User's email
      * @return the User's email
      */
-    protected String getEmail() {
+    public String getEmail() {
         return this.email;
     }
 
@@ -83,7 +86,7 @@ public class User {
      * Returns the User's password
      * @return the User's password
      */
-    protected String getPassword() {
+    public String getPassword() {
         return this.password;
     }
 
@@ -92,7 +95,7 @@ public class User {
      * @param friend the User to be added to the friends list
      * @return true if successfully added to the list, false otherwise
      */
-    protected boolean addFriend(User friend) {
+    public boolean addFriend(User friend) {
         if (this.equals(friend)) {
             return false;
         }
@@ -111,7 +114,7 @@ public class User {
      * @param friend the User to be removed
      * @return true if successfully removed, false otherwise
      */
-    protected boolean unfriend(User friend) {
+    public boolean unfriend(User friend) {
         if (isFriendsWith(friend)) {
             friends.remove(friend);
             friend.friends.remove(this); //so deleting friends will be mutual
@@ -125,7 +128,7 @@ public class User {
      * @param u the User to be determined if friends
      * @return true if friendship exists, false otherwise
      */
-    protected boolean isFriendsWith(User u) {
+    public boolean isFriendsWith(User u) {
         return friends.contains(u);
     }
 
@@ -133,7 +136,7 @@ public class User {
      * Gets the average rating of this User
      * @return the averge rating
      */
-    protected double getAverageRating() {
+    public double getAverageRating() {
         if (numOfRatings == 0) return 0;
         return (double) totalOfRatings / numOfRatings;
     }
@@ -145,7 +148,7 @@ public class User {
      * in all the "salesSharedByUser" Maps of any friend who was interested in the item.
      * Also not quite sure on the parameters for this method just yet;
      */
-    protected void postSale() {
+    public void postSale() {
 
     }
     /**
@@ -154,7 +157,7 @@ public class User {
      * @return the number of such sales
      */
     //TODO: fix method so it doesn't always return 0
-    protected int getSalesReceivedByUser(User u) {
+    public int getSalesReceivedByUser(User u) {
        return 0; //returns 0 until Sale posting functionality is proper
     }
     /**
@@ -162,7 +165,7 @@ public class User {
      * @param u the friend to rate
      * @param rating the rating to give the friend
      */
-    protected void rate(User u, int rating) {
+    public void rate(User u, int rating) {
         if (isFriendsWith(u)) {
             u.totalOfRatings += rating;
             u.numOfRatings++;
@@ -172,7 +175,7 @@ public class User {
      * Returns the user's list of friends
      * @return the list of friends
      */
-    protected List<User> getFriends() {
+    public List<User> getFriends() {
         return friends;
     }
 
@@ -195,4 +198,55 @@ public class User {
     public String toString() {
         return name + " " + email + " ";
     }
+
+    /**
+     * Describe the kinds of special objects contained in this Parcelable's
+     * marshalled representation.
+     *
+     * @return a bitmask indicating the set of special object types marshalled
+     * by the Parcelable.
+     */
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    /**
+     * Flatten this object in to a Parcel.
+     *
+     * @param out  The Parcel in which the object should be written.
+     * @param flags Additional flags about how the object should be written.
+     *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
+     */
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeString(name);
+        out.writeString(email);
+        out.writeString(password);
+        out.writeTypedList(friends);
+    }
+    public void readFromParcel(Parcel in) {
+        name = in.readString();
+        email = in.readString();
+        password = in.readString();
+        in.readTypedList(friends, User.CREATOR);
+    }
+    public static final Parcelable.Creator<User> CREATOR
+        = new Parcelable.Creator<User>() {
+            public User createFromParcel(Parcel in) {
+                return new User(in);
+           }
+
+            public User[] newArray(int size) {
+                return new User[size];
+            }
+        };
+
+    public User(Parcel in) {
+        name = in.readString();
+        email = in.readString();
+        password = in.readString();
+        Log.d("DEBUG", "friends == null? " + (friends == null));
+        in.readTypedList(friends, User.CREATOR);
+        }
 }

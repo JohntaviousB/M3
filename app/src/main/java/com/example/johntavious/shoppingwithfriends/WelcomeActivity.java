@@ -14,22 +14,22 @@ import android.widget.Button;
  * @version 1.0
  */
 public class WelcomeActivity extends ActionBarActivity {
-    String userName = "";
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            userName = extras.getString("userName");
+            user = LoginActivity.getUser(extras.getString("user"));
         }
         TextView welcomeText = (TextView)findViewById(R.id.welcome_text);
-        welcomeText.setText("Welcome, " + userName);
+        welcomeText.setText("Welcome, " + user.getName());
 
         // Friend's List
         Button friend_list_button = (Button) findViewById(R.id.friend_list_button);
         final Intent goToFriendList = new Intent(this, FriendList.class);
-        goToFriendList.putExtra("userName", userName);
+        goToFriendList.putExtra("user", user.getName());
         friend_list_button.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View view) {
@@ -65,7 +65,7 @@ public class WelcomeActivity extends ActionBarActivity {
         }
         if (id == R.id.action_friendslist) {
             Intent friendsList = new Intent(this, FriendList.class);
-            friendsList.putExtra("userName", userName);
+            friendsList.putExtra("user", user.getName());
             startActivity(friendsList);
         }
 

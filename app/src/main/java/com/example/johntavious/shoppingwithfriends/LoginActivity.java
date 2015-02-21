@@ -322,11 +322,11 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 return false;
             }
 
-            for (User user : REGISTERED_USERS) {
-                if (user.getEmail().equals(mEmail)) {
+            for (User possibleUser : REGISTERED_USERS) {
+                if (possibleUser.getEmail().equals(mEmail)) {
                     // Account exists, return true if the password matches.
-                    name = user.getName();
-                    return user.getPassword().equals(mPassword);
+                    name = possibleUser.getName();
+                    return possibleUser.getPassword().equals(mPassword);
                 }
             }
 
@@ -341,7 +341,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             if (success) {
                 finish();
                 intent = new Intent(LoginActivity.this, WelcomeActivity.class);
-                intent.putExtra("userName", name);
+                intent.putExtra("user", name);
                 startActivity(intent);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

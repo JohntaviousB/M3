@@ -23,8 +23,8 @@ public class FriendProfileActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_profile);
         Bundle extras = getIntent().getExtras();
-        user = LoginActivity.getUser(extras.getString("userName"));
-        otherUser = LoginActivity.getUser(extras.getString("otherUserName"));
+        user = LoginActivity.getUser(extras.getString("user"));
+        otherUser = LoginActivity.getUser(extras.getString("otherUser"));
 
         ((TextView)findViewById(R.id.otherUser_profile_header)).setText(otherUser.getName()
                 + "'s Profile");
@@ -48,8 +48,8 @@ public class FriendProfileActivity extends ActionBarActivity {
                     user.addFriend(otherUser);
                     updateViewContents(); //resets the text of the screen to reflect change
                 }
-//                Log.d("DEBUG", "User's friendsList size: " + user.getFriends().size()
-//                + " Friends friendslist size:" + otherUser.getFriends().size());
+                Log.d("DEBUG", "User's friendsList size: " + user.getFriends().size()
+                + " Friends friendslist size:" + otherUser.getFriends().size());
             }
         });
 
@@ -97,7 +97,7 @@ public class FriendProfileActivity extends ActionBarActivity {
         }
         if (id == R.id.action_home) {
             Intent returnHome = new Intent(this, WelcomeActivity.class);
-            returnHome.putExtra("userName", user.getName());
+            returnHome.putExtra("user", user.getName());
             startActivity(returnHome);
         }
         if (id == R.id.action_logout) {
@@ -106,7 +106,7 @@ public class FriendProfileActivity extends ActionBarActivity {
         }
         if (id == R.id.action_friendslist) {
             Intent friendsList = new Intent(this, FriendList.class);
-            friendsList.putExtra("userName", user.getName());
+            friendsList.putExtra("user", user.getName());
             startActivity(friendsList);
         }
         return super.onOptionsItemSelected(item);
