@@ -51,7 +51,7 @@
         android:id="@+id/averge_rating"
         android:layout_alignBottom="@+id/otherUser_profile_header"
         android:layout_toEndOf="@+id/otherUser_profile_header"
-        android:paddingLeft="10dp"
+        android:paddingLeft="5dp"
         android:width="70dp" />
 
     <TextView

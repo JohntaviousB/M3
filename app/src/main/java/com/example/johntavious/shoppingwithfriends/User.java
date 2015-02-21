@@ -16,8 +16,8 @@ public class User {
     private int totalOfRatings, numOfRatings;
 
     protected User(String n, String e, String p) {
-        setName(n);
-        setEmail(e);
+        this.name = n;
+        this.email = e;
         setPassword(p);
         totalOfRatings = 0;
         friends = new ArrayList<>();
@@ -25,33 +25,42 @@ public class User {
     }
 
     /**
-     * Changes the User's name
+     * Attempts to change the User's name
      * @param n The new name
+     * @return true if successful, false otherwise;
      */
-    protected void setName(String n) {
-        if (n != null && !n.equals("")) {
+    protected boolean setName(String n) {
+        if (n != null && !n.equals("") && RegistrationActivity.isValidUsername(n)) {
             this.name = n;
+            return true;
         }
+        return false;
     }
 
     /**
-     * Changes the User's email
+     * Attempts to change the User's email
      * @param e The new email address
+     * @return true if successful, false otherwise
      */
-    protected void setEmail(String e) {
-        if (e != null && !e.equals("")) {
+    protected boolean setEmail(String e) {
+        if (LoginActivity.emailValid(e)) {
             this.email = e;
+            return true;
         }
+        return false;
     }
 
     /**
-     * Changes the User's password
+     * Attempts to change the User's password
      * @param p The new password
+     * @return true if successful, false otherwise
      */
-    protected void setPassword(String p) {
+    protected boolean setPassword(String p) {
         if (p != null && p.length() >= 4) {
             this.password = p;
+            return true;
         }
+        return false;
     }
 
     /**
@@ -166,6 +175,7 @@ public class User {
     protected List<User> getFriends() {
         return friends;
     }
+
     @Override
     public boolean equals(Object other) {
         if (this == other) return true;
@@ -173,10 +183,14 @@ public class User {
         User that = (User) other;
         return this.name.equals(that.name) && this.email.equals(that.email);
     }
-//    @Override
-//    public int hashCode() {
-//        return 0;
-//    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + email.hashCode();
+        return result;
+    }
+
     @Override
     public String toString() {
         return name + " " + email + " ";

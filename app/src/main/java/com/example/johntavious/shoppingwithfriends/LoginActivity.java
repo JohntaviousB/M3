@@ -36,6 +36,7 @@ import java.util.NoSuchElementException;
  * A login screen that offers login via email/password.
  * @version 1.0
  */
+//**TODO: implement some way to lock user out after 3 attempts and alert admin
 public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
     private static final ArrayList<User> REGISTERED_USERS = new ArrayList<>();
@@ -74,6 +75,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         }
         throw new NoSuchElementException("The Username does not exist");
     }
+
+    protected static List<User> getUsers() {
+        return REGISTERED_USERS;
+    }
     /**
      * Determines if an email is valid (checks if taken already and if formatted properly)
      * @param e the String representation of the email
@@ -85,7 +90,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 return false;
             }
         }
-        return e.contains("@") && e.contains(".");
+        return e != null && e.contains("@") && e.contains(".");
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,7 +195,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
         for (User user : REGISTERED_USERS) {
             if (user.getEmail().equals(email)) {
                 return true;
@@ -199,9 +203,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         return false;
     }
 
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() >= 1;
+    protected static boolean isPasswordValid(String password) {
+        return password != null && password.length() >= 4;
     }
 
     /**
@@ -338,7 +341,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             if (success) {
                 finish();
                 intent = new Intent(LoginActivity.this, WelcomeActivity.class);
-                intent.putExtra("user", name);
+                intent.putExtra("userName", name);
                 startActivity(intent);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

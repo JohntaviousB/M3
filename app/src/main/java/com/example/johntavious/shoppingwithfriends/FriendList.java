@@ -32,7 +32,7 @@ public class FriendList extends ActionBarActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            user = LoginActivity.getUser(extras.getString("name"));
+            user = LoginActivity.getUser(extras.getString("userName"));
         }
         TextView header = (TextView) findViewById(R.id.friend_list_header_text);
         header.setText(user.getName() + "'s Friends");
@@ -66,7 +66,8 @@ public class FriendList extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_friend_list, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         return true;
     }
 
@@ -76,10 +77,14 @@ public class FriendList extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_home) {
+            Intent returnHome = new Intent(this, WelcomeActivity.class);
+            returnHome.putExtra("userName", user.getName());
+            startActivity(returnHome);
+        }
+        if (id == R.id.action_logout) {
+            Intent logout = new Intent(this, LoginActivity.class);
+            startActivity(logout);
         }
 
         return super.onOptionsItemSelected(item);
@@ -105,25 +110,6 @@ public class FriendList extends ActionBarActivity {
                 addFriendText.requestFocus();
             }
         }
-    }
-
-    /**
-     * Returns the User to his/her homepage
-     * @param view the Home Button click
-     */
-    public void onHomeClick(View view) {
-        Intent goHome = new Intent(this, WelcomeActivity.class);
-        goHome.putExtra("user", user.getName());
-        startActivity(goHome);
-    }
-
-    /**
-     * Signs the User out of the app
-     * @param view the Sign Out Button click
-     */
-    public void onSignOutClick(View view) {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
     }
 
 }

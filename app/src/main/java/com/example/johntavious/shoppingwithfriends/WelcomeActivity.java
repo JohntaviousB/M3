@@ -14,15 +14,14 @@ import android.widget.Button;
  * @version 1.0
  */
 public class WelcomeActivity extends ActionBarActivity {
-
+    String userName = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         Bundle extras = getIntent().getExtras();
-        String userName = "";
         if (extras != null) {
-            userName = extras.getString("user");
+            userName = extras.getString("userName");
         }
         TextView welcomeText = (TextView)findViewById(R.id.welcome_text);
         welcomeText.setText("Welcome, " + userName);
@@ -30,7 +29,7 @@ public class WelcomeActivity extends ActionBarActivity {
         // Friend's List
         Button friend_list_button = (Button) findViewById(R.id.friend_list_button);
         final Intent goToFriendList = new Intent(this, FriendList.class);
-        goToFriendList.putExtra("name", userName);
+        goToFriendList.putExtra("userName", userName);
         friend_list_button.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View view) {
@@ -44,7 +43,8 @@ public class WelcomeActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_welcome, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         return true;
     }
 
@@ -59,16 +59,16 @@ public class WelcomeActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.action_logout) {
+            Intent logout = new Intent(this, LoginActivity.class);
+            startActivity(logout);
+        }
+        if (id == R.id.action_friendslist) {
+            Intent friendsList = new Intent(this, FriendList.class);
+            friendsList.putExtra("userName", userName);
+            startActivity(friendsList);
+        }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Signs the user out of the app, returns to login screen
-     * @param view the signout button click
-     */
-    public void onSignOutClick(View view) {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
     }
 }

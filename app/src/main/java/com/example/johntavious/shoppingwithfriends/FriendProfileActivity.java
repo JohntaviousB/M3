@@ -1,5 +1,6 @@
 package com.example.johntavious.shoppingwithfriends;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -78,7 +79,8 @@ public class FriendProfileActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_friend_profile, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         return true;
     }
 
@@ -93,7 +95,20 @@ public class FriendProfileActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
+        if (id == R.id.action_home) {
+            Intent returnHome = new Intent(this, WelcomeActivity.class);
+            returnHome.putExtra("userName", user.getName());
+            startActivity(returnHome);
+        }
+        if (id == R.id.action_logout) {
+            Intent logout = new Intent(this, LoginActivity.class);
+            startActivity(logout);
+        }
+        if (id == R.id.action_friendslist) {
+            Intent friendsList = new Intent(this, FriendList.class);
+            friendsList.putExtra("userName", user.getName());
+            startActivity(friendsList);
+        }
         return super.onOptionsItemSelected(item);
     }
 }

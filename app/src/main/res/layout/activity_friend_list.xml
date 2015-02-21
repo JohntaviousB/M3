@@ -22,7 +22,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="User's Friends"
         android:id="@+id/friend_list_header_text"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="42dp"
         android:layout_below="@+id/add_friend_button"
         android:layout_centerHorizontal="true" />
 
@@ -41,27 +41,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:width="200dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Home"
-        android:id="@+id/go_home_text"
-        android:layout_alignBottom="@+id/add_friend_text"
-        android:layout_alignEnd="@+id/list_of_friends"
-        android:onClick="onHomeClick"
-        android:nestedScrollingEnabled="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Sign Out"
-        android:id="@+id/signOutText"
-        android:layout_below="@+id/add_friend_text"
-        android:layout_alignEnd="@+id/go_home_text"
-        android:onClick="onSignOutClick" />
 
 
 </RelativeLayout>
