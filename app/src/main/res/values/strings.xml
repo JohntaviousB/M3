@@ -17,5 +17,9 @@
     <string name="action_friendslist">Friends</string>
     <string name="action_logout">Sign Out</string>
     <string name="action_home">Home</string>
+    <string name="title_activity_register_interest">RegisterInterestActivity</string>
+    <string name="action_new_interest">New Interest</string>
+    <string name="action_post_sale">Post Sale</string>
+    <string name="action_notifications">Notifications</string>
 
 </resources>

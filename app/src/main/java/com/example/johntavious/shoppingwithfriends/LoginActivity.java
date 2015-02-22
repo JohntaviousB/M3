@@ -69,7 +69,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
      */
     protected static User getUser(String username) {
         for (User user : REGISTERED_USERS) {
-            if (user.getName().equals(username)) {
+            if (user.getName().equalsIgnoreCase(username)) {
                 return user;
             }
         }
@@ -86,7 +86,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
      */
     protected static boolean emailValid(String e) {
         for (User user : REGISTERED_USERS) {
-            if (user.getEmail().equals(e)) {
+            if (user.getEmail().equalsIgnoreCase(e)) {
                 return false;
             }
         }
@@ -323,10 +323,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             }
 
             for (User possibleUser : REGISTERED_USERS) {
-                if (possibleUser.getEmail().equals(mEmail)) {
+                if (possibleUser.getEmail().equalsIgnoreCase(mEmail)) {
                     // Account exists, return true if the password matches.
                     name = possibleUser.getName();
-                    return possibleUser.getPassword().equals(mPassword);
+                    return possibleUser.getPassword().equalsIgnoreCase(mPassword);
                 }
             }
 

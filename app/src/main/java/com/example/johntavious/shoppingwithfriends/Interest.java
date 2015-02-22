@@ -1,0 +1,89 @@
+package com.example.johntavious.shoppingwithfriends;
+
+/**
+ * Represents a User's interest in the application
+ * @version 1.0
+ */
+public class Interest {
+    private String itemName;
+    private double thresholdPrice;
+    private int distance; //the max distance willing to travel
+
+    public Interest(String item, double price, int distance) {
+        this.itemName = item;
+        this.thresholdPrice = price;
+        this.distance = distance;
+    }
+
+    /**
+     * Gets the item name
+      * @return the item name
+     */
+    public String getItemName() {
+        return itemName;
+    }
+
+    /**
+     * Gets the threshold price
+     * @return the threshold price
+     */
+    public double getThresholdPrice() {
+        return thresholdPrice;
+    }
+
+    /**
+     * Gets the threshold distance
+     * @return the threshold distance for the item
+     */
+    public int getDistance() {
+        return distance;
+    }
+
+    /**
+     * Sets the threshold price
+     * @param price the new threshold price
+     */
+    public void setThresholdPrice(double price) {
+        if (price > 0) {
+            this.thresholdPrice = 0;
+        }
+    }
+
+    /**
+     * Sets the threshold distance
+     * @param distance the threshold distance
+     */
+    public void setDistance(int distance) {
+        if (distance > 0) {
+            this.distance = 0;
+        }
+    }
+
+    /**
+     * Sets the item name
+     * @param name the item name
+     */
+    public void setItemName(String name) {
+        if (name != null && !name.trim().equals("") && !name.equals(" ")) {
+            this.itemName = name;
+            //should probably check for a lot more bad characters
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Interest interest = (Interest) o;
+
+        if (!itemName.equals(interest.itemName)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return itemName.hashCode();
+    }
+}

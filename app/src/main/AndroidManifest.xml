@@ -17,8 +17,7 @@
             android:label="Login"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
-        <activity
-            android:name=".MainActivity">
+        <activity android:name=".MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,18 +28,19 @@
             android:name=".Welcome"
             android:label="@string/title_activity_welcome" >
         </activity>
-        <activity
-            android:name=".WelcomeActivity">
+        <activity android:name=".WelcomeActivity" >
         </activity>
         <activity
             android:name=".RegistrationActivity"
             android:label="Register" >
         </activity>
-        <activity
-            android:name=".FriendList">
+        <activity android:name=".FriendList" >
+        </activity>
+        <activity android:name=".FriendProfileActivity" >
         </activity>
         <activity
-            android:name=".FriendProfileActivity">
+            android:name=".RegisterInterestActivity"
+            android:label="@string/title_activity_register_interest" >
         </activity>
     </application>
 

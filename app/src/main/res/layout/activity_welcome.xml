@@ -6,7 +6,7 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.example.johntavious.shoppingwithfriends.WelcomeActivity"
     android:id="@+id/Welcome"
-    android:background="#ffffc973"
+    android:background="#ff1dff82"
     android:textAlignment="center"
     android:clickable="true"
     android:onClick="onSignOutClick">
@@ -29,8 +29,17 @@
         android:layout_height="wrap_content"
         android:text="Friend's List"
         android:id="@+id/friend_list_button"
+        android:layout_marginTop="52dp"
         android:layout_below="@+id/welcome_text"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="46dp" />
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Interest"
+        android:id="@+id/register_interest_button"
+        android:layout_alignTop="@+id/friend_list_button"
+        android:layout_alignParentEnd="true"
+        android:onClick="onNewInterestClick" />
 
 </RelativeLayout>

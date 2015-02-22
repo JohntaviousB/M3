@@ -46,7 +46,7 @@ public class RegistrationActivity extends Activity {
         if (!isValidUsername(name)) {
             EditText nameView = (EditText)findViewById(R.id.name_field);
             nameView.setError("This name is either taken or invalid. Usernames" +
-                            " cannot contain \"@\" or spaces and must be more than 2" +
+                            " cannot contain \"@\" or spaces and must be more than 2 " +
                             "characters"
             );
             nameView.requestFocus();
@@ -75,7 +75,7 @@ public class RegistrationActivity extends Activity {
     public static boolean isValidUsername(String n) {
         if (n != null && !n.contains(" ") && !n.contains("@") && n.length() > 2) {
             for (User user : LoginActivity.getUsers()) {
-                if (user.getName().equals(n)) {
+                if (user.getName().equalsIgnoreCase(n)) {
                     return false; //return false b/c the name is taken
                 }
             }

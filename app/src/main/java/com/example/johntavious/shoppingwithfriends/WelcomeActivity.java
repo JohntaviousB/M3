@@ -71,4 +71,14 @@ public class WelcomeActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Takes user to RegisterInterestActivity
+     * @param view the New Interest button click
+     */
+    public void onNewInterestClick(View view) {
+        Intent intent = new Intent(this, RegisterInterestActivity.class);
+        intent.putExtra("user", user.getName());
+        startActivity(intent);
+    }
 }

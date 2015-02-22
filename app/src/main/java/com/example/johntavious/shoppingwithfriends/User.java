@@ -11,14 +11,16 @@ import java.util.Map;
 
 /**
  * Represents a non-admin user of the application
- * @version 1.1
+ * @version 1.2
  */
 public class User implements Parcelable {
     private String name, email, password;
     private List<User> friends = new ArrayList<>();
     private Map<User, Integer> salesSharedByUser = new HashMap<>();
+    private List<Interest> interests = new ArrayList<>();
                     // a map of friends who shared sales with this User
     private int totalOfRatings, numOfRatings;
+    //Todo: store user's location in order to compare distances
 
     public User(String n, String e, String p) {
         this.name = n;
@@ -171,6 +173,24 @@ public class User implements Parcelable {
             u.numOfRatings++;
         }
     }
+
+    /**
+     * Attempts to add a new Interest to the list of interests
+     * @param interest the new Interest to add
+     * @return true if successfully added, false otherwise
+     */
+    public boolean registerInterest(Interest interest) {
+        return interests.add(interest);
+    }
+
+    /**
+     * Attempts to remove an interest from the list of interests
+     * @param interest the interest to remove
+     * @return true if successful, false otherwise;
+     */
+    public boolean removeInterest(Interest interest) {
+        return interests.remove(interest);
+    }
     /**
      * Returns the user's list of friends
      * @return the list of friends
@@ -184,7 +204,7 @@ public class User implements Parcelable {
         if (this == other) return true;
         if (!(other instanceof User)) return false;
         User that = (User) other;
-        return this.name.equals(that.name) && this.email.equals(that.email);
+        return this.name.equalsIgnoreCase(that.name) && this.email.equalsIgnoreCase(that.email);
     }
 
     @Override
