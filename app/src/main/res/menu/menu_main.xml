@@ -8,6 +8,8 @@
         android:orderInCategory="100" app:showAsAction="always" />
     <item android:id="@+id/action_post_sale" android:title="@string/action_post_sale"
         android:orderInCategory="100" app:showAsAction="always" />
+    <item android:id="@+id/action_interests" android:title="Interests"
+        android:orderInCategory="100" app:showAsAction="ifRoom" />
     <item android:id="@+id/action_logout" android:title="@string/action_logout"
         android:orderInCategory="100" app:showAsAction="ifRoom" />
     <item android:id="@+id/action_friendslist" android:title="@string/action_friendslist"

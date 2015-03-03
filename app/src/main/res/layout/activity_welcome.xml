@@ -9,7 +9,7 @@
     android:background="#ff1dff82"
     android:textAlignment="center"
     android:clickable="true"
-    android:onClick="onSignOutClick">
+    android:nestedScrollingEnabled="true">
 
     <TextView
         android:layout_width="wrap_content"

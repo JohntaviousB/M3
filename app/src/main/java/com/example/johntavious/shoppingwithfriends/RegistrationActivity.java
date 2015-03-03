@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import java.io.File;
+
 /**
  * Represents the registration activity of the application
  */

@@ -107,6 +107,7 @@ public class RegisterInterestActivity extends ActionBarActivity {
      * Attempts to register a new interest for the user
      * @param view the Post button click
      */
+    //TODO: make sure User hasn't already posted this item previously
     public void onPostClick(View view) {
         EditText item = (EditText)findViewById(R.id.item_name_edit_text);
         EditText price = (EditText)findViewById(R.id.threshold_price_edit_text);
@@ -118,7 +119,7 @@ public class RegisterInterestActivity extends ActionBarActivity {
             price.setError("Please enter only valid dollar amounts");
             price.requestFocus();
         }
-        if (itemName.trim().equals("") || itemName.equals(" ") || itemName.length() < 2) {
+        if (itemName.length() < 2) {
             item.setError("Please enter a valid item name");
             item.requestFocus();
         } else if (maxDistance == 0) {

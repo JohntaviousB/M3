@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
 import java.util.NoSuchElementException;
 
 /**
@@ -87,7 +88,16 @@ public class FriendList extends ActionBarActivity {
             Intent logout = new Intent(this, LoginActivity.class);
             startActivity(logout);
         }
-
+        if (id == R.id.action_register_interest) {
+            Intent interest = new Intent(this, RegisterInterestActivity.class);
+            interest.putExtra("user", user.getName());
+            startActivity(interest);
+        }
+        if (id == R.id.action_interests) {
+            Intent interests = new Intent(this, InterestsListActivity.class);
+            interests.putExtra("user", user.getName());
+            startActivity(interests);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -112,5 +122,4 @@ public class FriendList extends ActionBarActivity {
             }
         }
     }
-
 }

@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,9 +12,9 @@ import java.util.Map;
 
 /**
  * Represents a non-admin user of the application
- * @version 1.2
+ * @version 1.3
  */
-public class User implements Parcelable {
+public class User {
     private String name, email, password;
     private List<User> friends = new ArrayList<>();
     private Map<User, Integer> salesSharedByUser = new HashMap<>();
@@ -207,6 +208,13 @@ public class User implements Parcelable {
         return this.name.equalsIgnoreCase(that.name) && this.email.equalsIgnoreCase(that.email);
     }
 
+    /**
+     * Returns this User's list of interests
+     * @return the list of interests
+     */
+    public List<Interest> getInterests() {
+        return interests;
+    }
     @Override
     public int hashCode() {
         int result = name.hashCode();
@@ -218,55 +226,4 @@ public class User implements Parcelable {
     public String toString() {
         return name + " " + email + " ";
     }
-
-    /**
-     * Describe the kinds of special objects contained in this Parcelable's
-     * marshalled representation.
-     *
-     * @return a bitmask indicating the set of special object types marshalled
-     * by the Parcelable.
-     */
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    /**
-     * Flatten this object in to a Parcel.
-     *
-     * @param out  The Parcel in which the object should be written.
-     * @param flags Additional flags about how the object should be written.
-     *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
-     */
-    @Override
-    public void writeToParcel(Parcel out, int flags) {
-        out.writeString(name);
-        out.writeString(email);
-        out.writeString(password);
-        out.writeTypedList(friends);
-    }
-    public void readFromParcel(Parcel in) {
-        name = in.readString();
-        email = in.readString();
-        password = in.readString();
-        in.readTypedList(friends, User.CREATOR);
-    }
-    public static final Parcelable.Creator<User> CREATOR
-        = new Parcelable.Creator<User>() {
-            public User createFromParcel(Parcel in) {
-                return new User(in);
-           }
-
-            public User[] newArray(int size) {
-                return new User[size];
-            }
-        };
-
-    public User(Parcel in) {
-        name = in.readString();
-        email = in.readString();
-        password = in.readString();
-        Log.d("DEBUG", "friends == null? " + (friends == null));
-        in.readTypedList(friends, User.CREATOR);
-        }
 }

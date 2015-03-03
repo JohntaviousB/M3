@@ -109,6 +109,16 @@ public class FriendProfileActivity extends ActionBarActivity {
             friendsList.putExtra("user", user.getName());
             startActivity(friendsList);
         }
+        if (id == R.id.action_register_interest) {
+            Intent interest = new Intent(this, RegisterInterestActivity.class);
+            interest.putExtra("user", user.getName());
+            startActivity(interest);
+        }
+        if (id == R.id.action_interests) {
+            Intent interests = new Intent(this, InterestsListActivity.class);
+            interests.putExtra("user", user.getName());
+            startActivity(interests);
+        }
         return super.onOptionsItemSelected(item);
     }
 }

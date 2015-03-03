@@ -21,5 +21,6 @@
     <string name="action_new_interest">New Interest</string>
     <string name="action_post_sale">Post Sale</string>
     <string name="action_notifications">Notifications</string>
+    <string name="title_activity_interests_list">InterestsListActivity</string>
 
 </resources>

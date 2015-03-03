@@ -9,6 +9,7 @@
 
     <application
         android:allowBackup="true"
+        android:debuggable="true"
         android:icon="@drawable/ic_launcher"
         android:label="Shopping With Friends"
         android:theme="@style/AppTheme" >
@@ -41,6 +42,10 @@
         <activity
             android:name=".RegisterInterestActivity"
             android:label="@string/title_activity_register_interest" >
+        </activity>
+        <activity
+            android:name=".InterestsListActivity"
+            android:label="@string/title_activity_interests_list" >
         </activity>
     </application>
 

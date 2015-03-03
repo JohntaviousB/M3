@@ -1,5 +1,7 @@
 package com.example.johntavious.shoppingwithfriends;
 
+import java.text.NumberFormat;
+
 /**
  * Represents a User's interest in the application
  * @version 1.0
@@ -69,6 +71,12 @@ public class Interest {
             //should probably check for a lot more bad characters
         }
     }
+    @Override
+    public String toString() {
+        NumberFormat fmt = NumberFormat.getCurrencyInstance();
+        return String.format("Item Name%15s\nUp To%21s\nUp To %d Miles Away", itemName,
+                fmt.format(thresholdPrice), distance);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -77,7 +85,7 @@ public class Interest {
 
         Interest interest = (Interest) o;
 
-        if (!itemName.equals(interest.itemName)) return false;
+        if (!itemName.equalsIgnoreCase(interest.itemName)) return false;
 
         return true;
     }
