@@ -39,7 +39,10 @@ import java.util.NoSuchElementException;
 //**TODO: implement some way to lock user out after 3 attempts and alert admin
 public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
-    private static final ArrayList<User> REGISTERED_USERS = new ArrayList<>();
+    DBHandler dbHandler = new DBHandler(this, null, null, 3);
+
+    // Modified to be mutable
+    private static ArrayList<User> REGISTERED_USERS = new ArrayList<>();
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -175,7 +178,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
+        } else if (!dbHandler.isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
@@ -356,6 +359,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         }
     }
+
+
+
+
 }
 
 

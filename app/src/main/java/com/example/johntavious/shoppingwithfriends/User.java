@@ -16,13 +16,15 @@ import java.util.Map;
  */
 public class User {
     private String name, email, password;
-    private List<User> friends = new ArrayList<>();
+    private int id;
+    private List<String> friends = new ArrayList<>();
     private Map<User, Integer> salesSharedByUser = new HashMap<>();
     private List<Interest> interests = new ArrayList<>();
                     // a map of friends who shared sales with this User
     private int totalOfRatings, numOfRatings;
     //Todo: store user's location in order to compare distances
 
+    public User() {}
     public User(String n, String e, String p) {
         this.name = n;
         this.email = e;
@@ -32,35 +34,51 @@ public class User {
 
     /**
      * Attempts to change the User's name
-     * @param n The new name
+ //    * @param n The new name
      * @return true if successful, false otherwise;
      */
-    public boolean setName(String n) {
+/*
+     public boolean setName(String n) {
         if (n != null && !n.equals("") && RegistrationActivity.isValidUsername(n)) {
             this.name = n;
             return true;
         }
         return false;
+    } */
+
+     public void setName(String name) {
+         this.name = name;
+     }
+     public void setEmail(String email) {
+         this.email = email;
+     }
+     public void setPassword(String password) {
+         this.password = password;
+     }
+    public void setId(int id) {
+        this.id = id;
     }
+
 
     /**
      * Attempts to change the User's email
      * @param e The new email address
      * @return true if successful, false otherwise
      */
-    public boolean setEmail(String e) {
+/*    public boolean setEmail(String e) {
         if (LoginActivity.emailValid(e)) {
             this.email = e;
             return true;
         }
         return false;
-    }
+    }  */
 
     /**
      * Attempts to change the User's password
      * @param p The new password
      * @return true if successful, false otherwise
      */
+ /*
     public boolean setPassword(String p) {
         if (p != null && p.length() >= 4) {
             this.password = p;
@@ -68,6 +86,8 @@ public class User {
         }
         return false;
     }
+*/
+
 
     /**
      * Returns the User's name
@@ -93,23 +113,10 @@ public class User {
         return this.password;
     }
 
-    /**
-     * Attempts to add a new user to the friends list
-     * @param friend the User to be added to the friends list
-     * @return true if successfully added to the list, false otherwise
-     */
-    public boolean addFriend(User friend) {
-        if (this.equals(friend)) {
-            return false;
-        }
-        if (friend != null && !isFriendsWith(friend)) {
-            friends.add(friend);
-            if (!friend.isFriendsWith(this)) {
-                friend.friends.add(this); //so friendship will be mutual
-            }
-            return true;
-        }
-        return false;
+    public int getId() { return id; }
+
+    public void addFriend(String friend) {
+        friends.add(friend);
     }
 
     /**
@@ -119,8 +126,9 @@ public class User {
      */
     public boolean unfriend(User friend) {
         if (isFriendsWith(friend)) {
-            friends.remove(friend);
-            friend.friends.remove(this); //so deleting friends will be mutual
+            friends.remove(friend.getName());
+            friend.friends.remove(this.getName()); //so deleting friends will be mutual
+
             return true;
         }
         return false;
@@ -132,7 +140,13 @@ public class User {
      * @return true if friendship exists, false otherwise
      */
     public boolean isFriendsWith(User u) {
-        return friends.contains(u);
+        boolean isFriends = false;
+        for (String each : friends) {
+            if (each.equalsIgnoreCase(u.getName()));
+                isFriends = true;
+        }
+        return isFriends;
+//        return friends.contains(u.getName());
     }
 
     /**
@@ -196,7 +210,7 @@ public class User {
      * Returns the user's list of friends
      * @return the list of friends
      */
-    public List<User> getFriends() {
+    public List<String> getFriends() {
         return friends;
     }
 

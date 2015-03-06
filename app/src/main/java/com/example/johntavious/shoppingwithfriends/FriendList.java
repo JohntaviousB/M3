@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.w3c.dom.Text;
 
@@ -26,6 +28,8 @@ import java.util.NoSuchElementException;
 public class FriendList extends ActionBarActivity {
     private User user;
     ArrayAdapter<User> adapter;
+    DBHandler dbHandler = new DBHandler(this, null, null, 3);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,14 +37,26 @@ public class FriendList extends ActionBarActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
+//            user = dbHandler.getUser(extras.getString("user"));
             user = LoginActivity.getUser(extras.getString("user"));
         }
         TextView header = (TextView) findViewById(R.id.friend_list_header_text);
         header.setText(user.getName() + "'s Friends");
 
+        // Temp solution for supplying the adapter with a list of users
+        // Consider adjusting adapter to accept a list of Strings
+        user.getFriends().clear();
+        dbHandler.getFriends(user);
+        List<String> friends = user.getFriends();
+        List<User> friendsList = new ArrayList<User>();
+
+        for (String each : friends) {
+            friendsList.add(dbHandler.getUser(each));
+        }
+
         // Populating the ListView with an adapter
         adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, user.getFriends());
+                android.R.layout.simple_list_item_1, friendsList);
         ListView listView = (ListView) findViewById(R.id.list_of_friends);
         listView.setAdapter(adapter);
 
@@ -48,18 +64,19 @@ public class FriendList extends ActionBarActivity {
          * When a user clicks on a friend in the list, it will take him to the Friend's profile
          */
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    TextView textView = (TextView) view;
-                    User otherUser =
-                       LoginActivity.getUser(textView.getText().toString().split(" ")[0]);
-                    Intent friendProfile = new Intent(FriendList.this, FriendProfileActivity.class);
-                    friendProfile.putExtra("otherUser", otherUser.getName());
+                                            @Override
+                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                                TextView textView = (TextView) view;
+                                                User otherUser =
+                                                        dbHandler.getUser(textView.getText().toString().split(" ")[0]);
+//                       LoginActivity.getUser(textView.getText().toString().split(" ")[0]);
+                                                Intent friendProfile = new Intent(FriendList.this, FriendProfileActivity.class);
+                                                friendProfile.putExtra("otherUser", otherUser.getName());
 //                    Log.d("DEBUG", friendName);
-                    friendProfile.putExtra("user", user.getName());
-                    startActivity(friendProfile);
-                }
-            }
+                                                friendProfile.putExtra("user", user.getName());
+                                                startActivity(friendProfile);
+                                            }
+                                        }
         );
 
     }
@@ -108,18 +125,27 @@ public class FriendList extends ActionBarActivity {
     public void onAddFriendClick(View view) {
         EditText addFriendText = (EditText)findViewById(R.id.add_friend_text);
         String searchName = addFriendText.getText().toString();
+        User friend = dbHandler.getUser(searchName);
+        if (friend != null) {
+            dbHandler.addFriend(user, friend);
+        } else {
+            addFriendText.setError("No username " + searchName + " exists");
+            addFriendText.requestFocus();
+        }
+/*
         User friendToAdd;
         if (!searchName.trim().equals("")) { // to avoid searching for no-name queries
             try {
+
                 friendToAdd = LoginActivity.getUser(searchName);
                 if (!friendToAdd.equals(user) && !user.getFriends().contains(friendToAdd)){
                     adapter.add(friendToAdd);
-                    friendToAdd.addFriend(user); //adding friends should be mutual
+                    friendToAdd.addFriend(user.getName()); //adding friends should be mutual
                 }
             } catch (NoSuchElementException e) {
                 addFriendText.setError("No username " + searchName + " exists");
                 addFriendText.requestFocus();
             }
-        }
+        }  */
     }
 }

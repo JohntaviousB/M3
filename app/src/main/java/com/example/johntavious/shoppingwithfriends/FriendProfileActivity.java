@@ -18,13 +18,18 @@ public class FriendProfileActivity extends ActionBarActivity {
     User user;
     User otherUser;
     Button friendshipButton;
+    DBHandler dbHandler = new DBHandler(this, null, null, 3);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_profile);
         Bundle extras = getIntent().getExtras();
-        user = LoginActivity.getUser(extras.getString("user"));
-        otherUser = LoginActivity.getUser(extras.getString("otherUser"));
+        user = dbHandler.getUser(extras.getString("user"));
+        user.getFriends().clear();
+        dbHandler.getFriends(user);
+        otherUser = dbHandler.getUser(extras.getString("otherUser"));
+//        user = LoginActivity.getUser(extras.getString("user"));
+//        otherUser = LoginActivity.getUser(extras.getString("otherUser"));
 
         ((TextView)findViewById(R.id.otherUser_profile_header)).setText(otherUser.getName()
                 + "'s Profile");
@@ -43,9 +48,12 @@ public class FriendProfileActivity extends ActionBarActivity {
             public void onClick(View v) {
                 if (user.isFriendsWith(otherUser)) {
                     user.unfriend(otherUser);
+                    dbHandler.unfriend(user, otherUser);
+                    user.getFriends().clear();
+                    dbHandler.getFriends(user);
                     updateViewContents(); //resets the text of the screen to reflect change
                 } else {
-                    user.addFriend(otherUser);
+                    user.addFriend(otherUser.getName());
                     updateViewContents(); //resets the text of the screen to reflect change
                 }
                 Log.d("DEBUG", "User's friendsList size: " + user.getFriends().size()

@@ -15,13 +15,17 @@ import android.widget.Button;
  */
 public class WelcomeActivity extends ActionBarActivity {
     User user;
+
+    DBHandler dbHandler = new DBHandler(this, null, null, 3);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            user = LoginActivity.getUser(extras.getString("user"));
+
+            user = dbHandler.getUser(extras.getString("user"));
+//            user = LoginActivity.getUser(extras.getString("user"));
         }
         TextView welcomeText = (TextView)findViewById(R.id.welcome_text);
         welcomeText.setText("Welcome, " + user.getName());

@@ -21,13 +21,15 @@ public class RegisterInterestActivity extends ActionBarActivity {
     Spinner distance;
     int maxDistance = 0;
     String[] distances = {"5", "10", "20", "35", "50", "75", "100+"};
+    DBHandler dbHandler = new DBHandler(this, null, null, 3);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_interest);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            user = LoginActivity.getUser(extras.getString("user"));
+            user = dbHandler.getUser(extras.getString("user"));
+//            user = LoginActivity.getUser(extras.getString("user"));
         }
         distance = (Spinner)findViewById(R.id.distance_spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
@@ -127,7 +129,8 @@ public class RegisterInterestActivity extends ActionBarActivity {
             distanceText.setError("Please select a maximum distance");
             distance.requestFocus();
         } else if (thresholdPrice > 0) {
-            user.registerInterest(new Interest(itemName, thresholdPrice, maxDistance));
+             dbHandler.addInterest(user, new Interest(itemName, thresholdPrice, maxDistance));
+//            user.registerInterest(new Interest(itemName, thresholdPrice, maxDistance));
             Intent intent = new Intent(this, WelcomeActivity.class);
             intent.putExtra("user", user.getName());
             startActivity(intent);

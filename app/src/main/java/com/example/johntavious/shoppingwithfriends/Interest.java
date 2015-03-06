@@ -7,9 +7,12 @@ import java.text.NumberFormat;
  * @version 1.0
  */
 public class Interest {
+    private int id;
     private String itemName;
     private double thresholdPrice;
     private int distance; //the max distance willing to travel
+
+    public Interest() {}
 
     public Interest(String item, double price, int distance) {
         this.itemName = item;
@@ -41,13 +44,16 @@ public class Interest {
         return distance;
     }
 
+    public int getId() { return id; }
     /**
      * Sets the threshold price
      * @param price the new threshold price
      */
     public void setThresholdPrice(double price) {
-        if (price > 0) {
+        if (price < 0) {
             this.thresholdPrice = 0;
+        } else {
+            thresholdPrice = price;
         }
     }
 
@@ -56,8 +62,10 @@ public class Interest {
      * @param distance the threshold distance
      */
     public void setDistance(int distance) {
-        if (distance > 0) {
+        if (distance < 0) {
             this.distance = 0;
+        } else {
+            this.distance = distance;
         }
     }
 
@@ -70,6 +78,9 @@ public class Interest {
             this.itemName = name;
             //should probably check for a lot more bad characters
         }
+    }
+    public void setId(int id) {
+        this.id = id;
     }
     @Override
     public String toString() {

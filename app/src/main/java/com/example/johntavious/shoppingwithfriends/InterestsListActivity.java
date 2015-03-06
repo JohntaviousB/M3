@@ -8,16 +8,21 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import android.widget.TextView;
+import java.util.List;
 
 public class InterestsListActivity extends ActionBarActivity {
     User user;
+    DBHandler dbHandler = new DBHandler(this, null, null, 3);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_interests_list);
         Bundle extras = getIntent().getExtras();
         if (extras!= null) {
-            user = LoginActivity.getUser(extras.getString("user"));
+            user = dbHandler.getUser(extras.getString("user"));
+            dbHandler.getInterests(user);
+//            user = LoginActivity.getUser(extras.getString("user"));
         }
         // Populating the ListView with an adapter
         ArrayAdapter<Interest> adapter = new ArrayAdapter<>(this,

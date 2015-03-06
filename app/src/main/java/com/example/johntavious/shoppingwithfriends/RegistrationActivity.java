@@ -18,6 +18,8 @@ import java.io.File;
 
 public class RegistrationActivity extends Activity {
 
+    DBHandler dbHandler = new DBHandler(this, null, null, 3);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +47,7 @@ public class RegistrationActivity extends Activity {
         String name = ((EditText)findViewById(R.id.name_field)).getText().toString().trim();
         String email = ((EditText)findViewById(R.id.email_field)).getText().toString().trim();
         String password = ((EditText)findViewById(R.id.password_field)).getText().toString();
-        if (!isValidUsername(name)) {
+        if (!dbHandler.isValidUsername(name)) {
             EditText nameView = (EditText)findViewById(R.id.name_field);
             nameView.setError("This name is either taken or invalid. Usernames" +
                             " cannot contain \"@\" or spaces and must be more than 2 " +
@@ -56,9 +58,12 @@ public class RegistrationActivity extends Activity {
                     EditText passwordView = (EditText)findViewById(R.id.password_field);
                     passwordView.setError("Passwords must be at least 4 characters");
                     passwordView.requestFocus();
-            } else if (LoginActivity.emailValid(email)) {
+//            } else if (LoginActivity.emailValid(email)) {
+            } else if (dbHandler.emailValid(email)) {
                     User user = new User(name, email, password);
                     LoginActivity.addUser(user);
+                    dbHandler.addUser(user);
+
                     Intent intent = new Intent(this, WelcomeActivity.class);
                     intent.putExtra("user", user.getName());
                     startActivity(intent);
