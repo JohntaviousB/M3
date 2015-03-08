@@ -22,5 +22,8 @@
     <string name="action_post_sale">Post Sale</string>
     <string name="action_notifications">Notifications</string>
     <string name="title_activity_interests_list">InterestsListActivity</string>
+    <string name="title_activity_tester">Tester</string>
+    <string name="title_activity_temp_login">TempLogin</string>
+    <string name="title_activity_temp_for_testing">TempForTesting</string>
 
 </resources>

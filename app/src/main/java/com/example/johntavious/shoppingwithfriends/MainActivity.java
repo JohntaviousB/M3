@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.io.File;
 
@@ -20,6 +21,10 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
+        
         Button loginButton = (Button) findViewById(R.id.login);
         Button registerButton = (Button) findViewById(R.id.register);
 

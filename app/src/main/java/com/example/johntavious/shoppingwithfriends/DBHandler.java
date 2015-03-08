@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.content.Context;
 import android.database.Cursor;
 import java.util.ArrayList;
+import java.util.List;
 /**
  * Created by Clay on 3/3/2015.
  */
@@ -114,11 +115,38 @@ public class DBHandler extends SQLiteOpenHelper {
             user.setEmail(cursor.getString(2));
             user.setPassword(cursor.getString(3));
             cursor.close();
+            includeFriends(user, db);
         } else {
             user = null;
         }
+
         db.close();
         return user;
+    }
+
+    private static void includeFriends(User user, SQLiteDatabase db) {
+        String query = "SELECT * FROM " + TABLE_FRIENDS + " WHERE " + COLUMN_USER_NAME +
+                " = \"" + user.getName() + "\"";
+//        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        String name = " ";
+
+        if (cursor.moveToFirst()) {
+            do {
+                name = cursor.getString(2);
+                boolean areFriends = false;
+                List<String> friends = user.getFriends();
+                for (String element : friends) {
+                    if (element.equalsIgnoreCase(name)) {
+                        areFriends = true;
+                    }
+                }
+                if (!areFriends) {
+                    user.addFriend(name);
+                }
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
     }
 
     // Methods don't belong here
@@ -169,9 +197,13 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     public void unfriend(User user, User friend) {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        db.delete(TABLE_FRIENDS, COLUMN_USER_NAME + " = " + user.getName() + " AND " +
-//                COLUMN_FRIEND_NAME + " = \"" + friend.getName(), null);
+/*        String query = "DELETE FROM " + TABLE_FRIENDS + " WHERE " + COLUMN_USER_NAME +
+                " = \"" + user.getName() + " AND " + COLUMN_FRIEND_NAME + " = \"" + friend.getName()
+                + "\"";
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.rawQuery(query, null);   */
+//        db.delete(TABLE_FRIENDS, COLUMN_USER_NAME + " = \"" + user.getName() + " AND " +
+//                COLUMN_FRIEND_NAME + " = \"" + friend.getName() + "\"", null);
 
     }
 
@@ -185,7 +217,16 @@ public class DBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 name = cursor.getString(2);
-                user.addFriend(name);
+                boolean areFriends = false;
+                List<String> friends = user.getFriends();
+                for (String element : friends) {
+                    if (element.equalsIgnoreCase(name)) {
+                        areFriends = true;
+                    }
+                }
+                if (!areFriends) {
+                    user.addFriend(name);
+                }
             } while (cursor.moveToNext());
             cursor.close();
         }

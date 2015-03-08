@@ -47,6 +47,18 @@
             android:name=".InterestsListActivity"
             android:label="@string/title_activity_interests_list" >
         </activity>
+        <activity
+            android:name=".Tester"
+            android:label="@string/title_activity_tester" >
+        </activity>
+        <activity
+            android:name=".TempLogin"
+            android:label="@string/title_activity_temp_login" >
+        </activity>
+        <activity
+            android:name=".TempForTesting"
+            android:label="@string/title_activity_temp_for_testing" >
+        </activity>
     </application>
 
 </manifest>

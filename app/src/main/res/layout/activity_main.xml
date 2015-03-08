@@ -31,4 +31,6 @@
         android:id="@+id/register"
         android:layout_alignTop="@+id/login"
         android:layout_alignEnd="@+id/opening_welcome" />
+
+
 </RelativeLayout>

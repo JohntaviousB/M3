@@ -37,16 +37,15 @@ public class FriendList extends ActionBarActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-//            user = dbHandler.getUser(extras.getString("user"));
-            user = LoginActivity.getUser(extras.getString("user"));
+            user = dbHandler.getUser(extras.getString("user"));
+//            user = LoginActivity.getUser(extras.getString("user"));
         }
         TextView header = (TextView) findViewById(R.id.friend_list_header_text);
         header.setText(user.getName() + "'s Friends");
 
         // Temp solution for supplying the adapter with a list of users
         // Consider adjusting adapter to accept a list of Strings
-        user.getFriends().clear();
-        dbHandler.getFriends(user);
+
         List<String> friends = user.getFriends();
         List<User> friendsList = new ArrayList<User>();
 

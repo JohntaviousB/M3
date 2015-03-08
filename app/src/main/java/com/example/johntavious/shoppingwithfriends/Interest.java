@@ -44,6 +44,10 @@ public class Interest {
         return distance;
     }
 
+    /**
+     * Gets the id, primary key in SQLite table
+     * @return the id for the interest
+     */
     public int getId() { return id; }
     /**
      * Sets the threshold price
@@ -79,9 +83,15 @@ public class Interest {
             //should probably check for a lot more bad characters
         }
     }
+
+    /**
+     * Sets the id of the Interest
+     * @param id the Interest id
+     */
     public void setId(int id) {
         this.id = id;
     }
+
     @Override
     public String toString() {
         NumberFormat fmt = NumberFormat.getCurrencyInstance();
