@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentResolver;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -39,7 +38,7 @@ import java.util.NoSuchElementException;
 //**TODO: implement some way to lock user out after 3 attempts and alert admin
 public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
-    DBHandler dbHandler = new DBHandler(this, null, null, 3);
+    SQLHandler SQLHandler = new SQLHandler(this, null, null, 3);
 
     // Modified to be mutable
     private static ArrayList<User> REGISTERED_USERS = new ArrayList<>();
@@ -179,7 +178,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!dbHandler.isEmailValid(email)) {
+        } else if (!SQLHandler.isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;

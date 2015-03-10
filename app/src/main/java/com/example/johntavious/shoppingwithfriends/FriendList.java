@@ -3,7 +3,6 @@ package com.example.johntavious.shoppingwithfriends;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,11 +14,6 @@ import android.widget.ListView;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.w3c.dom.Text;
-
-import java.io.File;
-import java.util.NoSuchElementException;
-
 /**
  * Represents the screen that will be displayed when a User wants to
  * view a list of his/her friends
@@ -28,7 +22,7 @@ import java.util.NoSuchElementException;
 public class FriendList extends ActionBarActivity {
     private User user;
     ArrayAdapter<User> adapter;
-    DBHandler dbHandler = new DBHandler(this, null, null, 3);
+    DataController dc = new DataController(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +31,7 @@ public class FriendList extends ActionBarActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            user = dbHandler.getUser(extras.getString("user"));
-//            user = LoginActivity.getUser(extras.getString("user"));
+            user = dc.getUser(extras.getString("user"));
         }
         TextView header = (TextView) findViewById(R.id.friend_list_header_text);
         header.setText(user.getName() + "'s Friends");
@@ -50,7 +43,7 @@ public class FriendList extends ActionBarActivity {
         List<User> friendsList = new ArrayList<User>();
 
         for (String each : friends) {
-            friendsList.add(dbHandler.getUser(each));
+            friendsList.add(dc.getUser(each));
         }
 
         // Populating the ListView with an adapter
@@ -67,8 +60,7 @@ public class FriendList extends ActionBarActivity {
                                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                                 TextView textView = (TextView) view;
                                                 User otherUser =
-                                                        dbHandler.getUser(textView.getText().toString().split(" ")[0]);
-//                       LoginActivity.getUser(textView.getText().toString().split(" ")[0]);
+                                                        dc.getUser(textView.getText().toString().split(" ")[0]);
                                                 Intent friendProfile = new Intent(FriendList.this, FriendProfileActivity.class);
                                                 friendProfile.putExtra("otherUser", otherUser.getName());
 //                    Log.d("DEBUG", friendName);
@@ -124,9 +116,9 @@ public class FriendList extends ActionBarActivity {
     public void onAddFriendClick(View view) {
         EditText addFriendText = (EditText)findViewById(R.id.add_friend_text);
         String searchName = addFriendText.getText().toString();
-        User friend = dbHandler.getUser(searchName);
+        User friend = dc.getUser(searchName);
         if (friend != null) {
-            dbHandler.addFriend(user, friend);
+            dc.addFriend(user, friend);
         } else {
             addFriendText.setError("No username " + searchName + " exists");
             addFriendText.requestFocus();

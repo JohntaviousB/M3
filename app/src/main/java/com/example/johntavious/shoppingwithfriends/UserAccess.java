@@ -1,5 +1,7 @@
 package com.example.johntavious.shoppingwithfriends;
 
+import android.content.Context;
+
 /**
  * Created by Clay on 3/7/2015.
  * This class handles user access to the application.
@@ -9,8 +11,8 @@ package com.example.johntavious.shoppingwithfriends;
 public class UserAccess {
     private static DataController dc;
 
-    public UserAccess() {
-        dc = new DataController();
+    public UserAccess(Context context) {
+        dc = new DataController(context);
     }
 
     public boolean validateCredentials(String email, String password) {
@@ -28,7 +30,7 @@ public class UserAccess {
         boolean registrationSuccessful = false;
         if (isNameValid(name) && isEmailValid(email) && isPasswordValid(password)){
             registrationSuccessful = true;
-            dc.addUser(name, email, password);
+            dc.addUser(new User(name, email, password));
         }
         return registrationSuccessful;
     }

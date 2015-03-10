@@ -18,16 +18,16 @@ public class FriendProfileActivity extends ActionBarActivity {
     User user;
     User otherUser;
     Button friendshipButton;
-    DBHandler dbHandler = new DBHandler(this, null, null, 3);
+    DataController dc = new DataController(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_profile);
         Bundle extras = getIntent().getExtras();
-        user = dbHandler.getUser(extras.getString("user"));
+        user = dc.getUser(extras.getString("user"));
         user.getFriends().clear();
-        dbHandler.getFriends(user);
-        otherUser = dbHandler.getUser(extras.getString("otherUser"));
+//        dc.getFriends(user);
+        otherUser = dc.getUser(extras.getString("otherUser"));
 //        user = LoginActivity.getUser(extras.getString("user"));
 //        otherUser = LoginActivity.getUser(extras.getString("otherUser"));
 
@@ -48,9 +48,9 @@ public class FriendProfileActivity extends ActionBarActivity {
             public void onClick(View v) {
                 if (user.isFriendsWith(otherUser)) {
                     user.unfriend(otherUser);
-                    dbHandler.unfriend(user, otherUser);
-                    user.getFriends().clear();
-                    dbHandler.getFriends(user);
+//                    dc.unfriend(user, otherUser);
+//                    user.getFriends().clear();
+//                    dc.getFriends(user);
                     updateViewContents(); //resets the text of the screen to reflect change
                 } else {
                     user.addFriend(otherUser.getName());

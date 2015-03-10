@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Button;
 
@@ -16,8 +15,7 @@ import android.widget.Button;
  */
 public class WelcomeActivity extends ActionBarActivity {
     User user;
-
-    DBHandler dbHandler = new DBHandler(this, null, null, 3);
+    DataController dc = new DataController(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +23,7 @@ public class WelcomeActivity extends ActionBarActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
 
-            user = dbHandler.getUser(extras.getString("user"));
+            user = dc.getUser(extras.getString("user"));
 //            user = LoginActivity.getUser(extras.getString("user"));
         }
         TextView welcomeText = (TextView)findViewById(R.id.welcome_text);

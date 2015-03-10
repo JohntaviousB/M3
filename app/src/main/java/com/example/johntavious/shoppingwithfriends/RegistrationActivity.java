@@ -2,15 +2,9 @@ package com.example.johntavious.shoppingwithfriends;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-
-import java.io.File;
 
 /**
  * Represents the registration activity of the application
@@ -18,7 +12,8 @@ import java.io.File;
 
 public class RegistrationActivity extends Activity {
 
-    DBHandler dbHandler = new DBHandler(this, null, null, 3);
+    SQLHandler SQLHandler = new SQLHandler(this, null, null, 3);
+    DataController dc = new DataController(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +42,7 @@ public class RegistrationActivity extends Activity {
         String name = ((EditText)findViewById(R.id.name_field)).getText().toString().trim();
         String email = ((EditText)findViewById(R.id.email_field)).getText().toString().trim();
         String password = ((EditText)findViewById(R.id.password_field)).getText().toString();
-        if (!dbHandler.isValidUsername(name)) {
+        if (!SQLHandler.isValidUsername(name)) {
             EditText nameView = (EditText)findViewById(R.id.name_field);
             nameView.setError("This name is either taken or invalid. Usernames" +
                             " cannot contain \"@\" or spaces and must be more than 2 " +
@@ -59,10 +54,11 @@ public class RegistrationActivity extends Activity {
                     passwordView.setError("Passwords must be at least 4 characters");
                     passwordView.requestFocus();
 //            } else if (LoginActivity.emailValid(email)) {
-            } else if (dbHandler.emailValid(email)) {
+            } else if (SQLHandler.emailValid(email)) {
                     User user = new User(name, email, password);
                     LoginActivity.addUser(user);
-                    dbHandler.addUser(user);
+
+                      dc.addUser(user);
 
                     Intent intent = new Intent(this, WelcomeActivity.class);
                     intent.putExtra("user", user.getName());

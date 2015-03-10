@@ -1,6 +1,7 @@
 package com.example.johntavious.shoppingwithfriends;
 
 import android.support.v7.app.ActionBarActivity;
+import android.content.Context;
 
 /**
  * Created by Clay on 3/7/2015.
@@ -9,30 +10,35 @@ import android.support.v7.app.ActionBarActivity;
  * Currently directs data to and from the SQLite database
  * Can be expanded to work with files or mySQL
  */
-public class DataController extends ActionBarActivity {
-    private DBHandler dbHandler;
+public class DataController  {
+//    SQLHandler liteHandler = new SQLHandler(this, null, null, 3);
+    private SQLHandler liteHandler;
 
-    public DataController() {
-        dbHandler = new DBHandler(this, null, null, 3);
+    public DataController(Context context) {
+        liteHandler = new SQLHandler(context, null, null, 3);
     }
 
-    public boolean addUser(String name, String email, String password) {
+/*    public boolean addUser(String name, String email, String password) {
         User user = new User (name, email, password);
-        dbHandler.addUser(user);
+        SQLHandler.addUser(user);
         return true;
+    }  */
+
+    public void addUser(User user) {
+        liteHandler.addUser(user);
     }
 
     public User getUser(String name) {
-        User user = dbHandler.getUser(name);
+        User user = liteHandler.getUser(name);
         return user;
     }
 
     public void addFriend(User user, User friend) {
-        dbHandler.addFriend(user, friend);
+        liteHandler.addFriend(user, friend);
     }
 
     public void addInterest(User user, Interest interest) {
-        dbHandler.addInterest(user, interest);
+        liteHandler.addInterest(user, interest);
     }
 
 }

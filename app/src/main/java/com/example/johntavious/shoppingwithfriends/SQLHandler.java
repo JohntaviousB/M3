@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Clay on 3/3/2015.
  */
-public class DBHandler extends SQLiteOpenHelper {
+public class SQLHandler extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "ShopWFriends.db";
@@ -36,7 +36,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public static final String TABLE_SALES = "Sales";
 
-    public DBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    public SQLHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
     }
 
@@ -116,6 +116,7 @@ public class DBHandler extends SQLiteOpenHelper {
             user.setPassword(cursor.getString(3));
             cursor.close();
             includeFriends(user, db);
+            includeInterests(user, db);
         } else {
             user = null;
         }
@@ -124,10 +125,28 @@ public class DBHandler extends SQLiteOpenHelper {
         return user;
     }
 
+    public void includeInterests(User user, SQLiteDatabase db) {
+        String query = "SELECT * FROM " + TABLE_INTERESTS + " WHERE " + COLUMN_INTEREST_USER_NAME +
+                " = \"" + user.getName() + "\"";
+        Cursor cursor = db.rawQuery(query, null);
+
+
+        if (cursor.moveToFirst()) {
+            do {
+                Interest interest = new Interest();
+                interest.setId(Integer.parseInt(cursor.getString(0)));
+                interest.setItemName(cursor.getString(2));
+                interest.setThresholdPrice(Double.parseDouble(cursor.getString(3)));
+                interest.setDistance(Integer.parseInt(cursor.getString(4)));
+                user.registerInterest(interest);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+    }
+
     private static void includeFriends(User user, SQLiteDatabase db) {
         String query = "SELECT * FROM " + TABLE_FRIENDS + " WHERE " + COLUMN_USER_NAME +
                 " = \"" + user.getName() + "\"";
-//        db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         String name = " ";
 
