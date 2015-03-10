@@ -43,7 +43,7 @@ public class FriendList extends ActionBarActivity {
         List<User> friendsList = new ArrayList<User>();
 
         for (String each : friends) {
-            friendsList.add(dc.getUser(each));
+            friendsList.add(dc.getUserByName(each));
         }
 
         // Populating the ListView with an adapter
@@ -60,11 +60,11 @@ public class FriendList extends ActionBarActivity {
                                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                                 TextView textView = (TextView) view;
                                                 User otherUser =
-                                                        dc.getUser(textView.getText().toString().split(" ")[0]);
+                                                        dc.getUserByName(textView.getText().toString().split(" ")[0]);
                                                 Intent friendProfile = new Intent(FriendList.this, FriendProfileActivity.class);
-                                                friendProfile.putExtra("otherUser", otherUser.getName());
+                                                friendProfile.putExtra("otherUser", otherUser.getEmail());
 //                    Log.d("DEBUG", friendName);
-                                                friendProfile.putExtra("user", user.getName());
+                                                friendProfile.putExtra("user", user.getEmail());
                                                 startActivity(friendProfile);
                                             }
                                         }
@@ -89,7 +89,7 @@ public class FriendList extends ActionBarActivity {
         int id = item.getItemId();
         if (id == R.id.action_home) {
             Intent returnHome = new Intent(this, WelcomeActivity.class);
-            returnHome.putExtra("user", user.getName());
+            returnHome.putExtra("user", user.getEmail());
             startActivity(returnHome);
         }
         if (id == R.id.action_logout) {
@@ -98,12 +98,12 @@ public class FriendList extends ActionBarActivity {
         }
         if (id == R.id.action_register_interest) {
             Intent interest = new Intent(this, RegisterInterestActivity.class);
-            interest.putExtra("user", user.getName());
+            interest.putExtra("user", user.getEmail());
             startActivity(interest);
         }
         if (id == R.id.action_interests) {
             Intent interests = new Intent(this, InterestsListActivity.class);
-            interests.putExtra("user", user.getName());
+            interests.putExtra("user", user.getEmail());
             startActivity(interests);
         }
         return super.onOptionsItemSelected(item);
@@ -116,7 +116,7 @@ public class FriendList extends ActionBarActivity {
     public void onAddFriendClick(View view) {
         EditText addFriendText = (EditText)findViewById(R.id.add_friend_text);
         String searchName = addFriendText.getText().toString();
-        User friend = dc.getUser(searchName);
+        User friend = dc.getUserByName(searchName);
         if (friend != null) {
             dc.addFriend(user, friend);
         } else {

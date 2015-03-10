@@ -24,7 +24,6 @@ public class WelcomeActivity extends ActionBarActivity {
         if (extras != null) {
 
             user = dc.getUser(extras.getString("user"));
-//            user = LoginActivity.getUser(extras.getString("user"));
         }
         TextView welcomeText = (TextView)findViewById(R.id.welcome_text);
         welcomeText.setText("Welcome, " + user.getName());
@@ -32,7 +31,7 @@ public class WelcomeActivity extends ActionBarActivity {
         // Friend's List
         Button friend_list_button = (Button) findViewById(R.id.friend_list_button);
         final Intent goToFriendList = new Intent(this, FriendList.class);
-        goToFriendList.putExtra("user", user.getName());
+        goToFriendList.putExtra("user", user.getEmail());
         friend_list_button.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View view) {
@@ -69,17 +68,17 @@ public class WelcomeActivity extends ActionBarActivity {
         }
         if (id == R.id.action_friendslist) {
             Intent friendsList = new Intent(this, FriendList.class);
-            friendsList.putExtra("user", user.getName());
+            friendsList.putExtra("user", user.getEmail());
             startActivity(friendsList);
         }
         if (id == R.id.action_register_interest) {
             Intent interest = new Intent(this, RegisterInterestActivity.class);
-            interest.putExtra("user", user.getName());
+            interest.putExtra("user", user.getEmail());
             startActivity(interest);
         }
         if (id == R.id.action_interests) {
             Intent interests = new Intent(this, InterestsListActivity.class);
-            interests.putExtra("user", user.getName());
+            interests.putExtra("user", user.getEmail());
             startActivity(interests);
         }
 
@@ -92,7 +91,7 @@ public class WelcomeActivity extends ActionBarActivity {
      */
     public void onNewInterestClick(View view) {
         Intent intent = new Intent(this, RegisterInterestActivity.class);
-        intent.putExtra("user", user.getName());
+        intent.putExtra("user", user.getEmail());
         startActivity(intent);
     }
 }

@@ -102,7 +102,30 @@ public class SQLHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public User getUser(String name) {
+    public User getUser(String email) {
+        String query = "SELECT * FROM " + TABLE_MAIN + " WHERE " + COLUMN_EMAIL +
+                " = \"" + email + "\"";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        User user = new User();
+
+        if (cursor.moveToFirst()) {
+            user.setId(Integer.parseInt(cursor.getString(0)));
+            user.setName(cursor.getString(1));
+            user.setEmail(cursor.getString(2));
+            user.setPassword(cursor.getString(3));
+            cursor.close();
+            includeFriends(user, db);
+            includeInterests(user, db);
+        } else {
+            user = null;
+        }
+
+        db.close();
+        return user;
+    }
+
+    public User getUserByName(String name) {
         String query = "SELECT * FROM " + TABLE_MAIN + " WHERE " + COLUMN_NAME +
                 " = \"" + name + "\"";
         SQLiteDatabase db = this.getWritableDatabase();

@@ -28,8 +28,13 @@ public class DataController  {
         liteHandler.addUser(user);
     }
 
-    public User getUser(String name) {
-        User user = liteHandler.getUser(name);
+    public User getUser(String email) {
+        User user = liteHandler.getUser(email);
+        return user;
+    }
+
+    public User getUserByName(String name) {
+        User user = liteHandler.getUserByName(name);
         return user;
     }
 

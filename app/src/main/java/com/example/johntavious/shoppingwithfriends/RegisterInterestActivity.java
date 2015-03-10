@@ -91,12 +91,12 @@ public class RegisterInterestActivity extends ActionBarActivity {
         }
         if (id == R.id.action_friendslist) {
             Intent friendsList = new Intent(this, FriendList.class);
-            friendsList.putExtra("user", user.getName());
+            friendsList.putExtra("user", user.getEmail());
             startActivity(friendsList);
         }
         if (id == R.id.action_home) {
             Intent returnHome = new Intent(this, WelcomeActivity.class);
-            returnHome.putExtra("user", user.getName());
+            returnHome.putExtra("user", user.getEmail());
             startActivity(returnHome);
         }
 
@@ -130,7 +130,7 @@ public class RegisterInterestActivity extends ActionBarActivity {
              dc.addInterest(user, new Interest(itemName, thresholdPrice, maxDistance));
 //            user.registerInterest(new Interest(itemName, thresholdPrice, maxDistance));
             Intent intent = new Intent(this, WelcomeActivity.class);
-            intent.putExtra("user", user.getName());
+            intent.putExtra("user", user.getEmail());
             startActivity(intent);
         }
     }
@@ -141,7 +141,7 @@ public class RegisterInterestActivity extends ActionBarActivity {
      */
     public void onCancelClick(View view) {
         Intent intent = new Intent(this, WelcomeActivity.class);
-        intent.putExtra("user", user.getName());
+        intent.putExtra("user", user.getEmail());
         startActivity(intent);
     }
 }

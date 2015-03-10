@@ -54,6 +54,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private View mLoginFormView;
     private Intent intent;
     private String name = "";
+    private String email = "";
 
     /**
      * Adds a new User to the list of registered users
@@ -329,6 +330,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 if (possibleUser.getEmail().equalsIgnoreCase(mEmail)) {
                     // Account exists, return true if the password matches.
                     name = possibleUser.getName();
+                    email = possibleUser.getEmail();
                     return possibleUser.getPassword().equalsIgnoreCase(mPassword);
                 }
             }
@@ -344,7 +346,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             if (success) {
                 finish();
                 intent = new Intent(LoginActivity.this, WelcomeActivity.class);
-                intent.putExtra("user", name);
+                intent.putExtra("user", email);
                 startActivity(intent);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

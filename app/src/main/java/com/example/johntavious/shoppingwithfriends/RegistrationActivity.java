@@ -61,7 +61,7 @@ public class RegistrationActivity extends Activity {
                       dc.addUser(user);
 
                     Intent intent = new Intent(this, WelcomeActivity.class);
-                    intent.putExtra("user", user.getName());
+                    intent.putExtra("user", user.getEmail());
                     startActivity(intent);
             } else {
                     EditText emailView = (EditText) findViewById(R.id.email_field);

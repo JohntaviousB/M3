@@ -43,7 +43,7 @@ public class InterestsListActivity extends ActionBarActivity {
         int id = item.getItemId();
         if (id == R.id.action_home) {
             Intent returnHome = new Intent(this, WelcomeActivity.class);
-            returnHome.putExtra("user", user.getName());
+            returnHome.putExtra("user", user.getEmail());
             startActivity(returnHome);
         }
         if (id == R.id.action_logout) {
@@ -52,12 +52,12 @@ public class InterestsListActivity extends ActionBarActivity {
         }
         if (id == R.id.action_register_interest) {
             Intent interest = new Intent(this, RegisterInterestActivity.class);
-            interest.putExtra("user", user.getName());
+            interest.putExtra("user", user.getEmail());
             startActivity(interest);
         }
         if (id == R.id.action_friendslist) {
             Intent friends = new Intent(this, FriendList.class);
-            friends.putExtra("user", user.getName());
+            friends.putExtra("user", user.getEmail());
             startActivity(friends);
         }
 
