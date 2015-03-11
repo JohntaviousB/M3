@@ -11,11 +11,10 @@ import android.content.Context;
  * Can be expanded to work with files or mySQL
  */
 public class DataController  {
-//    SQLHandler liteHandler = new SQLHandler(this, null, null, 3);
     private SQLHandler liteHandler;
 
     public DataController(Context context) {
-        liteHandler = new SQLHandler(context, null, null, 3);
+        liteHandler = new SQLHandler(context, null, null, 4);
     }
 
 /*    public boolean addUser(String name, String email, String password) {
@@ -46,6 +45,9 @@ public class DataController  {
         liteHandler.addInterest(user, interest);
     }
 
+    public void addSale(Sale sale) {
+        liteHandler.addSale(sale);
+    }
 }
 
 
