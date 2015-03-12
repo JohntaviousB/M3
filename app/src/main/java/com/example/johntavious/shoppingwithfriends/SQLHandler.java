@@ -40,7 +40,7 @@ public class SQLHandler extends SQLiteOpenHelper {
     // Constants used in construction of Sales table
     public static final String TABLE_SALES = "Sales";
     public static final String COLUMN_SALE_ID = "sale_id";
-    public static final String COLUMN_SALE_USER = "sale_user";
+    public static final String COLUMN_SALE_USER = "sale_user"; // user who posted sale
     public static final String COLUMN_SALE_ITEM = "sale_item";
     public static final String COLUMN_SALE_PRICE = "sale_price";
     public static final String COLUMN_SALE_LOCATION = "sale_location";
@@ -49,7 +49,7 @@ public class SQLHandler extends SQLiteOpenHelper {
     public static final String TABLE_NOTIFICATIONS = "Notifications";
     public static final String COLUMN_NOTIFICATION_ID = "notification_id";
     public static final String COLUMN_NOTIFICATION_USER = "notification_user";
-    public static final String COLUMN_NOTIFICATION_NOTE = "notification_note";
+    public static final String COLUMN_NOTIFICATION_SALE = "notification_sale";
 
     public SQLHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -66,16 +66,16 @@ public class SQLHandler extends SQLiteOpenHelper {
                 " INTEGER PRIMARY KEY," + COLUMN_INTEREST_USER_NAME + " TEXT, " + COLUMN_ITEM_NAME + " TEXT," +
                 COLUMN_THRESHOLD_PRICE + " REAL, " + COLUMN_DISTANCE + " INTEGER" + ")";
         String CREATE_TABLE_SALES = "CREATE TABLE " + TABLE_SALES + "(" + COLUMN_SALE_ID +
-                " INTEGER PRIMARY KEY," + COLUMN_SALE_ITEM + " TEXT, " + COLUMN_SALE_PRICE + " REAL, " +
+                " INTEGER PRIMARY KEY," + COLUMN_SALE_USER + " TEXT, " + COLUMN_SALE_ITEM + " TEXT, " + COLUMN_SALE_PRICE + " REAL, " +
                  COLUMN_SALE_LOCATION + " TEXT" + ")";
-        String CREATE_TABLE_NOTIFICATIONS = "CREATE TABLE " + TABLE_SALES + "(" + COLUMN_SALE_ID +
-                " INTEGER PRIMARY KEY," + COLUMN_SALE_ITEM + " TEXT, " + COLUMN_SALE_PRICE + " REAL, " +
-                COLUMN_SALE_LOCATION + " TEXT" + ")";
+        String CREATE_TABLE_NOTIFICATIONS = "CREATE TABLE " + TABLE_NOTIFICATIONS + "(" + COLUMN_NOTIFICATION_ID +
+                " INTEGER PRIMARY KEY," + COLUMN_NOTIFICATION_USER + " TEXT, " + COLUMN_NOTIFICATION_SALE + " INTEGER, " + ")";
 
         db.execSQL(CREATE_TABLE_MAIN);
         db.execSQL(CREATE_TABLE_FRIENDS);
         db.execSQL(CREATE_TABLE_INTERESTS);
         db.execSQL(CREATE_TABLE_SALES);
+        db.execSQL(CREATE_TABLE_NOTIFICATIONS);
     }
 
     @Override
@@ -135,18 +135,6 @@ public class SQLHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-/*    public void addSale(Sale sale) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_INTEREST_USER_NAME, user.getName());
-        values.put(COLUMN_ITEM_NAME, interest.getItemName());
-        values.put(COLUMN_THRESHOLD_PRICE, interest.getThresholdPrice());
-        values.put(COLUMN_DISTANCE, interest.getDistance());
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.insert(TABLE_INTERESTS, null, values);
-        db.close();
-    } */
-
     public User getUser(String email) {
         String query = "SELECT * FROM " + TABLE_MAIN + " WHERE " + COLUMN_EMAIL +
                 " = \"" + email + "\"";
@@ -192,6 +180,29 @@ public class SQLHandler extends SQLiteOpenHelper {
         db.close();
         return user;
     }
+
+/*    public User getSale(String userName) {
+        String query = "SELECT * FROM " + TABLE_SALES + " WHERE " + COLUMN_SALE_USER +
+                " = \"" + userName + "\"";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        User user = new User();
+
+        if (cursor.moveToFirst()) {
+            user.setId(Integer.parseInt(cursor.getString(0)));
+            user.setName(cursor.getString(1));
+            user.setEmail(cursor.getString(2));
+            user.setPassword(cursor.getString(3));
+            cursor.close();
+            includeFriends(user, db);
+            includeInterests(user, db);
+        } else {
+            user = null;
+        }
+
+        db.close();
+        return user;
+    }  */
 
     public void includeInterests(User user, SQLiteDatabase db) {
         String query = "SELECT * FROM " + TABLE_INTERESTS + " WHERE " + COLUMN_INTEREST_USER_NAME +

@@ -48,6 +48,10 @@ public class DataController  {
     public void addSale(Sale sale) {
         liteHandler.addSale(sale);
     }
+
+/*    public Sale getSale(User userName) {
+        liteHandler.getSale();
+    }  */
 }
 
 

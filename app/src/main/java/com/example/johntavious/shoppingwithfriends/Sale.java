@@ -5,6 +5,7 @@ package com.example.johntavious.shoppingwithfriends;
  */
 public class Sale {
     private int id;
+    private String userName; // User who posted sale
     private String item;
     private double price;
     private String location;
@@ -17,6 +18,13 @@ public class Sale {
         return item;
     }
 
+    /**
+     * Gets the userName
+     * @return the userName associated with the sale
+     */
+    public String getUsername() {
+        return userName;
+    }
     /**
      * Gets the item price
      * @return the price of the item
@@ -41,6 +49,13 @@ public class Sale {
         this.id = id;
     }
 
+    /**
+     * Sets the userName
+     * @param name the name of the user who posted the sale
+     */
+    public void setUserName(String name) {
+        userName = name;
+    }
     /**
      * Sets the item
      * @param item the name of the item
