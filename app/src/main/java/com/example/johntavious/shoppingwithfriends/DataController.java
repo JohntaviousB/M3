@@ -28,13 +28,11 @@ public class DataController  {
     }
 
     public User getUser(String email) {
-        User user = liteHandler.getUser(email);
-        return user;
+        return liteHandler.getUser(email);
     }
 
     public User getUserByName(String name) {
-        User user = liteHandler.getUserByName(name);
-        return user;
+        return liteHandler.getUserByName(name);
     }
 
     public void addFriend(User user, User friend) {
@@ -49,9 +47,9 @@ public class DataController  {
         liteHandler.addSale(sale);
     }
 
-/*    public Sale getSale(User userName) {
-        liteHandler.getSale();
-    }  */
+    public Sale getSale(String userName) {
+        return liteHandler.getSale(userName);
+    }
 }
 
 

@@ -181,28 +181,27 @@ public class SQLHandler extends SQLiteOpenHelper {
         return user;
     }
 
-/*    public User getSale(String userName) {
+    public Sale getSale(String userName) {
         String query = "SELECT * FROM " + TABLE_SALES + " WHERE " + COLUMN_SALE_USER +
                 " = \"" + userName + "\"";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
-        User user = new User();
+        Sale sale = new Sale();
 
         if (cursor.moveToFirst()) {
-            user.setId(Integer.parseInt(cursor.getString(0)));
-            user.setName(cursor.getString(1));
-            user.setEmail(cursor.getString(2));
-            user.setPassword(cursor.getString(3));
+            sale.setId(Integer.parseInt(cursor.getString(0)));
+            sale.setUserName(cursor.getString(1));
+            sale.setItem(cursor.getString(2));
+            sale.setPrice(Double.parseDouble(cursor.getString(3)));
+            sale.setLocation(cursor.getString(4));
             cursor.close();
-            includeFriends(user, db);
-            includeInterests(user, db);
         } else {
-            user = null;
+            sale = null;
         }
 
         db.close();
-        return user;
-    }  */
+        return sale;
+    }
 
     public void includeInterests(User user, SQLiteDatabase db) {
         String query = "SELECT * FROM " + TABLE_INTERESTS + " WHERE " + COLUMN_INTEREST_USER_NAME +
