@@ -67,9 +67,9 @@ public class SQLHandler extends SQLiteOpenHelper {
                 COLUMN_THRESHOLD_PRICE + " REAL, " + COLUMN_DISTANCE + " INTEGER" + ")";
         String CREATE_TABLE_SALES = "CREATE TABLE " + TABLE_SALES + "(" + COLUMN_SALE_ID +
                 " INTEGER PRIMARY KEY," + COLUMN_SALE_USER + " TEXT, " + COLUMN_SALE_ITEM + " TEXT, " + COLUMN_SALE_PRICE + " REAL, " +
-                 COLUMN_SALE_LOCATION + " TEXT" + ")";
+                COLUMN_SALE_LOCATION + " TEXT" + ")";
         String CREATE_TABLE_NOTIFICATIONS = "CREATE TABLE " + TABLE_NOTIFICATIONS + "(" + COLUMN_NOTIFICATION_ID +
-                " INTEGER PRIMARY KEY," + COLUMN_NOTIFICATION_USER + " TEXT, " + COLUMN_NOTIFICATION_SALE_ID + " INTEGER, " + ")";
+                " INTEGER PRIMARY KEY," + COLUMN_NOTIFICATION_USER + " TEXT, " + COLUMN_NOTIFICATION_SALE_ID + " INTEGER" + ")";
 
         db.execSQL(CREATE_TABLE_MAIN);
         db.execSQL(CREATE_TABLE_FRIENDS);
@@ -126,6 +126,7 @@ public class SQLHandler extends SQLiteOpenHelper {
 
     public void addSale(Sale sale) {
         ContentValues values = new ContentValues();
+        values.put(COLUMN_SALE_USER, sale.getUserName());
         values.put(COLUMN_SALE_ITEM,   sale.getItem());
         values.put(COLUMN_SALE_PRICE, sale.getPrice());
         values.put(COLUMN_SALE_LOCATION, sale.getLocation());
@@ -211,6 +212,29 @@ public class SQLHandler extends SQLiteOpenHelper {
 
         db.close();
         return sale;
+    }
+
+    public Notification getNotification(String userName) {
+        String query = "SELECT * FROM " + TABLE_NOTIFICATIONS + " WHERE " + COLUMN_NOTIFICATION_USER +
+                " = \"" + userName + "\"";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        Notification note = new Notification();
+        Sale sale = new Sale();
+
+        if (cursor.moveToFirst()) {
+            note.setUserName("Van Jones");
+//            note.setId(Integer.parseInt(cursor.getString(0)));
+//            note.setUserName(cursor.getString(1));
+            note.setSale(sale);
+            //           int id = Integer.parseInt(cursor.getString(2));
+            cursor.close();
+        } else {
+            note = null;
+        }
+
+        db.close();
+        return note;
     }
 
     public void includeInterests(User user, SQLiteDatabase db) {

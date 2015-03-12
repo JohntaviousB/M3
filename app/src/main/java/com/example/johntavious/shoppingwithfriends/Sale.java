@@ -29,7 +29,7 @@ public class Sale {
      * Gets the userName
      * @return the userName associated with the sale
      */
-    public String getUsername() {
+    public String getUserName() {
         return userName;
     }
     /**
