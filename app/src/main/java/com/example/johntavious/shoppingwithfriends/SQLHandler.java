@@ -145,7 +145,7 @@ public class SQLHandler extends SQLiteOpenHelper {
         db.insert(TABLE_NOTIFICATIONS, null, values);
         db.close();
     }
-
+    
     public User getUser(String email) {
         String query = "SELECT * FROM " + TABLE_MAIN + " WHERE " + COLUMN_EMAIL +
                 " = \"" + email + "\"";
@@ -223,11 +223,9 @@ public class SQLHandler extends SQLiteOpenHelper {
         Sale sale = new Sale();
 
         if (cursor.moveToFirst()) {
-            note.setUserName("Van Jones");
-//            note.setId(Integer.parseInt(cursor.getString(0)));
-//            note.setUserName(cursor.getString(1));
-            note.setSale(sale);
-            //           int id = Integer.parseInt(cursor.getString(2));
+            note.setId(Integer.parseInt(cursor.getString(0)));
+            note.setUserName(cursor.getString(1));
+            int id = Integer.parseInt(cursor.getString(2));
             cursor.close();
         } else {
             note = null;
