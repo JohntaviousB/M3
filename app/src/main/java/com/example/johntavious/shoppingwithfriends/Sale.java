@@ -11,6 +11,13 @@ public class Sale {
     private String location;
 
     /**
+     * Gets the sale id
+     * @return the sale id
+     */
+    public int getId() {
+        return id;
+    }
+    /**
      * Gets the item name
      * @return the item name
      */

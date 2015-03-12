@@ -49,7 +49,7 @@ public class SQLHandler extends SQLiteOpenHelper {
     public static final String TABLE_NOTIFICATIONS = "Notifications";
     public static final String COLUMN_NOTIFICATION_ID = "notification_id";
     public static final String COLUMN_NOTIFICATION_USER = "notification_user";
-    public static final String COLUMN_NOTIFICATION_SALE = "notification_sale";
+    public static final String COLUMN_NOTIFICATION_SALE_ID = "notification_sale_id";
 
     public SQLHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -69,7 +69,7 @@ public class SQLHandler extends SQLiteOpenHelper {
                 " INTEGER PRIMARY KEY," + COLUMN_SALE_USER + " TEXT, " + COLUMN_SALE_ITEM + " TEXT, " + COLUMN_SALE_PRICE + " REAL, " +
                  COLUMN_SALE_LOCATION + " TEXT" + ")";
         String CREATE_TABLE_NOTIFICATIONS = "CREATE TABLE " + TABLE_NOTIFICATIONS + "(" + COLUMN_NOTIFICATION_ID +
-                " INTEGER PRIMARY KEY," + COLUMN_NOTIFICATION_USER + " TEXT, " + COLUMN_NOTIFICATION_SALE + " INTEGER, " + ")";
+                " INTEGER PRIMARY KEY," + COLUMN_NOTIFICATION_USER + " TEXT, " + COLUMN_NOTIFICATION_SALE_ID + " INTEGER, " + ")";
 
         db.execSQL(CREATE_TABLE_MAIN);
         db.execSQL(CREATE_TABLE_FRIENDS);
@@ -132,6 +132,16 @@ public class SQLHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert(TABLE_SALES, null, values);
+        db.close();
+    }
+
+    public void addNotification(Notification notification) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_NOTIFICATION_USER,   notification.getUserName());
+        values.put(COLUMN_NOTIFICATION_SALE_ID, notification.getSale().getId());
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.insert(TABLE_NOTIFICATIONS, null, values);
         db.close();
     }
 

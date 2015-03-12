@@ -3,7 +3,7 @@ package com.example.johntavious.shoppingwithfriends;
 /**
  * Created by Clay on 3/11/2015.
  */
-public class Notifications {
+public class Notification {
     private int id;
     private String userName;
     private Sale sale;
