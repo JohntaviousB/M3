@@ -34,9 +34,9 @@ public class Notification {
 
     /**
      * Sets the userName of the user who reported the Sale
-     * @param name the name of the user who reported the Sale
+     * @param userName the name of the user who reported the Sale
      */
-    public void setUserName(String name) {
+    public void setUserName(String userName) {
         this.userName = userName;
     }
 
