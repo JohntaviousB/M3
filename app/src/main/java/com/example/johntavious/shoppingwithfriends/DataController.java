@@ -35,14 +35,20 @@ public class DataController  {
         return liteHandler.getUserByName(name);
     }
 
-    public void addFriend(User user, User friend) {
-        liteHandler.addFriend(user, friend);
+    public void getFriends(User user) {
+        liteHandler.getFriends(user);
+    }
+
+    public boolean addFriend(User user, User friend) {
+        return liteHandler.addFriend(user, friend);
     }
 
     public void addInterest(User user, Interest interest) {
         liteHandler.addInterest(user, interest);
     }
-
+    public void unfriend (User u, User f) {
+        liteHandler.unfriend(u, f);
+    }
     public void addSale(Sale sale) {
         liteHandler.addSale(sale);
     }

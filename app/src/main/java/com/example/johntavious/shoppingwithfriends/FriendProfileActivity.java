@@ -25,7 +25,7 @@ public class FriendProfileActivity extends ActionBarActivity {
         setContentView(R.layout.activity_friend_profile);
         Bundle extras = getIntent().getExtras();
         user = dc.getUser(extras.getString("user"));
-//        user.getFriends().clear();
+
         otherUser = dc.getUser(extras.getString("otherUser"));
 
         ((TextView)findViewById(R.id.otherUser_profile_header)).setText(otherUser.getName()
@@ -45,12 +45,11 @@ public class FriendProfileActivity extends ActionBarActivity {
             public void onClick(View v) {
                 if (user.isFriendsWith(otherUser)) {
                     user.unfriend(otherUser);
-//                    dc.unfriend(user, otherUser);
-//                    user.getFriends().clear();
-//                    dc.getFriends(user);
+                    dc.unfriend(user, otherUser);
                     updateViewContents(); //resets the text of the screen to reflect change
                 } else {
                     user.addFriend(otherUser.getName());
+                    dc.addFriend(user, otherUser);
                     updateViewContents(); //resets the text of the screen to reflect change
                 }
                 Log.d("DEBUG", "User's friendsList size: " + user.getFriends().size()

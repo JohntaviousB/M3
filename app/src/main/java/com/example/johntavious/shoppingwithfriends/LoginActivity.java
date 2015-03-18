@@ -38,10 +38,10 @@ import java.util.NoSuchElementException;
 //**TODO: implement some way to lock user out after 3 attempts and alert admin
 public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
-    SQLHandler SQLHandler = new SQLHandler(this, null, null, 3);
+    SQLHandler sqlHandler;
 
     // Modified to be mutable
-    private static ArrayList<User> REGISTERED_USERS = new ArrayList<>();
+    private List<User> REGISTERED_USERS;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -60,9 +60,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
      * Adds a new User to the list of registered users
      * @param u the new User to add
      */
-    protected static void addUser(User u) {
-        REGISTERED_USERS.add(u);
-    }
+//    protected static void addUser(User u) {
+//        REGISTERED_USERS.add(u);
+//    }
 
     /**
      * Returns a User associated with a username
@@ -70,36 +70,37 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
      * @return the User associated with the username--throws a NoSuchElementException
      * if there is no such User
      */
-    protected static User getUser(String username) {
-        for (User user : REGISTERED_USERS) {
-            if (user.getName().equalsIgnoreCase(username)) {
-                return user;
-            }
-        }
-        throw new NoSuchElementException("The Username does not exist");
-    }
+//    protected static User getUser(String username) {
+//        for (User user : REGISTERED_USERS) {
+//            if (user.getName().equalsIgnoreCase(username)) {
+//                return user;
+//            }
+//        }
+//        throw new NoSuchElementException("The Username does not exist");
+//    }
 
-    protected static List<User> getUsers() {
-        return REGISTERED_USERS;
-    }
-    /**
-     * Determines if an email is valid (checks if taken already and if formatted properly)
-     * @param e the String representation of the email
-     * @return true if the email is valid, false otherwise
-     */
-    protected static boolean emailValid(String e) {
-        for (User user : REGISTERED_USERS) {
-            if (user.getEmail().equalsIgnoreCase(e)) {
-                return false;
-            }
-        }
-        return e != null && e.contains("@") && e.contains(".");
-    }
+//    protected static List<User> getUsers() {
+//        return REGISTERED_USERS;
+//    }
+//    /**
+//     * Determines if an email is valid (checks if taken already and if formatted properly)
+//     * @param e the String representation of the email
+//     * @return true if the email is valid, false otherwise
+//     */
+//    protected static boolean emailValid(String e) {
+//        for (User user : REGISTERED_USERS) {
+//            if (user.getEmail().equalsIgnoreCase(e)) {
+//                return false;
+//            }
+//        }
+//        return e != null && e.contains("@") && e.contains(".");
+//    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        sqlHandler = new SQLHandler(this, null, null, 4);
+        REGISTERED_USERS = sqlHandler.syncRegisteredUsers();
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -131,8 +132,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                         finish();
                         intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
-//                        mAuthTask.cancel(false);
-//                        cancelButton.setEnabled(false);
                     }
                 }
         );
@@ -179,7 +178,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!SQLHandler.isEmailValid(email)) {
+        } else if (!sqlHandler.isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
@@ -207,7 +206,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         return false;
     }
 
-    protected static boolean isPasswordValid(String password) {
+    protected boolean isPasswordValid(String password) {
         return password != null && password.length() >= 4;
     }
 
@@ -317,10 +316,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
             try {
-                // Simulate network access.
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 return false;

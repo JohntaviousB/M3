@@ -23,7 +23,7 @@ public class FriendList extends ActionBarActivity {
     private User user;
     ArrayAdapter<User> adapter;
     DataController dc = new DataController(this);
-
+    List<String> friends;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,10 +36,7 @@ public class FriendList extends ActionBarActivity {
         TextView header = (TextView) findViewById(R.id.friend_list_header_text);
         header.setText(user.getName() + "'s Friends");
 
-        // Temp solution for supplying the adapter with a list of users
-        // Consider adjusting adapter to accept a list of Strings
-
-        List<String> friends = user.getFriends();
+        friends = user.getFriends();
         List<User> friendsList = new ArrayList<User>();
 
         for (String each : friends) {
@@ -58,16 +55,16 @@ public class FriendList extends ActionBarActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                TextView textView = (TextView) view;
-                                                User otherUser =
-                                                        dc.getUserByName(textView.getText().toString().split(" ")[0]);
-                                                Intent friendProfile = new Intent(FriendList.this, FriendProfileActivity.class);
-                                                friendProfile.putExtra("otherUser", otherUser.getEmail());
+                TextView textView = (TextView) view;
+                User otherUser =
+                        dc.getUser(textView.getText().toString().split(" ")[1]);
+                Intent friendProfile = new Intent(FriendList.this, FriendProfileActivity.class);
+                friendProfile.putExtra("otherUser", otherUser.getEmail());
 //                    Log.d("DEBUG", friendName);
-                                                friendProfile.putExtra("user", user.getEmail());
-                                                startActivity(friendProfile);
-                                            }
-                                        }
+                friendProfile.putExtra("user", user.getEmail());
+                startActivity(friendProfile);
+            }
+        }
         );
 
     }
@@ -117,26 +114,14 @@ public class FriendList extends ActionBarActivity {
         EditText addFriendText = (EditText)findViewById(R.id.add_friend_text);
         String searchName = addFriendText.getText().toString();
         User friend = dc.getUserByName(searchName);
+        //TODO: PREVENT DUPLICATES
         if (friend != null) {
-            dc.addFriend(user, friend);
+            if (dc.addFriend(user, friend)){
+                adapter.add(friend);
+            }
         } else {
             addFriendText.setError("No username " + searchName + " exists");
             addFriendText.requestFocus();
         }
-/*
-        User friendToAdd;
-        if (!searchName.trim().equals("")) { // to avoid searching for no-name queries
-            try {
-
-                friendToAdd = LoginActivity.getUser(searchName);
-                if (!friendToAdd.equals(user) && !user.getFriends().contains(friendToAdd)){
-                    adapter.add(friendToAdd);
-                    friendToAdd.addFriend(user.getName()); //adding friends should be mutual
-                }
-            } catch (NoSuchElementException e) {
-                addFriendText.setError("No username " + searchName + " exists");
-                addFriendText.requestFocus();
-            }
-        }  */
     }
 }

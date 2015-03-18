@@ -83,6 +83,8 @@ public class SQLHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MAIN);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FRIENDS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_INTERESTS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SALES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTIFICATIONS);
         onCreate(db);
     }
 
@@ -97,19 +99,26 @@ public class SQLHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addFriend(User user, User friend) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_USER_NAME, user.getName());
-        values.put(COLUMN_FRIEND_NAME, friend.getName());
+    public boolean addFriend(User user, User friend) {
+        List<String> friendsList = user.getFriends();
+        if (!friendsList.contains(friend.getName())
+                && !user.equals(friend)) {
+            friendsList.add(friend.getName());
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_USER_NAME, user.getName());
+            values.put(COLUMN_FRIEND_NAME, friend.getName());
 
-        ContentValues values2 = new ContentValues();
-        values2.put(COLUMN_USER_NAME, friend.getName());
-        values2.put(COLUMN_FRIEND_NAME, user.getName());
+            ContentValues values2 = new ContentValues();
+            values2.put(COLUMN_USER_NAME, friend.getName());
+            values2.put(COLUMN_FRIEND_NAME, user.getName());
 
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.insert(TABLE_FRIENDS, null, values);
-        db.insert(TABLE_FRIENDS, null, values2);
-        db.close();
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.insert(TABLE_FRIENDS, null, values);
+            db.insert(TABLE_FRIENDS, null, values2);
+            db.close();
+            return true;
+        }
+        return false;
     }
 
     public void addInterest(User user, Interest interest) {
@@ -278,7 +287,12 @@ public class SQLHandler extends SQLiteOpenHelper {
         }
     }
 
-    // Methods don't belong here
+    /**
+     * Checks first to see if the db contains the email, and then if the email
+     * has a valid format. Purpose is to make sure the email is not alreay taken
+     * @param email the email to check
+     * @return true if the email is not taken and formatted properly
+     */
     public boolean emailValid(String email) {
         String query = "SELECT * FROM " + TABLE_MAIN + " WHERE " + COLUMN_EMAIL +
                 " = \"" + email + "\"";
@@ -293,6 +307,11 @@ public class SQLHandler extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Checks to see if the db contains the email
+     * @param email the email to be checked
+     * @return true if the db contains the email, false otherwise
+     */
     public boolean isEmailValid(String email) {
         String query = "SELECT * FROM " + TABLE_MAIN + " WHERE " + COLUMN_EMAIL +
                 " = \"" + email + "\"";
@@ -306,7 +325,9 @@ public class SQLHandler extends SQLiteOpenHelper {
             return false;
         }
     }
-
+    public boolean isPasswordValid(String password) {
+        return password != null && password.length() >= 4;
+    }
     public boolean isValidUsername(String name) {
         if (name != null && !name.contains(" ") && !name.contains("@") && name.length() > 2) {
             String query = "SELECT * FROM " + TABLE_MAIN + " WHERE " + COLUMN_NAME +
@@ -326,14 +347,11 @@ public class SQLHandler extends SQLiteOpenHelper {
     }
 
     public void unfriend(User user, User friend) {
-/*        String query = "DELETE FROM " + TABLE_FRIENDS + " WHERE " + COLUMN_USER_NAME +
-                " = \"" + user.getName() + " AND " + COLUMN_FRIEND_NAME + " = \"" + friend.getName()
-                + "\"";
         SQLiteDatabase db = this.getWritableDatabase();
-        db.rawQuery(query, null);   */
-//        db.delete(TABLE_FRIENDS, COLUMN_USER_NAME + " = \"" + user.getName() + " AND " +
-//                COLUMN_FRIEND_NAME + " = \"" + friend.getName() + "\"", null);
-
+        db.delete(TABLE_FRIENDS, COLUMN_USER_NAME + " = ? AND "
+                + COLUMN_FRIEND_NAME + " = ?", new String[]{user.getName(), friend.getName()});
+        db.delete(TABLE_FRIENDS, COLUMN_USER_NAME + " = ? AND "
+                + COLUMN_FRIEND_NAME + " = ?", new String[]{friend.getName(), user.getName()});
     }
 
     public void getFriends(User user) {
@@ -383,7 +401,7 @@ public class SQLHandler extends SQLiteOpenHelper {
 
     public ArrayList<User> syncRegisteredUsers() {
         ArrayList<User> registeredUsers = new ArrayList<User>();
-        String query = "SELECT * FROM " + TABLE_MAIN + "\"";
+        String query = "SELECT * FROM " + TABLE_MAIN ;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 

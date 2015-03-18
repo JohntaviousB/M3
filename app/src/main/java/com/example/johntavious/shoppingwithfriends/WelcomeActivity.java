@@ -22,7 +22,6 @@ public class WelcomeActivity extends ActionBarActivity {
         setContentView(R.layout.activity_welcome);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-
             user = dc.getUser(extras.getString("user"));
         }
         TextView welcomeText = (TextView)findViewById(R.id.welcome_text);

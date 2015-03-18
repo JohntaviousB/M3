@@ -22,7 +22,6 @@ public class User {
     private List<Interest> interests = new ArrayList<>();
                     // a map of friends who shared sales with this User
     private int totalOfRatings, numOfRatings;
-    //Todo: store user's location in order to compare distances
 
     public User() {}
     public User(String n, String e, String p) {
@@ -128,7 +127,6 @@ public class User {
         if (isFriendsWith(friend)) {
             friends.remove(friend.getName());
             friend.friends.remove(this.getName()); //so deleting friends will be mutual
-
             return true;
         }
         return false;
@@ -140,12 +138,12 @@ public class User {
      * @return true if friendship exists, false otherwise
      */
     public boolean isFriendsWith(User u) {
-        boolean isFriends = false;
         for (String each : friends) {
-            if (each.equalsIgnoreCase(u.getName()));
-                isFriends = true;
+            if (each.equalsIgnoreCase(u.getName())) {
+                return true;
+            }
         }
-        return isFriends;
+        return false;
 //        return friends.contains(u.getName());
     }
 

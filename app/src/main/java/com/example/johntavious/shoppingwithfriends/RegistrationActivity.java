@@ -12,7 +12,7 @@ import android.widget.EditText;
 
 public class RegistrationActivity extends Activity {
 
-    SQLHandler SQLHandler = new SQLHandler(this, null, null, 3);
+    SQLHandler sqlHandler = new SQLHandler(this, null, null, 4);
     DataController dc = new DataController(this);
 
     @Override
@@ -24,6 +24,7 @@ public class RegistrationActivity extends Activity {
     /**
      * Cancels the Registration Activity and returns User
      * to the opening page
+     *
      * @param view the cancel button click
      */
     public void onCancelClick(View view) {
@@ -36,55 +37,35 @@ public class RegistrationActivity extends Activity {
      * and log him into the system
      * @param view the done button click
      */
-    /**TODO: also check Username uniqueness, and fix bug allowing empty names,
-     * , as well as name that contain spaces"**/
+    /**
+     * TODO: also check Username uniqueness, and fix bug allowing empty names,
+     * , as well as name that contain spaces"*
+     */
     public void onDoneClick(View view) {
-        String name = ((EditText)findViewById(R.id.name_field)).getText().toString().trim();
-        String email = ((EditText)findViewById(R.id.email_field)).getText().toString().trim();
-        String password = ((EditText)findViewById(R.id.password_field)).getText().toString();
-        if (!SQLHandler.isValidUsername(name)) {
-            EditText nameView = (EditText)findViewById(R.id.name_field);
+        String name = ((EditText) findViewById(R.id.name_field)).getText().toString().trim();
+        String email = ((EditText) findViewById(R.id.email_field)).getText().toString().trim();
+        String password = ((EditText) findViewById(R.id.password_field)).getText().toString();
+        if (!sqlHandler.isValidUsername(name)) {
+            EditText nameView = (EditText) findViewById(R.id.name_field);
             nameView.setError("This name is either taken or invalid. Usernames" +
                             " cannot contain \"@\" or spaces and must be more than 2 " +
                             "characters"
             );
             nameView.requestFocus();
-            } else if (!LoginActivity.isPasswordValid(password)) {
-                    EditText passwordView = (EditText)findViewById(R.id.password_field);
-                    passwordView.setError("Passwords must be at least 4 characters");
-                    passwordView.requestFocus();
-//            } else if (LoginActivity.emailValid(email)) {
-            } else if (SQLHandler.emailValid(email)) {
-                    User user = new User(name, email, password);
-                    LoginActivity.addUser(user);
-
-                      dc.addUser(user);
-
-                    Intent intent = new Intent(this, WelcomeActivity.class);
-                    intent.putExtra("user", user.getEmail());
-                    startActivity(intent);
-            } else {
-                    EditText emailView = (EditText) findViewById(R.id.email_field);
-                    emailView.setError(getString(R.string.email_taken));
-                    emailView.requestFocus();
-            }
+        } else if (!sqlHandler.isPasswordValid(password)) {
+            EditText passwordView = (EditText) findViewById(R.id.password_field);
+            passwordView.setError("Passwords must be at least 4 characters");
+            passwordView.requestFocus();
+        } else if (sqlHandler.emailValid(email)) {
+            User user = new User(name, email, password);
+            sqlHandler.addUser(user);
+            Intent intent = new Intent(this, WelcomeActivity.class);
+            intent.putExtra("user", user.getEmail());
+            startActivity(intent);
+        } else {
+            EditText emailView = (EditText) findViewById(R.id.email_field);
+            emailView.setError(getString(R.string.email_taken));
+            emailView.requestFocus();
         }
-
-    /**
-     * Determines if a Username is valid or not (usernames are unique)
-     * @param n the Username to check
-     * @return true if valid, false otherwise
-     */
-    public static boolean isValidUsername(String n) {
-        if (n != null && !n.contains(" ") && !n.contains("@") && n.length() > 2) {
-            for (User user : LoginActivity.getUsers()) {
-                if (user.getName().equalsIgnoreCase(n)) {
-                    return false; //return false b/c the name is taken
-                }
-            }
-            return true; //we've searched all names and no one is using it
-        }
-        return false; //will return false here if n contains one of the "bad" characters or is null
-
     }
 }
