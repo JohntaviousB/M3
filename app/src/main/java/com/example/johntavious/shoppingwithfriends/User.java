@@ -7,6 +7,7 @@ import android.util.Log;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ public class User {
     private Map<User, Integer> salesSharedByUser = new HashMap<>();
     private List<Interest> interests = new ArrayList<>();
                     // a map of friends who shared sales with this User
+    private LinkedList<Notification> notifications = new LinkedList<>();
     private int totalOfRatings, numOfRatings;
 
     public User() {}
@@ -187,6 +189,16 @@ public class User {
         }
     }
 
+    /**
+     * Adds a new notification to the User's list of notifications
+     * @param n the notification to add
+     */
+    public void addNotification(Notification n) {
+        notifications.addFirst(n);
+    }
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
     /**
      * Attempts to add a new Interest to the list of interests
      * @param interest the new Interest to add

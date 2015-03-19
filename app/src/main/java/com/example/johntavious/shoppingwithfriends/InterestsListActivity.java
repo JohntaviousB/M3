@@ -60,6 +60,11 @@ public class InterestsListActivity extends ActionBarActivity {
             friends.putExtra("user", user.getEmail());
             startActivity(friends);
         }
+        if (id == R.id.action_post_sale) {
+            Intent postSale = new Intent(this, PostSaleActivity.class);
+            postSale.putExtra("user", user.getEmail());
+            startActivity(postSale);
+        }
 
         return super.onOptionsItemSelected(item);
     }

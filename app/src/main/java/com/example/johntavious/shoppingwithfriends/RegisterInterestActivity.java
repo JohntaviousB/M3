@@ -107,7 +107,6 @@ public class RegisterInterestActivity extends ActionBarActivity {
      * Attempts to register a new interest for the user
      * @param view the Post button click
      */
-    //TODO: make sure User hasn't already posted this item previously
     public void onPostClick(View view) {
         EditText item = (EditText)findViewById(R.id.item_name_edit_text);
         EditText price = (EditText)findViewById(R.id.threshold_price_edit_text);
@@ -128,7 +127,6 @@ public class RegisterInterestActivity extends ActionBarActivity {
             distance.requestFocus();
         } else if (thresholdPrice > 0) {
              dc.addInterest(user, new Interest(itemName, thresholdPrice, maxDistance));
-//            user.registerInterest(new Interest(itemName, thresholdPrice, maxDistance));
             Intent intent = new Intent(this, WelcomeActivity.class);
             intent.putExtra("user", user.getEmail());
             startActivity(intent);

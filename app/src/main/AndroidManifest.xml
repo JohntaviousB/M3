@@ -59,6 +59,10 @@
             android:name=".TempForTesting"
             android:label="@string/title_activity_temp_for_testing" >
         </activity>
+        <activity
+            android:name=".PostSaleActivity"
+            android:label="@string/title_activity_post_sale" >
+        </activity>
     </application>
 
 </manifest>

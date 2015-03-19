@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Button;
 
@@ -38,7 +40,10 @@ public class WelcomeActivity extends ActionBarActivity {
                     }
                 }
         );
-
+        ArrayAdapter<Notification> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, user.getNotifications());
+        ListView listview = (ListView)findViewById(R.id.notificationsList);
+        listview.setAdapter(adapter);
     }
 
 
@@ -57,10 +62,6 @@ public class WelcomeActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
         if (id == R.id.action_logout) {
             Intent logout = new Intent(this, LoginActivity.class);
             startActivity(logout);
@@ -79,6 +80,11 @@ public class WelcomeActivity extends ActionBarActivity {
             Intent interests = new Intent(this, InterestsListActivity.class);
             interests.putExtra("user", user.getEmail());
             startActivity(interests);
+        }
+        if (id == R.id.action_post_sale) {
+            Intent postSale = new Intent(this, PostSaleActivity.class);
+            postSale.putExtra("user", user.getEmail());
+            startActivity(postSale);
         }
 
         return super.onOptionsItemSelected(item);

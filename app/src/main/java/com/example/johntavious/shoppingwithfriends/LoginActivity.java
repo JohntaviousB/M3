@@ -35,7 +35,6 @@ import java.util.NoSuchElementException;
  * A login screen that offers login via email/password.
  * @version 1.0
  */
-//**TODO: implement some way to lock user out after 3 attempts and alert admin
 public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
     SQLHandler sqlHandler;
@@ -56,45 +55,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private String name = "";
     private String email = "";
 
-    /**
-     * Adds a new User to the list of registered users
-     * @param u the new User to add
-     */
-//    protected static void addUser(User u) {
-//        REGISTERED_USERS.add(u);
-//    }
-
-    /**
-     * Returns a User associated with a username
-     * @param username the username associated with the User to be returned
-     * @return the User associated with the username--throws a NoSuchElementException
-     * if there is no such User
-     */
-//    protected static User getUser(String username) {
-//        for (User user : REGISTERED_USERS) {
-//            if (user.getName().equalsIgnoreCase(username)) {
-//                return user;
-//            }
-//        }
-//        throw new NoSuchElementException("The Username does not exist");
-//    }
-
-//    protected static List<User> getUsers() {
-//        return REGISTERED_USERS;
-//    }
-//    /**
-//     * Determines if an email is valid (checks if taken already and if formatted properly)
-//     * @param e the String representation of the email
-//     * @return true if the email is valid, false otherwise
-//     */
-//    protected static boolean emailValid(String e) {
-//        for (User user : REGISTERED_USERS) {
-//            if (user.getEmail().equalsIgnoreCase(e)) {
-//                return false;
-//            }
-//        }
-//        return e != null && e.contains("@") && e.contains(".");
-//    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

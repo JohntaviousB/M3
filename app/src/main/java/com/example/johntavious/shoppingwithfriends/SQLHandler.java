@@ -122,6 +122,7 @@ public class SQLHandler extends SQLiteOpenHelper {
     }
 
     public void addInterest(User user, Interest interest) {
+        user.registerInterest(interest);
         ContentValues values = new ContentValues();
         values.put(COLUMN_INTEREST_USER_NAME, user.getName());
         values.put(COLUMN_ITEM_NAME, interest.getItemName());
@@ -144,16 +145,6 @@ public class SQLHandler extends SQLiteOpenHelper {
         db.insert(TABLE_SALES, null, values);
         db.close();
     }
-
-    public void addNotification(Notification notification) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_NOTIFICATION_USER,   notification.getUserName());
-        values.put(COLUMN_NOTIFICATION_SALE_ID, notification.getSale().getId());
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.insert(TABLE_NOTIFICATIONS, null, values);
-        db.close();
-    }
     
     public User getUser(String email) {
         String query = "SELECT * FROM " + TABLE_MAIN + " WHERE " + COLUMN_EMAIL +
@@ -170,6 +161,7 @@ public class SQLHandler extends SQLiteOpenHelper {
             cursor.close();
             includeFriends(user, db);
             includeInterests(user, db);
+            includeNotifications(user, db);
         } else {
             user = null;
         }
@@ -193,6 +185,7 @@ public class SQLHandler extends SQLiteOpenHelper {
             cursor.close();
             includeFriends(user, db);
             includeInterests(user, db);
+            includeNotifications(user, db);
         } else {
             user = null;
         }
@@ -221,27 +214,6 @@ public class SQLHandler extends SQLiteOpenHelper {
 
         db.close();
         return sale;
-    }
-
-    public Notification getNotification(String userName) {
-        String query = "SELECT * FROM " + TABLE_NOTIFICATIONS + " WHERE " + COLUMN_NOTIFICATION_USER +
-                " = \"" + userName + "\"";
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
-        Notification note = new Notification();
-        Sale sale = new Sale();
-
-        if (cursor.moveToFirst()) {
-            note.setId(Integer.parseInt(cursor.getString(0)));
-            note.setUserName(cursor.getString(1));
-            int id = Integer.parseInt(cursor.getString(2));
-            cursor.close();
-        } else {
-            note = null;
-        }
-
-        db.close();
-        return note;
     }
 
     public void includeInterests(User user, SQLiteDatabase db) {
@@ -286,10 +258,35 @@ public class SQLHandler extends SQLiteOpenHelper {
             cursor.close();
         }
     }
-
+    private static void includeNotifications(User user, SQLiteDatabase db) {
+        String query = "SELECT " + COLUMN_SALE_USER + ", " + COLUMN_SALE_ITEM + ", "
+                + COLUMN_SALE_PRICE + ", " + COLUMN_SALE_LOCATION + " FROM "
+                + TABLE_SALES + " s, " + TABLE_FRIENDS + " f WHERE s." + COLUMN_SALE_USER
+                + " = " + "f." + COLUMN_FRIEND_NAME + " AND f." + COLUMN_USER_NAME
+                + " = \"" + user.getName() + "\"";
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                String friend = cursor.getString(0);
+                String itemName = cursor.getString(1);
+                double price = Double.parseDouble(cursor.getString(2));
+                String location = cursor.getString(3);
+                List<Interest> interests = user.getInterests();
+                for (Interest interest : interests) {
+                    if (interest.getItemName().equalsIgnoreCase(itemName)) {
+                        if (interest.getThresholdPrice() >= price) {
+                            user.addNotification(
+                                    new Notification(friend, location, itemName, price));
+                        }
+                    }
+                }
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+    }
     /**
      * Checks first to see if the db contains the email, and then if the email
-     * has a valid format. Purpose is to make sure the email is not alreay taken
+     * has a valid format. Purpose is to make sure the email is not already taken
      * @param email the email to check
      * @return true if the email is not taken and formatted properly
      */

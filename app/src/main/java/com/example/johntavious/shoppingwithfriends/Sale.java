@@ -1,8 +1,6 @@
 package com.example.johntavious.shoppingwithfriends;
 
-/**
- * Created by Clay on 3/11/2015.
- */
+
 public class Sale {
     private int id;
     private String userName; // User who posted sale
@@ -10,6 +8,13 @@ public class Sale {
     private double price;
     private String location;
 
+    public Sale(String n, String i, double p, String l) {
+        this.userName = n;
+        this.item = i;
+        this.price = p;
+        this.location = l;
+    }
+    public Sale(){}
     /**
      * Gets the sale id
      * @return the sale id

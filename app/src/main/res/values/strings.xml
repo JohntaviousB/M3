@@ -25,5 +25,9 @@
     <string name="title_activity_tester">Tester</string>
     <string name="title_activity_temp_login">TempLogin</string>
     <string name="title_activity_temp_for_testing">TempForTesting</string>
+    <string name="title_activity_post_sale">PostSaleActivity</string>
+    <string name="invalidSaleItem">Invalid item name</string>
+    <string name="invalidSalePrice">Invalid Entry</string>
+    <string name="invalidSaleLocation">Invalid Location</string>
 
 </resources>

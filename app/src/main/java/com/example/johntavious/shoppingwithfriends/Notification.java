@@ -1,51 +1,26 @@
 package com.example.johntavious.shoppingwithfriends;
 
-/**
- * Created by Clay on 3/11/2015.
- */
+
+import java.text.NumberFormat;
+
 public class Notification {
-    private int id;
-    private String userName;
-    private Sale sale;
-
-    /**
-     * Gets the userName of the user who reported the sale
-     * @return the userName
-     */
-    public String getUserName() {
-        return userName;
+    private String message;
+    private String user, location, item;
+    private double price;
+    public Notification(String user, String location, String item, double price) {
+        this.user = user;
+        this.location = location;
+        this.item = item;
+        this.price = price;
+        createMessage(user, location, item, price);
     }
-
-    /**
-     * Gets the Sale
-     * @return the Sale
-     */
-    public Sale getSale() {
-        return sale;
+    private void createMessage(String user, String location, String item, double price) {
+        NumberFormat fmt = NumberFormat.getCurrencyInstance();
+        this.message = user + " found an item you were interested in!\n" +
+                "A(n) " + item + " at " + location + "\n For only " + fmt.format(price) + "!";
     }
-
-    /**
-     * Sets the Notification's id
-     * @param id the id of the Notification
-     */
-    public void setId(int id) {
-        this.id = id;
+    @Override
+    public String toString() {
+        return message;
     }
-
-    /**
-     * Sets the userName of the user who reported the Sale
-     * @param userName the name of the user who reported the Sale
-     */
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    /**
-     * Sets the Sale associated with the Notification
-     * @param sale the Sale associated with the Notification
-     */
-    public void setSale(Sale sale) {
-        this.sale = sale;
-    }
-
 }

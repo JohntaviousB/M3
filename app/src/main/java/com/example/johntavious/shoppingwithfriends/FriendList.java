@@ -103,6 +103,11 @@ public class FriendList extends ActionBarActivity {
             interests.putExtra("user", user.getEmail());
             startActivity(interests);
         }
+        if (id == R.id.action_post_sale) {
+            Intent postSale = new Intent(this, PostSaleActivity.class);
+            postSale.putExtra("user", user.getEmail());
+            startActivity(postSale);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -114,7 +119,6 @@ public class FriendList extends ActionBarActivity {
         EditText addFriendText = (EditText)findViewById(R.id.add_friend_text);
         String searchName = addFriendText.getText().toString();
         User friend = dc.getUserByName(searchName);
-        //TODO: PREVENT DUPLICATES
         if (friend != null) {
             if (dc.addFriend(user, friend)){
                 adapter.add(friend);
