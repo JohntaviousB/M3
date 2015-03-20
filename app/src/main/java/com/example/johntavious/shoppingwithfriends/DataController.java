@@ -14,7 +14,7 @@ public class DataController  {
     private SQLHandler liteHandler;
 
     public DataController(Context context) {
-        liteHandler = new SQLHandler(context, null, null, 4);
+        liteHandler = new SQLHandler(context, null, null, 5);
     }
 
 /*    public boolean addUser(String name, String email, String password) {

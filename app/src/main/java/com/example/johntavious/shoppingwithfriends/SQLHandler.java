@@ -5,14 +5,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
-/**
- * Created by Clay on 3/3/2015.
- */
+
 public class SQLHandler extends SQLiteOpenHelper {
     // Constants used in construction of database
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_NAME = "ShopWFriends.db";
 
     // Constants used in construction of main table
@@ -44,6 +44,8 @@ public class SQLHandler extends SQLiteOpenHelper {
     public static final String COLUMN_SALE_ITEM = "sale_item";
     public static final String COLUMN_SALE_PRICE = "sale_price";
     public static final String COLUMN_SALE_LOCATION = "sale_location";
+    public static final String COLUMN_SALE_LATITUDE = "sale_latitude";
+    public static final String COLUMN_SALE_LONGITUDE = "sale_longitude";
 
     // Constants used in construction of Notifications table
     public static final String TABLE_NOTIFICATIONS = "Notifications";
@@ -66,10 +68,12 @@ public class SQLHandler extends SQLiteOpenHelper {
                 " INTEGER PRIMARY KEY," + COLUMN_INTEREST_USER_NAME + " TEXT, " + COLUMN_ITEM_NAME + " TEXT," +
                 COLUMN_THRESHOLD_PRICE + " REAL, " + COLUMN_DISTANCE + " INTEGER" + ")";
         String CREATE_TABLE_SALES = "CREATE TABLE " + TABLE_SALES + "(" + COLUMN_SALE_ID +
-                " INTEGER PRIMARY KEY," + COLUMN_SALE_USER + " TEXT, " + COLUMN_SALE_ITEM + " TEXT, " + COLUMN_SALE_PRICE + " REAL, " +
-                COLUMN_SALE_LOCATION + " TEXT" + ")";
-        String CREATE_TABLE_NOTIFICATIONS = "CREATE TABLE " + TABLE_NOTIFICATIONS + "(" + COLUMN_NOTIFICATION_ID +
-                " INTEGER PRIMARY KEY," + COLUMN_NOTIFICATION_USER + " TEXT, " + COLUMN_NOTIFICATION_SALE_ID + " INTEGER" + ")";
+                " INTEGER PRIMARY KEY," + COLUMN_SALE_USER + " TEXT, " + COLUMN_SALE_ITEM
+                + " TEXT, " + COLUMN_SALE_PRICE + " REAL, " + COLUMN_SALE_LOCATION + " TEXT, "
+                + COLUMN_SALE_LATITUDE + " REAL, " + COLUMN_SALE_LONGITUDE + " REAL)";
+        String CREATE_TABLE_NOTIFICATIONS = "CREATE TABLE " + TABLE_NOTIFICATIONS
+                + "(" + COLUMN_NOTIFICATION_ID + " INTEGER PRIMARY KEY," + COLUMN_NOTIFICATION_USER
+                + " TEXT, " + COLUMN_NOTIFICATION_SALE_ID + " INTEGER" + ")";
 
         db.execSQL(CREATE_TABLE_MAIN);
         db.execSQL(CREATE_TABLE_FRIENDS);
@@ -140,6 +144,8 @@ public class SQLHandler extends SQLiteOpenHelper {
         values.put(COLUMN_SALE_ITEM,   sale.getItem());
         values.put(COLUMN_SALE_PRICE, sale.getPrice());
         values.put(COLUMN_SALE_LOCATION, sale.getLocation());
+        values.put(COLUMN_SALE_LATITUDE, sale.getLatitude());
+        values.put(COLUMN_SALE_LONGITUDE, sale.getLongitude());
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert(TABLE_SALES, null, values);
@@ -260,7 +266,8 @@ public class SQLHandler extends SQLiteOpenHelper {
     }
     private static void includeNotifications(User user, SQLiteDatabase db) {
         String query = "SELECT " + COLUMN_SALE_USER + ", " + COLUMN_SALE_ITEM + ", "
-                + COLUMN_SALE_PRICE + ", " + COLUMN_SALE_LOCATION + " FROM "
+                + COLUMN_SALE_PRICE + ", " + COLUMN_SALE_LOCATION
+                + ", " + COLUMN_SALE_LATITUDE + ", " + COLUMN_SALE_LONGITUDE + " FROM "
                 + TABLE_SALES + " s, " + TABLE_FRIENDS + " f WHERE s." + COLUMN_SALE_USER
                 + " = " + "f." + COLUMN_FRIEND_NAME + " AND f." + COLUMN_USER_NAME
                 + " = \"" + user.getName() + "\"";
@@ -271,12 +278,25 @@ public class SQLHandler extends SQLiteOpenHelper {
                 String itemName = cursor.getString(1);
                 double price = Double.parseDouble(cursor.getString(2));
                 String location = cursor.getString(3);
+                double lat = 0;
+                double lon = 0;
+                if (cursor.getString(4) != null) {
+                    lat = Double.parseDouble(cursor.getString(4));
+                }
+                if (cursor.getString(5) != null) {
+                    lon = Double.parseDouble((cursor.getString(5)));
+                }
                 List<Interest> interests = user.getInterests();
                 for (Interest interest : interests) {
                     if (interest.getItemName().equalsIgnoreCase(itemName)) {
                         if (interest.getThresholdPrice() >= price) {
-                            user.addNotification(
-                                    new Notification(friend, location, itemName, price));
+                            if (location != null) {
+                                user.addNotification(
+                                        new Notification(friend, location, itemName, price));
+                            } else {
+                                user.addNotification(
+                                        new Notification(friend, itemName, price, lat, lon));
+                            }
                         }
                     }
                 }

@@ -29,5 +29,9 @@
     <string name="invalidSaleItem">Invalid item name</string>
     <string name="invalidSalePrice">Invalid Entry</string>
     <string name="invalidSaleLocation">Invalid Location</string>
+    <string name="title_activity_view_sale">Map</string>
+    <string name="GoogleMapsNoLocation">failed to include location :(</string>
+    <string name="Friend">"Friend "</string>
+    <string name="FoundItemGoogleMaps">The item is here!</string>
 
 </resources>

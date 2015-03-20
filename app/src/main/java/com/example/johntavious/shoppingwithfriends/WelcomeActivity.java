@@ -1,15 +1,22 @@
 package com.example.johntavious.shoppingwithfriends;
 
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Button;
+import android.widget.Toast;
+
+import java.util.List;
 
 /**
  * The hompe page of a logged-in user
@@ -18,6 +25,7 @@ import android.widget.Button;
 public class WelcomeActivity extends ActionBarActivity {
     User user;
     DataController dc = new DataController(this);
+    Toast frenchToast;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,10 +48,64 @@ public class WelcomeActivity extends ActionBarActivity {
                     }
                 }
         );
+        //User's notifications
         ArrayAdapter<Notification> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, user.getNotifications());
         ListView listview = (ListView)findViewById(R.id.notificationsList);
         listview.setAdapter(adapter);
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> a, View view, int c, long d) {
+                Intent intent = new Intent(WelcomeActivity.this, ViewSaleActivity.class);
+                intent.putExtra("user", user.getEmail());
+                List<Notification> notes = user.getNotifications();
+                String message = ((TextView) view).getText().toString();
+                for (Notification note : notes) {
+                    if (note.toString().equals(message)) {
+                        intent.putExtra("location", note.getLocation());
+                        if (note.getLocation() == null) {
+                            intent.putExtra("lat", note.getLatitude());
+                            intent.putExtra("lon", note.getLongitude());
+                        }
+                        WelcomeActivity.this.startActivity(intent);
+                    }
+                }
+            }
+        });
+
+//        LocationManager locationManager =
+//                (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+//        boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+//        boolean isNetworkEnabled =
+//                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+//        Location location = null;
+//        if (isGPSEnabled) {
+//            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//            if (location != null) {
+//                double lat = location.getLatitude();
+//                double lon = location.getLongitude();
+//                frenchToast = Toast.makeText(
+//                        this, String.format("Lat: %f Lon: %f", lat, lon), Toast.LENGTH_SHORT);
+//                frenchToast.show();
+//            }
+//        } else {
+//            frenchToast = Toast.makeText(this, "GPS Disabled!!", Toast.LENGTH_SHORT);
+//            frenchToast.show();
+//        }
+//        if (isNetworkEnabled) {
+//            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+//            if (location != null) {
+//                double lat = location.getLatitude();
+//                double lon = location.getLongitude();
+//                frenchToast = Toast.makeText(
+//                        this, String.format("Lat: %f Lon: %f", lat, lon), Toast.LENGTH_SHORT);
+//                frenchToast.show();
+//            }
+//        } else {
+//            frenchToast = Toast.makeText(this, "Network Disabled!!", Toast.LENGTH_SHORT);
+//            frenchToast.show();
+//        }
     }
 
 

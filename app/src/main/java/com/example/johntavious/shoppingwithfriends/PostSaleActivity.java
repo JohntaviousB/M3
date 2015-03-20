@@ -1,12 +1,17 @@
 package com.example.johntavious.shoppingwithfriends;
 
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Switch;
+import android.widget.Toast;
 
 
 public class PostSaleActivity extends ActionBarActivity {
@@ -14,7 +19,8 @@ public class PostSaleActivity extends ActionBarActivity {
     DataController dc = new DataController(this);
     String itemName;
     String location;
-    double price;
+    Toast frenchToast;
+    double price, lat, lon;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +81,9 @@ public class PostSaleActivity extends ActionBarActivity {
         EditText itemText = (EditText)findViewById(R.id.postSaleEditText);
         EditText priceText = (EditText)findViewById(R.id.postSalePriceEditText);
         EditText locationText = (EditText)findViewById(R.id.postSaleLocationEditText);
+        Switch locationSwitch = (Switch)findViewById(R.id.retrieveLocationSwitch);
         String itemName = itemText.getText().toString().trim();
+        boolean useLatLng = false;
         double price = 0;
         try {
             price = Double.parseDouble(priceText.getText().toString());
@@ -84,14 +92,47 @@ public class PostSaleActivity extends ActionBarActivity {
             priceText.requestFocus();
         }
         String location = locationText.getText().toString().trim();
-        if (itemName.length() < 2) {
+        if (locationSwitch.isChecked()) {
+            LocationManager locMan =
+                    (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+            boolean isGPSEnabled = locMan.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            boolean isNetworkEnabled =
+                    locMan.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            Location loc = null;
+            if (isGPSEnabled) {
+                loc = locMan.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if (loc != null) {
+                    lat = loc.getLatitude();
+                    lon = loc.getLongitude();
+                    useLatLng = true;
+                }
+            }
+            if (isNetworkEnabled && !useLatLng) {
+                loc = locMan.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                if (loc != null) {
+                    lat = loc.getLatitude();
+                    lon = loc.getLongitude();
+                    useLatLng = true;
+                }
+            }
+            if (!useLatLng) {
+                frenchToast = Toast.makeText(this, "Unable to retrieve Location!", Toast.LENGTH_SHORT);
+                frenchToast.show();
+            }
+        }
+        if (itemName.length() < 2 && !useLatLng) {
             itemText.setError(getString(R.string.invalidSaleItem));
             itemText.requestFocus();
         } else if (price <= 0) {
             priceText.setError(getString(R.string.invalidSalePrice));
             priceText.requestFocus();
-        } else if (locationText.length() >= 2) {
+        } else if (locationText.length() >= 2 && !useLatLng) {
             dc.addSale(new Sale(user.getName(), itemName, price, location));
+            Intent intent = new Intent(this, WelcomeActivity.class);
+            intent.putExtra("user", user.getEmail());
+            startActivity(intent);
+        } else if (useLatLng) {
+            dc.addSale(new Sale(user.getName(), itemName, price, lat, lon));
             Intent intent = new Intent(this, WelcomeActivity.class);
             intent.putExtra("user", user.getEmail());
             startActivity(intent);

@@ -54,7 +54,7 @@ public class FriendList extends ActionBarActivity {
          */
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
-                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+          public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TextView textView = (TextView) view;
                 User otherUser =
                         dc.getUser(textView.getText().toString().split(" ")[1]);

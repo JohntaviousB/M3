@@ -7,12 +7,20 @@ public class Sale {
     private String item;
     private double price;
     private String location;
+    private Double latitude = null, longitude = null;
 
     public Sale(String n, String i, double p, String l) {
         this.userName = n;
         this.item = i;
         this.price = p;
         this.location = l;
+    }
+    public Sale(String n, String i, double p, double lat, double lon) {
+        this.userName = n;
+        this.item = i;
+        this.price = p;
+        this.latitude = lat;
+        this.longitude = lon;
     }
     public Sale(){}
     /**
@@ -91,6 +99,17 @@ public class Sale {
     public void setLocation(String location) {
         this.location = location;
     }
-
+    public void setLatitude(double lat) {
+        this.latitude = lat;
+    }
+    public void setLongitude(double lon) {
+        this.longitude = lon;
+    }
+    public Double getLatitude() {
+        return latitude;
+    }
+    public Double getLongitude() {
+        return longitude;
+    }
 
 }
