@@ -33,5 +33,10 @@
     <string name="GoogleMapsNoLocation">failed to include location :(</string>
     <string name="Friend">"Friend "</string>
     <string name="FoundItemGoogleMaps">The item is here!</string>
+    <string name="InvalidUsername">This name is either taken or invalid. Usernames</string>
+    <string name="invalidUsername2">" cannot contain \"@\" or spaces"</string>
+    <string name="invalidUsername3">and must be more than 2 characters</string>
+    <string name="validPasswordFormat">Passwords must be at least 4 characters</string>
+    <string name="unableToRetreiveLocation">Unable to retrieve Location!</string>
 
 </resources>

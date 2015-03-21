@@ -12,8 +12,17 @@ public class Interest {
     private double thresholdPrice;
     private int distance; //the max distance willing to travel
 
-    public Interest() {}
+    /**
+     * No arg constructor for an Interest
+     */
+    public Interest() { }
 
+    /**
+     * Constructor that initializes an Interest with the given parameters
+     * @param item the item name of interest
+     * @param price the threshold price of the interest
+     * @param distance the maximum distance willing to travel for the item
+     */
     public Interest(String item, double price, int distance) {
         this.itemName = item;
         this.thresholdPrice = price;
@@ -48,7 +57,9 @@ public class Interest {
      * Gets the id, primary key in SQLite table
      * @return the id for the interest
      */
-    public int getId() { return id; }
+    public int getId() {
+        return id;
+    }
     /**
      * Sets the threshold price
      * @param price the new threshold price
@@ -80,7 +91,6 @@ public class Interest {
     public void setItemName(String name) {
         if (name != null && !name.trim().equals("") && !name.equals(" ")) {
             this.itemName = name;
-            //should probably check for a lot more bad characters
         }
     }
 
@@ -95,20 +105,23 @@ public class Interest {
     @Override
     public String toString() {
         NumberFormat fmt = NumberFormat.getCurrencyInstance();
-        return String.format("Item Name%15s\nUp To%21s\nUp To %d Miles Away", itemName,
+        return String.format("Item Name%15s\nUp To%21s\nUp"
+               + " To %d Miles Away", itemName,
                 fmt.format(thresholdPrice), distance);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Interest interest = (Interest) o;
 
-        if (!itemName.equalsIgnoreCase(interest.itemName)) return false;
-
-        return true;
+        return itemName.equalsIgnoreCase(interest.itemName);
     }
 
     @Override

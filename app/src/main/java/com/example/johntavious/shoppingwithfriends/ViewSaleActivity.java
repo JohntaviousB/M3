@@ -11,12 +11,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class ViewSaleActivity extends FragmentActivity {
 
-    private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private GoogleMap mMap; // Might be null if Google Play
+                        // services APK is not available.
     private User user;
     private double lat;
     private double lon;
     private String location;
-    DataController dc = new DataController(this);
+    private DataController dc = new DataController(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,25 +41,18 @@ public class ViewSaleActivity extends FragmentActivity {
     }
 
     /**
-     * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
-     * installed) and the map has not already been instantiated.. This will ensure that we only ever
-     * call {@link #setUpMap()} once when {@link #mMap} is not null.
+     * Sets up the map if it is possible to do so
+     * (i.e., the Google Play services APK is correctly installed)
+     * and the map has not already been instantiated.
      * <p/>
-     * If it isn't installed {@link SupportMapFragment} (and
-     * {@link com.google.android.gms.maps.MapView MapView}) will show a prompt for the user to
-     * install/update the Google Play services APK on their device.
-     * <p/>
-     * A user can return to this FragmentActivity after following the prompt and correctly
-     * installing/updating/enabling the Google Play services. Since the FragmentActivity may not
-     * have been completely destroyed during this process (it is likely that it would only be
-     * stopped or paused), {@link #onCreate(Bundle)} may not be called again so we should call this
-     * method in {@link #onResume()} to guarantee that it will be called.
      */
     private void setUpMapIfNeeded() {
-        // Do a null check to confirm that we have not already instantiated the map.
+        // Do a null check to confirm that we have not
+        // already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+            mMap = ((SupportMapFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.map))
                     .getMap();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
@@ -68,10 +62,9 @@ public class ViewSaleActivity extends FragmentActivity {
     }
 
     /**
-     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-     * just add a marker near Africa.
-     * <p/>
-     * This should only be called once and when we are sure that {@link #mMap} is not null.
+     * This is where we can add markers or lines, add listeners
+     * or move the camera. In this case, we add a marker at the Burj Khalifa
+     * if no lat/long was retrieved when the sale was posted
      */
     private void setUpMap() {
         if (location == null) {
@@ -81,9 +74,11 @@ public class ViewSaleActivity extends FragmentActivity {
             //location of the Burj Khalifa in Dubai
             lat = 25.197170;
             lon = 55.2745;
-            mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title(
-                    getString(R.string.Friend) + getString(R.string.GoogleMapsNoLocation)));
+            mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lon))
+                    .title(getString(R.string.Friend)
+                            + getString(R.string.GoogleMapsNoLocation)));
         }
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 16));
+        mMap.moveCamera(CameraUpdateFactory
+                .newLatLngZoom(new LatLng(lat, lon), 18));
     }
 }

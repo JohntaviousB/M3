@@ -16,11 +16,11 @@ import android.widget.TextView;
  * Represents the screen where the User will register interests
  */
 public class RegisterInterestActivity extends ActionBarActivity {
-    User user;
-    Spinner distance;
-    int maxDistance = 0;
-    String[] distances = {"5", "10", "20", "35", "50", "75", "100+"};
-    DataController dc = new DataController(this);
+    private User user;
+    private Spinner distance;
+    private int maxDistance = 0;
+    private String[] distances = {"5", "10", "20", "35", "50", "75", "100+"};
+    private DataController dc = new DataController(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,44 +29,24 @@ public class RegisterInterestActivity extends ActionBarActivity {
         if (extras != null) {
             user = dc.getUser(extras.getString("user"));
         }
-        distance = (Spinner)findViewById(R.id.distance_spinner);
+        distance = (Spinner) findViewById(R.id.distance_spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                     android.R.layout.simple_spinner_item, distances);
         distance.setAdapter(adapter);
-        distance.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            /**
-             * <p>Callback method to be invoked when an item in this view has been
-             * selected. This callback is invoked only when the newly selected
-             * position is different from the previously selected position or if
-             * there was no selected item.</p>
-             * <p/>
-             * Impelmenters can call getItemAtPosition(position) if they need to access the
-             * data associated with the selected item.
-             *
-             * @param parent   The AdapterView where the selection happened
-             * @param view     The view within the AdapterView that was clicked
-             * @param position The position of the view in the adapter
-             * @param id       The row id of the item that is selected
-             */
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position < distances.length - 1) {
-                    maxDistance = Integer.parseInt(distances[position]);
-                } else {
-                    maxDistance = 100; //Note 100 is the default highest
+        distance.setOnItemSelectedListener(
+                new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent,
+                                           View view, int position, long id) {
+                    if (position < distances.length - 1) {
+                        maxDistance = Integer.parseInt(distances[position]);
+                    } else {
+                        maxDistance = 100; //Note 100 is the default highest
+                    }
                 }
-            }
-
-            /**
-             * Callback method to be invoked when the selection disappears from this
-             * view. The selection can disappear for instance when touch is activated
-             * or when the adapter becomes empty.
-             *
-             * @param parent The AdapterView that now contains no selected item.
-             */
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) { }
+            });
     }
 
 
@@ -84,7 +64,6 @@ public class RegisterInterestActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         if (id == R.id.action_logout) {
             Intent logout = new Intent(this, LoginActivity.class);
             startActivity(logout);
@@ -108,8 +87,9 @@ public class RegisterInterestActivity extends ActionBarActivity {
      * @param view the Post button click
      */
     public void onPostClick(View view) {
-        EditText item = (EditText)findViewById(R.id.item_name_edit_text);
-        EditText price = (EditText)findViewById(R.id.threshold_price_edit_text);
+        EditText item = (EditText) findViewById(R.id.item_name_edit_text);
+        EditText price = (EditText) findViewById(
+                R.id.threshold_price_edit_text);
         String itemName = item.getText().toString().trim();
         double thresholdPrice = 0;
         try {
@@ -122,11 +102,12 @@ public class RegisterInterestActivity extends ActionBarActivity {
             item.setError("Please enter a valid item name");
             item.requestFocus();
         } else if (maxDistance == 0) {
-            TextView distanceText = (TextView)findViewById(R.id.distance_text);
+            TextView distanceText = (TextView) findViewById(R.id.distance_text);
             distanceText.setError("Please select a maximum distance");
             distance.requestFocus();
         } else if (thresholdPrice > 0) {
-             dc.addInterest(user, new Interest(itemName, thresholdPrice, maxDistance));
+            dc.addInterest(user, new Interest(
+                     itemName, thresholdPrice, maxDistance));
             Intent intent = new Intent(this, WelcomeActivity.class);
             intent.putExtra("user", user.getEmail());
             startActivity(intent);

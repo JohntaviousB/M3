@@ -12,9 +12,7 @@ import android.widget.EditText;
 
 public class RegistrationActivity extends Activity {
 
-    SQLHandler sqlHandler = new SQLHandler(this, null, null, 4);
-    DataController dc = new DataController(this);
-
+    private SQLHandler sqlHandler = new SQLHandler(this, null, null, 5);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,24 +35,25 @@ public class RegistrationActivity extends Activity {
      * and log him into the system
      * @param view the done button click
      */
-    /**
-     * TODO: also check Username uniqueness, and fix bug allowing empty names,
-     * , as well as name that contain spaces"*
-     */
+
     public void onDoneClick(View view) {
-        String name = ((EditText) findViewById(R.id.name_field)).getText().toString().trim();
-        String email = ((EditText) findViewById(R.id.email_field)).getText().toString().trim();
-        String password = ((EditText) findViewById(R.id.password_field)).getText().toString();
+        String name = ((EditText) findViewById(R.id.name_field))
+                        .getText().toString().trim();
+        String email = ((EditText) findViewById(R.id.email_field))
+                        .getText().toString().trim();
+        String password = ((EditText) findViewById(R.id.password_field))
+                        .getText().toString();
         if (!sqlHandler.isValidUsername(name)) {
             EditText nameView = (EditText) findViewById(R.id.name_field);
-            nameView.setError("This name is either taken or invalid. Usernames" +
-                            " cannot contain \"@\" or spaces and must be more than 2 " +
-                            "characters"
+            nameView.setError(getString(R.string.InvalidUsername)
+                            + getString(R.string.invalidUsername2)
+                            + getString(R.string.invalidUsername3)
             );
             nameView.requestFocus();
         } else if (!sqlHandler.isPasswordValid(password)) {
-            EditText passwordView = (EditText) findViewById(R.id.password_field);
-            passwordView.setError("Passwords must be at least 4 characters");
+            EditText passwordView =
+                    (EditText) findViewById(R.id.password_field);
+            passwordView.setError(getString(R.string.validPasswordFormat));
             passwordView.requestFocus();
         } else if (sqlHandler.emailValid(email)) {
             User user = new User(name, email, password);

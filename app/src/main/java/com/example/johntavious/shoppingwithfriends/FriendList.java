@@ -21,9 +21,8 @@ import java.util.ArrayList;
  */
 public class FriendList extends ActionBarActivity {
     private User user;
-    ArrayAdapter<User> adapter;
-    DataController dc = new DataController(this);
-    List<String> friends;
+    private ArrayAdapter<User> adapter;
+    private DataController dc = new DataController(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +35,7 @@ public class FriendList extends ActionBarActivity {
         TextView header = (TextView) findViewById(R.id.friend_list_header_text);
         header.setText(user.getName() + "'s Friends");
 
-        friends = user.getFriends();
+        List<String> friends = user.getFriends();
         List<User> friendsList = new ArrayList<User>();
 
         for (String each : friends) {
@@ -50,17 +49,19 @@ public class FriendList extends ActionBarActivity {
         listView.setAdapter(adapter);
 
         /**
-         * When a user clicks on a friend in the list, it will take him to the Friend's profile
+         * When a user clicks on a friend in the list, it will
+         * take him to the Friend's profile
          */
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                            @Override
-          public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                  int position, long id) {
                 TextView textView = (TextView) view;
                 User otherUser =
                         dc.getUser(textView.getText().toString().split(" ")[1]);
-                Intent friendProfile = new Intent(FriendList.this, FriendProfileActivity.class);
+                Intent friendProfile = new Intent(
+                        FriendList.this, FriendProfileActivity.class);
                 friendProfile.putExtra("otherUser", otherUser.getEmail());
-//                    Log.d("DEBUG", friendName);
                 friendProfile.putExtra("user", user.getEmail());
                 startActivity(friendProfile);
             }
@@ -116,11 +117,11 @@ public class FriendList extends ActionBarActivity {
      * @param view the Add Friend button click
      */
     public void onAddFriendClick(View view) {
-        EditText addFriendText = (EditText)findViewById(R.id.add_friend_text);
+        EditText addFriendText = (EditText) findViewById(R.id.add_friend_text);
         String searchName = addFriendText.getText().toString();
         User friend = dc.getUserByName(searchName);
         if (friend != null) {
-            if (dc.addFriend(user, friend)){
+            if (dc.addFriend(user, friend)) {
                 adapter.add(friend);
             }
         } else {

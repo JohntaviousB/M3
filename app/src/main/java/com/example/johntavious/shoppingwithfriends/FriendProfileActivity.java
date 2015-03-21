@@ -3,7 +3,6 @@ package com.example.johntavious.shoppingwithfriends;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,10 +14,10 @@ import android.widget.TextView;
  * Can be a friend or nonfriend
  */
 public class FriendProfileActivity extends ActionBarActivity {
-    User user;
-    User otherUser;
-    Button friendshipButton;
-    DataController dc = new DataController(this);
+    private User user;
+    private User otherUser;
+    private Button friendshipButton;
+    private DataController dc = new DataController(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,52 +27,59 @@ public class FriendProfileActivity extends ActionBarActivity {
 
         otherUser = dc.getUser(extras.getString("otherUser"));
 
-        ((TextView)findViewById(R.id.otherUser_profile_header)).setText(otherUser.getName()
-                + "'s Profile");
-        ((TextView)findViewById(R.id.averge_rating)).setText(otherUser.getAverageRating()
+        ((TextView) findViewById(R.id.otherUser_profile_header))
+                .setText(otherUser.getName() + "'s Profile");
+        ((TextView) findViewById(R.id.averge_rating))
+                .setText(otherUser.getAverageRating()
                 + "/5.0");
-        ((TextView)findViewById(R.id.user_email_text)).setText(otherUser.getEmail());
+        ((TextView) findViewById(R.id.user_email_text))
+                .setText(otherUser.getEmail());
 
-        friendshipButton = ((Button)findViewById(R.id.friendship_button));
+        friendshipButton = ((Button) findViewById(R.id.friendship_button));
         updateViewContents(); //see private method below
 
         // will add or remove a user from this user's friends list
-        // note the change will also be reflected in the other user's list based on
-        // the methods in the User class
+        // note the change will also be reflected in the
+        // other user's list based on the methods in the User class
         friendshipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (user.isFriendsWith(otherUser)) {
                     user.unfriend(otherUser);
                     dc.unfriend(user, otherUser);
-                    updateViewContents(); //resets the text of the screen to reflect change
                 } else {
                     user.addFriend(otherUser.getName());
                     dc.addFriend(user, otherUser);
-                    updateViewContents(); //resets the text of the screen to reflect change
                 }
-                Log.d("DEBUG", "User's friendsList size: " + user.getFriends().size()
-                + " Friends friendslist size:" + otherUser.getFriends().size());
+                updateViewContents();
             }
         });
 
     }
 
+    /**
+     * Sets the content of the screen based on friendship
+     */
     private void updateViewContents() {
-        //Sets the content of the screen based on friendship
         if (user.isFriendsWith(otherUser)) {
-            ((TextView)findViewById(R.id.friendship_text)).setText(getString(R.string.friendship_text));
+            ((TextView) findViewById(R.id.friendship_text))
+                    .setText(getString(R.string.friendship_text));
 
-            ((TextView)findViewById(R.id.sales_shared_to_user_text)).setText(otherUser.getName()
-                    + " has shared " + user.getSalesReceivedByUser(otherUser) + " sales with you");
+            ((TextView) findViewById(R.id.sales_shared_to_user_text))
+                    .setText(otherUser.getName()
+                    + " has shared " + user.getSalesReceivedByUser(otherUser)
+                    + " sales with you");
 
-            ((TextView)findViewById(R.id.sales_shared_to_user_text)).setVisibility(View.VISIBLE);
+            ((TextView) findViewById(R.id.sales_shared_to_user_text))
+                    .setVisibility(View.VISIBLE);
 
             friendshipButton.setText("Unfriend");
         } else {
-            ((TextView)findViewById(R.id.friendship_text)).setText(getString(R.string.nonfriendship_text));
+            ((TextView) findViewById(R.id.friendship_text))
+                    .setText(getString(R.string.nonfriendship_text));
 
-            ((TextView)findViewById(R.id.sales_shared_to_user_text)).setVisibility(View.GONE);
+            ((TextView) findViewById(R.id.sales_shared_to_user_text))
+                    .setVisibility(View.GONE);
 
             friendshipButton.setText("Add Friend");
         }

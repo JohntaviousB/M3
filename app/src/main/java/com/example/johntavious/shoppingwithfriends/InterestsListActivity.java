@@ -9,14 +9,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class InterestsListActivity extends ActionBarActivity {
-    User user;
-    DataController dc = new DataController(this);
+    private User user;
+    private DataController dc = new DataController(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_interests_list);
         Bundle extras = getIntent().getExtras();
-        if (extras!= null) {
+        if (extras != null) {
             user = dc.getUser(extras.getString("user"));
         }
         // Populating the ListView with an adapter

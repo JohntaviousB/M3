@@ -1,10 +1,5 @@
 package com.example.johntavious.shoppingwithfriends;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.util.Log;
-
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -13,86 +8,73 @@ import java.util.Map;
 
 /**
  * Represents a non-admin user of the application
- * @version 1.3
  */
 public class User {
-    private String name, email, password;
+    private String name;
+    private String email;
+    private String password;
     private int id;
     private List<String> friends = new ArrayList<>();
     private Map<User, Integer> salesSharedByUser = new HashMap<>();
     private List<Interest> interests = new ArrayList<>();
                     // a map of friends who shared sales with this User
     private LinkedList<Notification> notifications = new LinkedList<>();
-    private int totalOfRatings, numOfRatings;
+    private int totalOfRatings;
+    private int numOfRatings;
 
-    public User() {}
+    /**
+     * A no arg constructor for a User
+     */
+    public User() { }
+
+    /**
+     * Initializes the username, email, and password of this user
+     * @param n the username
+     * @param e the email
+     * @param p the password
+     */
     public User(String n, String e, String p) {
-        this.name = n;
-        this.email = e;
+        setName(n);
+        setEmail(e);
         setPassword(p);
         totalOfRatings = 0;
+        numOfRatings = 0;
     }
 
     /**
-     * Attempts to change the User's name
- //    * @param n The new name
-     * @return true if successful, false otherwise;
+     * Sets the username of this user
+     * @param name the new username
      */
-/*
-     public boolean setName(String n) {
-        if (n != null && !n.equals("") && RegistrationActivity.isValidUsername(n)) {
-            this.name = n;
-            return true;
-        }
-        return false;
-    } */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-     public void setName(String name) {
-         this.name = name;
-     }
-     public void setEmail(String email) {
-         this.email = email;
-     }
-     public void setPassword(String password) {
-         this.password = password;
-     }
+    /**
+     * Sets the email of this user
+     * @param email the new email
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    /**
+     * Sets the password of this user
+     * @param password the new password
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    /**
+     * Sets the id of the user
+     * @param id the new id of the user
+     */
     public void setId(int id) {
         this.id = id;
     }
 
-
     /**
-     * Attempts to change the User's email
-     * @param e The new email address
-     * @return true if successful, false otherwise
-     */
-/*    public boolean setEmail(String e) {
-        if (LoginActivity.emailValid(e)) {
-            this.email = e;
-            return true;
-        }
-        return false;
-    }  */
-
-    /**
-     * Attempts to change the User's password
-     * @param p The new password
-     * @return true if successful, false otherwise
-     */
- /*
-    public boolean setPassword(String p) {
-        if (p != null && p.length() >= 4) {
-            this.password = p;
-            return true;
-        }
-        return false;
-    }
-*/
-
-
-    /**
-     * Returns the User's name
-     * @return the User's name
+     * Returns the User's username
+     * @return the User's username
      */
     public String getName() {
         return this.name;
@@ -114,8 +96,18 @@ public class User {
         return this.password;
     }
 
-    public int getId() { return id; }
+    /**
+     * Gets the id of this User
+     * @return the id of this user
+     */
+    public int getId() {
+        return id;
+    }
 
+    /**
+     * Adds friend to the user's list of friends
+     * @param friend the username of the friend to add
+     */
     public void addFriend(String friend) {
         friends.add(friend);
     }
@@ -128,7 +120,8 @@ public class User {
     public boolean unfriend(User friend) {
         if (isFriendsWith(friend)) {
             friends.remove(friend.getName());
-            friend.friends.remove(this.getName()); //so deleting friends will be mutual
+            friend.friends.remove(this.getName());
+            //so deleting friends will be mutual
             return true;
         }
         return false;
@@ -146,47 +139,26 @@ public class User {
             }
         }
         return false;
-//        return friends.contains(u.getName());
     }
 
     /**
      * Gets the average rating of this User
-     * @return the averge rating
+     * @return the average rating
      */
     public double getAverageRating() {
-        if (numOfRatings == 0) return 0;
+        if (numOfRatings == 0) {
+            return 0;
+        }
         return (double) totalOfRatings / numOfRatings;
-    }
-
-    /**
-     * Posts a sale found by this User
-     * TODO: THIS METHOD WILL NEED SOME SERIOUS FUNCTIONALITY UPDATES
-     * Must also update (or insert for this User's first post) the number of sales posts by this user
-     * in all the "salesSharedByUser" Maps of any friend who was interested in the item.
-     * Also not quite sure on the parameters for this method just yet;
-     */
-    public void postSale() {
-
     }
     /**
      * Returns the number of sales a friend has shared with this User
-     * @param u the friend we wish to determine the number of sales shared with this User
+     * @param u the friend we wish to determine the
+     *          number of sales shared with this User
      * @return the number of such sales
      */
-    //TODO: fix method so it doesn't always return 0
     public int getSalesReceivedByUser(User u) {
-       return 0; //returns 0 until Sale posting functionality is proper
-    }
-    /**
-     * Rates another friend
-     * @param u the friend to rate
-     * @param rating the rating to give the friend
-     */
-    public void rate(User u, int rating) {
-        if (isFriendsWith(u)) {
-            u.totalOfRatings += rating;
-            u.numOfRatings++;
-        }
+        return 0;
     }
 
     /**
@@ -196,6 +168,11 @@ public class User {
     public void addNotification(Notification n) {
         notifications.addFirst(n);
     }
+
+    /**
+     * Return the list of notifications
+     * @return the list of notifications
+     */
     public List<Notification> getNotifications() {
         return notifications;
     }
@@ -209,14 +186,6 @@ public class User {
     }
 
     /**
-     * Attempts to remove an interest from the list of interests
-     * @param interest the interest to remove
-     * @return true if successful, false otherwise;
-     */
-    public boolean removeInterest(Interest interest) {
-        return interests.remove(interest);
-    }
-    /**
      * Returns the user's list of friends
      * @return the list of friends
      */
@@ -226,10 +195,15 @@ public class User {
 
     @Override
     public boolean equals(Object other) {
-        if (this == other) return true;
-        if (!(other instanceof User)) return false;
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof User)) {
+            return false;
+        }
         User that = (User) other;
-        return this.name.equalsIgnoreCase(that.name) && this.email.equalsIgnoreCase(that.email);
+        return this.name.equalsIgnoreCase(that.name)
+                && this.email.equalsIgnoreCase(that.email);
     }
 
     /**

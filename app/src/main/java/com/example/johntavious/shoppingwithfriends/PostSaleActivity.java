@@ -15,12 +15,10 @@ import android.widget.Toast;
 
 
 public class PostSaleActivity extends ActionBarActivity {
-    User user;
-    DataController dc = new DataController(this);
-    String itemName;
-    String location;
-    Toast frenchToast;
-    double price, lat, lon;
+    private User user;
+    private DataController dc = new DataController(this);
+    private double lat;
+    private double lon;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,14 +72,19 @@ public class PostSaleActivity extends ActionBarActivity {
     }
 
     /**
-     * Attempts to post the sale found by the user and returns home if successfully posted
+     * Attempts to post the sale found by the user
+     * and returns home if successfully posted
      * @param view the post button click
      */
     public void onPostClick(View view) {
-        EditText itemText = (EditText)findViewById(R.id.postSaleEditText);
-        EditText priceText = (EditText)findViewById(R.id.postSalePriceEditText);
-        EditText locationText = (EditText)findViewById(R.id.postSaleLocationEditText);
-        Switch locationSwitch = (Switch)findViewById(R.id.retrieveLocationSwitch);
+        EditText itemText = (EditText) findViewById(
+                R.id.postSaleEditText);
+        EditText priceText = (EditText) findViewById(
+                R.id.postSalePriceEditText);
+        EditText locationText = (EditText) findViewById(
+                R.id.postSaleLocationEditText);
+        Switch locationSwitch = (Switch) findViewById(
+                R.id.retrieveLocationSwitch);
         String itemName = itemText.getText().toString().trim();
         boolean useLatLng = false;
         double price = 0;
@@ -94,11 +97,13 @@ public class PostSaleActivity extends ActionBarActivity {
         String location = locationText.getText().toString().trim();
         if (locationSwitch.isChecked()) {
             LocationManager locMan =
-                    (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-            boolean isGPSEnabled = locMan.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                    (LocationManager) this.getSystemService(
+                            Context.LOCATION_SERVICE);
+            boolean isGPSEnabled = locMan.isProviderEnabled(
+                    LocationManager.GPS_PROVIDER);
             boolean isNetworkEnabled =
                     locMan.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-            Location loc = null;
+            Location loc;
             if (isGPSEnabled) {
                 loc = locMan.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 if (loc != null) {
@@ -108,7 +113,8 @@ public class PostSaleActivity extends ActionBarActivity {
                 }
             }
             if (isNetworkEnabled && !useLatLng) {
-                loc = locMan.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                loc = locMan.getLastKnownLocation(
+                        LocationManager.NETWORK_PROVIDER);
                 if (loc != null) {
                     lat = loc.getLatitude();
                     lon = loc.getLongitude();
@@ -116,7 +122,9 @@ public class PostSaleActivity extends ActionBarActivity {
                 }
             }
             if (!useLatLng) {
-                frenchToast = Toast.makeText(this, "Unable to retrieve Location!", Toast.LENGTH_SHORT);
+                Toast frenchToast = Toast.makeText(this,
+                        getString(R.string.unableToRetreiveLocation),
+                        Toast.LENGTH_SHORT);
                 frenchToast.show();
             }
         }
