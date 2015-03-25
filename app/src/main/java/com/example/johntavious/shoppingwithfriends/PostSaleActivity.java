@@ -14,9 +14,9 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 
-public class PostSaleActivity extends ActionBarActivity {
+public final class PostSaleActivity extends ActionBarActivity {
     private User user;
-    private DataController dc = new DataController(this);
+    private DataController dc = new SQLiteController(this);
     private double lat;
     private double lon;
     @Override
@@ -28,7 +28,6 @@ public class PostSaleActivity extends ActionBarActivity {
             user = dc.getUser(extras.getString("user"));
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -73,7 +72,7 @@ public class PostSaleActivity extends ActionBarActivity {
 
     /**
      * Attempts to post the sale found by the user
-     * and returns home if successfully posted
+     * and returns home if successfully posted.
      * @param view the post button click
      */
     public void onPostClick(View view) {
@@ -151,7 +150,7 @@ public class PostSaleActivity extends ActionBarActivity {
     }
 
     /**
-     * Cancels the Sale Post and returns the user home
+     * Cancels the Sale Post and returns the user home.
      * @param view the Cancel button click
      */
     public void onCancelClick(View view) {

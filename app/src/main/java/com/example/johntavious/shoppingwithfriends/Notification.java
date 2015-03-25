@@ -6,7 +6,7 @@ package com.example.johntavious.shoppingwithfriends;
  */
 import java.text.NumberFormat;
 
-public class Notification {
+public final class Notification {
     private String message;
     private String user;
     private String location;
@@ -17,8 +17,8 @@ public class Notification {
 
     /**
      * Constructor to initialize a Notification when lat/lng was
-     * unable to be retrieved
-     * @param user the name of the User who posted the sale
+     * unable to be retrieved.
+     * @param user the username of the User who posted the sale
      * @param location the location of the sale
      * @param item the name of the item
      * @param price the price of the item
@@ -34,7 +34,7 @@ public class Notification {
 
     /**
      * Constructor to initialize a Notification when the device's lat/lng
-     * was successfully retrieved
+     * was successfully retrieved.
      * @param user the name of the User who posted the sale
      * @param item the name of the item
      * @param price the price of the item
@@ -53,7 +53,7 @@ public class Notification {
 
     /**
      * Creates a message that uses a location with no known lat/lng
-     * @param user the name of the User who posted the sale
+     * @param user the name of the User who posted the sale.
      * @param location the location of the sale
      * @param item the name of the item
      * @param price the price of the item
@@ -68,7 +68,7 @@ public class Notification {
 
     /**
      * Creates a message that uses the associated lat/lon of the Sale
-     * @param user the name of the User who posted the sale
+     * @param user the name of the User who posted the sale.
      * @param item the name of the item
      * @param price the price of the item
      * @param lat the latitude of the sale
@@ -83,21 +83,21 @@ public class Notification {
     }
 
     /**
-     * Gets the String location if no latitude/longitude was supplied
+     * Gets the String location if no latitude/longitude was supplied.
      * @return the location
      */
     public String getLocation() {
         return location;
     }
     /**
-     * Gets the latitude of the notification
+     * Gets the latitude of the notification.
      * @return the latitude of the associated sale
      */
     public double getLatitude() {
         return latitude;
     }
     /**
-     * Gets the longitude of the notification
+     * Gets the longitude of the notification.
      * @return the longitude
      */
     public double getLongitude() {

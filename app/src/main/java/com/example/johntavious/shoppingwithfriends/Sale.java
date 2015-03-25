@@ -1,13 +1,13 @@
 package com.example.johntavious.shoppingwithfriends;
 
 /**
- * Represents a Sale in the application
+ * Represents a Sale in the application.
  * Note that Sales can have an explicit location included
  * in the form of a String or, if the device is capable,
- * the latitude and longitude can be retrieved for the sale
+ * the latitude and longitude can be retrieved for the sale.
  */
 
-public class Sale {
+public final class Sale {
     private int id;
     private String userName; // User who posted sale
     private String item;
@@ -17,7 +17,7 @@ public class Sale {
     private Double longitude = null;
     /**
      * Constructor to initialize a Sale when lat/lng was
-     * unable to be retrieved
+     * unable to be retrieved.
      * @param n the username of the User who posted the sale
      * @param l the location of the sale
      * @param i the name of the item
@@ -32,7 +32,7 @@ public class Sale {
 
     /**
      * Constructor to initialize a Sale when Lat/Lng was
-     * successfully retrieved
+     * successfully retrieved.
      * @param n the username of the User of who posted the sale
      * @param i the name of the item
      * @param p the price of the item
@@ -47,18 +47,18 @@ public class Sale {
         this.longitude = lon;
     }
     /**
-     * No arg constructor for a Sale
+     * No arg constructor for a Sale.
      */
     public Sale() { }
     /**
-     * Gets the sale id
+     * Gets the sale id.
      * @return the sale id
      */
     public int getId() {
         return id;
     }
     /**
-     * Gets the item name
+     * Gets the item name.
      * @return the item name
      */
     public String getItem() {
@@ -66,14 +66,14 @@ public class Sale {
     }
 
     /**
-     * Gets the userName
+     * Gets the userName.
      * @return the userName associated with the sale
      */
     public String getUserName() {
         return userName;
     }
     /**
-     * Gets the item price
+     * Gets the item price.
      * @return the price of the item
      */
     public double getPrice() {
@@ -81,7 +81,7 @@ public class Sale {
     }
 
     /**
-     * Gets the location of the Sale
+     * Gets the location of the Sale.
      * @return the Sale's location
      */
     public String getLocation() {
@@ -89,62 +89,21 @@ public class Sale {
     }
 
     /**
-     * Sets the Sale's id
+     * Sets the Sale's id.
      * @param id the id of the Sale
      */
     public void setId(int id) {
         this.id = id;
     }
-
     /**
-     * Sets the userName
-     * @param name the name of the user who posted the sale
-     */
-    public void setUserName(String name) {
-        userName = name;
-    }
-    /**
-     * Sets the item
+     * Sets the item name.
      * @param item the name of the item
      */
     public void setItem(String item) {
         this.item = item;
     }
-
     /**
-     * Sets the price of the item
-     * @param price the price of the item
-     */
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    /**
-     * Sets the Sale's location
-     * @param location the location of the item
-     */
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    /**
-     * Sets the latitude of the Sale
-     * @param lat the new latitude
-     */
-    public void setLatitude(double lat) {
-        this.latitude = lat;
-    }
-
-    /**
-     * Sets the longitude of the Sale
-     * @param lon the new longitude
-     */
-    public void setLongitude(double lon) {
-        this.longitude = lon;
-    }
-
-    /**
-     * Gets the latitude of the Sale
+     * Gets the latitude of the Sale.
      * @return the latitude of the Sale, null if no latitude was given
      */
     public Double getLatitude() {
@@ -152,11 +111,10 @@ public class Sale {
     }
 
     /**
-     * Gets the longitude of the Sale
+     * Gets the longitude of the Sale.
      * @return the longitude of the Sale, null if no longitude was given
      */
     public Double getLongitude() {
         return longitude;
     }
-
 }

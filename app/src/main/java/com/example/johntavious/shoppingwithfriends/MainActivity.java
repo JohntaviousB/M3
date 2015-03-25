@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 /**
- * Represents the opening page of the application
+ * Represents the opening page of the application.
  */
-public class MainActivity extends Activity {
+public final class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

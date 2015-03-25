@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Represents a non-admin user of the application
+ * Represents a non-admin user of the application.
  */
-public class User {
+public final class User {
     private String name;
     private String email;
     private String password;
@@ -23,12 +23,12 @@ public class User {
     private int numOfRatings;
 
     /**
-     * A no arg constructor for a User
+     * A no arg constructor for a User.
      */
     public User() { }
 
     /**
-     * Initializes the username, email, and password of this user
+     * Initializes the username, email, and password of this user.
      * @param n the username
      * @param e the email
      * @param p the password
@@ -42,7 +42,7 @@ public class User {
     }
 
     /**
-     * Sets the username of this user
+     * Sets the username of this user.
      * @param name the new username
      */
     public void setName(String name) {
@@ -50,14 +50,14 @@ public class User {
     }
 
     /**
-     * Sets the email of this user
+     * Sets the email of this user.
      * @param email the new email
      */
     public void setEmail(String email) {
         this.email = email;
     }
     /**
-     * Sets the password of this user
+     * Sets the password of this user.
      * @param password the new password
      */
     public void setPassword(String password) {
@@ -65,7 +65,7 @@ public class User {
     }
 
     /**
-     * Sets the id of the user
+     * Sets the id of the user.
      * @param id the new id of the user
      */
     public void setId(int id) {
@@ -73,7 +73,7 @@ public class User {
     }
 
     /**
-     * Returns the User's username
+     * Returns the User's username.
      * @return the User's username
      */
     public String getName() {
@@ -81,7 +81,7 @@ public class User {
     }
 
     /**
-     * Returns the User's email
+     * Returns the User's email.
      * @return the User's email
      */
     public String getEmail() {
@@ -89,7 +89,7 @@ public class User {
     }
 
     /**
-     * Returns the User's password
+     * Returns the User's password.
      * @return the User's password
      */
     public String getPassword() {
@@ -97,7 +97,7 @@ public class User {
     }
 
     /**
-     * Gets the id of this User
+     * Gets the id of this User.
      * @return the id of this user
      */
     public int getId() {
@@ -105,7 +105,7 @@ public class User {
     }
 
     /**
-     * Adds friend to the user's list of friends
+     * Adds friend to the user's list of friends.
      * @param friend the username of the friend to add
      */
     public void addFriend(String friend) {
@@ -113,7 +113,7 @@ public class User {
     }
 
     /**
-     * Attempts to remove a User from the friends list
+     * Attempts to remove a User from the friends list.
      * @param friend the User to be removed
      * @return true if successfully removed, false otherwise
      */
@@ -128,7 +128,7 @@ public class User {
     }
 
     /**
-     * Returns whether or not to Users are friends
+     * Returns whether or not to Users are friends.
      * @param u the User to be determined if friends
      * @return true if friendship exists, false otherwise
      */
@@ -142,7 +142,7 @@ public class User {
     }
 
     /**
-     * Gets the average rating of this User
+     * Gets the average rating of this User.
      * @return the average rating
      */
     public double getAverageRating() {
@@ -152,7 +152,7 @@ public class User {
         return (double) totalOfRatings / numOfRatings;
     }
     /**
-     * Returns the number of sales a friend has shared with this User
+     * Returns the number of sales a friend has shared with this User.
      * @param u the friend we wish to determine the
      *          number of sales shared with this User
      * @return the number of such sales
@@ -162,7 +162,7 @@ public class User {
     }
 
     /**
-     * Adds a new notification to the User's list of notifications
+     * Adds a new notification to the User's list of notifications.
      * @param n the notification to add
      */
     public void addNotification(Notification n) {
@@ -177,7 +177,7 @@ public class User {
         return notifications;
     }
     /**
-     * Attempts to add a new Interest to the list of interests
+     * Attempts to add a new Interest to the list of interests.
      * @param interest the new Interest to add
      * @return true if successfully added, false otherwise
      */
@@ -186,7 +186,7 @@ public class User {
     }
 
     /**
-     * Returns the user's list of friends
+     * Returns the user's list of friends.
      * @return the list of friends
      */
     public List<String> getFriends() {
@@ -207,7 +207,7 @@ public class User {
     }
 
     /**
-     * Returns this User's list of interests
+     * Returns this User's list of interests.
      * @return the list of interests
      */
     public List<Interest> getInterests() {

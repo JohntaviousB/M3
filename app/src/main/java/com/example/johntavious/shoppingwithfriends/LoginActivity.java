@@ -34,11 +34,11 @@ import java.util.List;
  * A login screen that offers login via email/password.
  * @version 1.0
  */
-public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
+public final class LoginActivity
+        extends Activity implements LoaderCallbacks<Cursor> {
 
-    private SQLHandler sqlHandler;
+    private DataController sqlHandler;
 
-    // Modified to be mutable
     private List<User> registeredUsers;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -52,13 +52,13 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private View mLoginFormView;
     private Intent intent;
     private String email = "";
-
+    private final int MIN_PASSWORD_LENGTH = 4;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        sqlHandler = new SQLHandler(this, null, null, 5);
-        registeredUsers = sqlHandler.syncRegisteredUsers();
+        sqlHandler = new SQLiteController(this);
+        registeredUsers = sqlHandler.getUsers();
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -163,12 +163,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     }
 
     /**
-     * Checks if a password has valid formatting
+     * Checks if a password has valid formatting.
      * @param password the password to check
      * @return true if formatted properly, false otherwise
      */
     public boolean isPasswordValid(String password) {
-        return password != null && password.length() >= 4;
+        return password != null && password.length() >= MIN_PASSWORD_LENGTH;
     }
 
     /**
@@ -258,7 +258,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     }
 
     /**
-     * Adds emails to autocompletion
+     * Adds emails to autocompletion.
      * @param emailAddressCollection a list of emails
      */
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
@@ -280,7 +280,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         private final String mPassword;
 
         /**
-         * Creates a User Login Task
+         * Creates a User Login Task.
          * @param email the email of the task
          * @param password the password of the task
          */
@@ -291,12 +291,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
             for (User possibleUser : registeredUsers) {
                 if (possibleUser.getEmail().equalsIgnoreCase(mEmail)) {
                     // Account exists, return true if the password matches.
@@ -305,7 +299,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                             .equalsIgnoreCase(mPassword);
                 }
             }
-
             return false;
         }
 

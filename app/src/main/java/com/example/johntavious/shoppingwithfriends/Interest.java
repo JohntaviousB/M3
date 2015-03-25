@@ -3,34 +3,34 @@ package com.example.johntavious.shoppingwithfriends;
 import java.text.NumberFormat;
 
 /**
- * Represents a User's interest in the application
+ * Represents a User's interest in the application.
  * @version 1.0
  */
-public class Interest {
+public final class Interest {
     private int id;
     private String itemName;
     private double thresholdPrice;
     private int distance; //the max distance willing to travel
 
     /**
-     * No arg constructor for an Interest
+     * No arg constructor for an Interest.
      */
     public Interest() { }
 
     /**
-     * Constructor that initializes an Interest with the given parameters
+     * Constructor that initializes an Interest with the given parameters.
      * @param item the item name of interest
      * @param price the threshold price of the interest
-     * @param distance the maximum distance willing to travel for the item
+     * @param dist the maximum distance willing to travel for the item
      */
-    public Interest(String item, double price, int distance) {
+    public Interest(String item, double price, int dist) {
         this.itemName = item;
         this.thresholdPrice = price;
-        this.distance = distance;
+        this.distance = dist;
     }
 
     /**
-     * Gets the item name
+     * Gets the item name.
       * @return the item name
      */
     public String getItemName() {
@@ -38,7 +38,7 @@ public class Interest {
     }
 
     /**
-     * Gets the threshold price
+     * Gets the threshold price.
      * @return the threshold price
      */
     public double getThresholdPrice() {
@@ -46,7 +46,7 @@ public class Interest {
     }
 
     /**
-     * Gets the threshold distance
+     * Gets the threshold distance.
      * @return the threshold distance for the item
      */
     public int getDistance() {
@@ -54,14 +54,14 @@ public class Interest {
     }
 
     /**
-     * Gets the id, primary key in SQLite table
+     * Gets the id, primary key in SQLite table.
      * @return the id for the interest
      */
     public int getId() {
         return id;
     }
     /**
-     * Sets the threshold price
+     * Sets the threshold price.
      * @param price the new threshold price
      */
     public void setThresholdPrice(double price) {
@@ -73,19 +73,19 @@ public class Interest {
     }
 
     /**
-     * Sets the threshold distance
-     * @param distance the threshold distance
+     * Sets the threshold distance.
+     * @param dist the threshold distance
      */
-    public void setDistance(int distance) {
-        if (distance < 0) {
+    public void setDistance(int dist) {
+        if (dist < 0) {
             this.distance = 0;
         } else {
-            this.distance = distance;
+            this.distance = dist;
         }
     }
 
     /**
-     * Sets the item name
+     * Sets the item name.
      * @param name the item name
      */
     public void setItemName(String name) {
@@ -95,7 +95,7 @@ public class Interest {
     }
 
     /**
-     * Sets the id of the Interest
+     * Sets the id of the Interest.
      * @param id the Interest id
      */
     public void setId(int id) {

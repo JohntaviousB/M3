@@ -16,13 +16,13 @@ import java.util.ArrayList;
 
 /**
  * Represents the screen that will be displayed when a User wants to
- * view a list of his/her friends
+ * view a list of his/her friends.
  * @version 1.0
  */
-public class FriendList extends ActionBarActivity {
+public final class FriendList extends ActionBarActivity {
     private User user;
     private ArrayAdapter<User> adapter;
-    private DataController dc = new DataController(this);
+    private DataController dc = new SQLiteController(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,7 +113,7 @@ public class FriendList extends ActionBarActivity {
     }
 
     /**
-     * Attempts to add a new friend to the User's list of friends
+     * Attempts to add a new friend to the User's list of friends.
      * @param view the Add Friend button click
      */
     public void onAddFriendClick(View view) {

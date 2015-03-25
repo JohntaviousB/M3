@@ -7,12 +7,12 @@ import android.view.View;
 import android.widget.EditText;
 
 /**
- * Represents the registration activity of the application
+ * Represents the registration activity of the application.
  */
 
-public class RegistrationActivity extends Activity {
+public final class RegistrationActivity extends Activity {
 
-    private SQLHandler sqlHandler = new SQLHandler(this, null, null, 5);
+    private DataController sqlHandler = new SQLiteController(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,8 +21,7 @@ public class RegistrationActivity extends Activity {
 
     /**
      * Cancels the Registration Activity and returns User
-     * to the opening page
-     *
+     * to the opening page.
      * @param view the cancel button click
      */
     public void onCancelClick(View view) {
@@ -32,7 +31,7 @@ public class RegistrationActivity extends Activity {
 
     /**
      * Attempts to create a new User once "done" is clicked
-     * and log him into the system
+     * and log him into the system.
      * @param view the done button click
      */
 

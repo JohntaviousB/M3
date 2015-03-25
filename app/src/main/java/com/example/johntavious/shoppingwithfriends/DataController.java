@@ -1,87 +1,98 @@
 package com.example.johntavious.shoppingwithfriends;
 
-import android.content.Context;
+import java.util.List;
 
 /**
- * This class directs the retrieval, saving, and
- * deletion of persistent data for the application.
- * Currently directs data to and from the SQLite database
- * Can be expanded to work with files or mySQL
+ * Classes implementing this interface should handle
+ * the persistence of the application. I.e., they should
+ * be connected to a database, or web server, etc. (persistent
+ * structures).
  */
-public class DataController  {
-    private SQLHandler liteHandler;
-
+public interface DataController {
+    int MIN_PASSWORD_LENGTH = 4;
     /**
-     * Constructor for the data controller to be connected to a database
-     * @param context the context of the data controller
-     */
-    public DataController(Context context) {
-        liteHandler = new SQLHandler(context, null, null, 6);
-    }
-
-    /**
-     * Adds a user to the database
+     * Adds a user to the persistent structure.
      * @param user the user to add to the database
      */
-    public void addUser(User user) {
-        liteHandler.addUser(user);
-    }
+    void addUser(User user);
 
     /**
-     * Retrieves a user from the database
+     * Retrieves a user from the persistent structure.
      * @param email the email of the user to retrieve
      * @return the User from the database with the given email
      */
-    public User getUser(String email) {
-        return liteHandler.getUser(email);
-    }
+    User getUser(String email);
 
     /**
-     * Retrieves a user from the database
+     * Retrieves a user from the persistent structure by username.
      * @param name the username of the user to retrieve
      * @return the User from the database with the given username
      */
-    public User getUserByName(String name) {
-        return liteHandler.getUserByName(name);
-    }
+    User getUserByName(String name);
 
     /**
-     * Attempts to create a friendship between to Users
-     * The friendship is mutual, so parameter order is unimportant
+     * Attempts to create a friendship between to Users.
+     * The friendship is mutual, so parameter order is unimportant.
      * @param user one user associated with the friendship
      * @param friend the other user associated with the friendship
      * @return true if the friendship was successfully created, else false
      */
-    public boolean addFriend(User user, User friend) {
-        return liteHandler.addFriend(user, friend);
-    }
+    boolean addFriend(User user, User friend);
 
     /**
-     * Adds an interest to the database and associates it with a given user
-     * @param user the user whose interest is to be added to the database
-     * @param interest the interest of the user to add to the database
+     * Adds an interest to the database and associates it with a given user.
+     * @param user the user whose interest is to be
+     *             added to the persistent structure
+     * @param interest the interest of the user to add
+     *                 to the persistent structure
      */
-    public void addInterest(User user, Interest interest) {
-        liteHandler.addInterest(user, interest);
-    }
+    void addInterest(User user, Interest interest);
 
     /**
-     * Terminates a friendship between two users
+     * Terminates a friendship between two users.
      * The termination will be mutual so the order of
-     * the parameters is unimportant
+     * the parameters is unimportant.
      * @param u one user of the friendship
      * @param f another user of the friendship
      */
-    public void unfriend(User u, User f) {
-        liteHandler.unfriend(u, f);
-    }
+    void unfriend(User u, User f);
     /**
-     * Adds a sale to the database
+     * Adds a sale to the database.
      * @param sale the sale to add
      */
-    public void addSale(Sale sale) {
-        liteHandler.addSale(sale);
-    }
+    void addSale(Sale sale);
+
+    /**
+     * Makes sure password is of valid length.
+     * @param password the password to check
+     * @return true if the password is long enough, false otherwise
+     */
+    boolean isPasswordValid(String password);
+
+    /**
+     * Checks the persistent structure to see if the email is contained.
+     * @param email the email to check
+     * @return true if the persistent structure contains the email
+     */
+    boolean isEmailValid(String email);
+
+    /**
+     * Checks the PS to see if the email can be added.
+     * @param email the email to check.
+     * @return true if the email can be added, false otherwise.
+     */
+    boolean emailValid(String email);
+
+    /**
+     * Checks the persistent structure to see if the username is contained
+     * @param name the username to check
+     * @return true if the persistent structure DOES NOT contain the name
+     */
+    boolean isValidUsername(String name);
+
+    /**
+     * Returns a list of ALL users in the persistent structure.
+     * @return the list of all users.
+     */
+    List<User> getUsers();
 }
-
-

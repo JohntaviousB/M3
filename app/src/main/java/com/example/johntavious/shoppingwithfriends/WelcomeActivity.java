@@ -15,12 +15,11 @@ import android.widget.Button;
 import java.util.List;
 
 /**
- * The home page of a logged-in user
- * @version 1.0
+ * Represents the home page of a logged-in user.
  */
-public class WelcomeActivity extends ActionBarActivity {
+public final class WelcomeActivity extends ActionBarActivity {
     private User user;
-    private DataController dc = new DataController(this);
+    private DataController dc = new SQLiteController(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,7 +117,7 @@ public class WelcomeActivity extends ActionBarActivity {
     }
 
     /**
-     * Takes user to RegisterInterestActivity
+     * Takes user to RegisterInterestActivity.
      * @param view the New Interest button click
      */
     public void onNewInterestClick(View view) {

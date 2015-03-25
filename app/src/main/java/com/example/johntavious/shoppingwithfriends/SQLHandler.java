@@ -9,7 +9,10 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SQLHandler extends SQLiteOpenHelper {
+/**
+ * Represents the database used by the application.
+ */
+public final class SQLHandler extends SQLiteOpenHelper {
     // Constants used in construction of database
     private static final int DATABASE_VERSION = 6;
     private static final String DATABASE_NAME = "ShopWFriends.db";
@@ -48,15 +51,11 @@ public class SQLHandler extends SQLiteOpenHelper {
     public static final String TABLE_NOTIFICATIONS = "Notifications";
 
     /**
-     * Constructor to initialize our database helper
+     * Constructor to initialize our database helper.
      * @param context the context of the database
-     * @param name the name of the database
-     * @param factory the factory of the database
-     * @param version the version of the database
      */
-    public SQLHandler(Context context, String name,
-                      SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, DATABASE_NAME, factory, DATABASE_VERSION);
+    public SQLHandler(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
@@ -101,7 +100,7 @@ public class SQLHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Adds a user to the database
+     * Adds a user to the database.
      * @param user the User to add to the database
      */
     public void addUser(User user) {
@@ -116,7 +115,7 @@ public class SQLHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Creates a friendship in the database between two users
+     * Creates a friendship in the database between two users.
      * @param user one member of the friendship
      * @param friend the other member of the friendship
      * @return true if the creation was successful, false otherwise
@@ -144,7 +143,7 @@ public class SQLHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Creates an interest in the database associated with a given User
+     * Creates an interest in the database associated with a given User.
      * @param user the User whose interest is to be added
      * @param interest the interest to add
      */
@@ -162,7 +161,7 @@ public class SQLHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Adds a Sale into the database
+     * Adds a Sale into the database.
      * @param sale the sale to be added
      */
     public void addSale(Sale sale) {
@@ -181,7 +180,7 @@ public class SQLHandler extends SQLiteOpenHelper {
 
     /**
      * Retrieves a user from the database along with
-     * all of his interests, friends, and notifications
+     * all of his interests, friends, and notifications.
      * @param email the email of the User to retrieve
      * @return the User
      */
@@ -212,7 +211,7 @@ public class SQLHandler extends SQLiteOpenHelper {
 
     /**
      * Retrieves a User from the database with the given Username
-     * along with his friends, notifications, and interests
+     * along with his friends, notifications, and interests.
      * @param name the username of the user to retrieve
      * @return the user with the given name
      */
@@ -239,7 +238,7 @@ public class SQLHandler extends SQLiteOpenHelper {
     }
     /**
      * Helper method to insert all of a User's interests from the database
-     * into the User's List of interests
+     * into the User's List of interests.
      * @param user the user whose interests are to be retrieved
      * @param db the database to retrieve the interests from
      */
@@ -264,7 +263,7 @@ public class SQLHandler extends SQLiteOpenHelper {
 
     /**
      * Helper method to insert all of a User's friends from the
-     * database into the user's List of friends
+     * database into the user's List of friends.
      * @param user the user whose friends are to be retrieved
      * @param db the database to retrieve the friends from
      */
@@ -294,7 +293,7 @@ public class SQLHandler extends SQLiteOpenHelper {
 
     /**
      * Performs a join on the Sale and Friends table to help
-     * retrieve notifications for a User
+     * retrieve notifications for a User.
      * @param user the user whose notifications are to be retrieved
      * @param db the database to retrieve the notifications from
      */
@@ -353,7 +352,7 @@ public class SQLHandler extends SQLiteOpenHelper {
     /**
      * Checks first to see if the db contains the email, and then if the email
      * has a valid format. Purpose is to make sure the
-     * email is not already taken
+     * email is not already taken.
      * @param email the email to check
      * @return true if the email is not taken and formatted properly
      */
@@ -374,7 +373,7 @@ public class SQLHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Checks to see if the db contains the email
+     * Checks to see if the db contains the email.
      * @param email the email to be checked
      * @return true if the db contains the email, false otherwise
      */
@@ -394,16 +393,7 @@ public class SQLHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Checks if a password is formatted validly
-     * @param password the password to check
-     * @return true if formatted validly, false otherwise
-     */
-    public boolean isPasswordValid(String password) {
-        return password != null && password.length() >= 4;
-    }
-
-    /**
-     * Checks to see if a username is already taken in the database
+     * Checks to see if a username is already taken in the database.
      * @param name the username to check
      * @return true if the name is available, false otherwise
      */
@@ -429,7 +419,7 @@ public class SQLHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Terminates a friendship in the database. Note friendship is mutual
+     * Terminates a friendship in the database. Note friendship is mutual.
      * @param user one member of the friendship
      * @param friend the other member of the friendship
      */
@@ -444,7 +434,7 @@ public class SQLHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Generates a List of all Users in the database
+     * Generates a List of all Users in the database.
      * @return a List of all Users in the database
      */
     public List<User> syncRegisteredUsers() {

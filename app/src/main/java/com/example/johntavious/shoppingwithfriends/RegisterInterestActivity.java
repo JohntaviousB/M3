@@ -13,14 +13,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 /**
- * Represents the screen where the User will register interests
+ * Represents the screen where the User will register interests.
  */
-public class RegisterInterestActivity extends ActionBarActivity {
+public final class RegisterInterestActivity extends ActionBarActivity {
     private User user;
     private Spinner distance;
     private int maxDistance = 0;
     private String[] distances = {"5", "10", "20", "35", "50", "75", "100+"};
-    private DataController dc = new DataController(this);
+    private final int MAX_DISTANCE = 100;
+    private DataController dc = new SQLiteController(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +42,7 @@ public class RegisterInterestActivity extends ActionBarActivity {
                     if (position < distances.length - 1) {
                         maxDistance = Integer.parseInt(distances[position]);
                     } else {
-                        maxDistance = 100; //Note 100 is the default highest
+                        maxDistance = MAX_DISTANCE;
                     }
                 }
                 @Override
@@ -83,7 +84,7 @@ public class RegisterInterestActivity extends ActionBarActivity {
     }
 
     /**
-     * Attempts to register a new interest for the user
+     * Attempts to register a new interest for the user.
      * @param view the Post button click
      */
     public void onPostClick(View view) {

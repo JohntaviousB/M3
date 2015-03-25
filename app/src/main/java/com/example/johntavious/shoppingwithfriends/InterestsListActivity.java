@@ -10,7 +10,7 @@ import android.widget.ListView;
 
 public class InterestsListActivity extends ActionBarActivity {
     private User user;
-    private DataController dc = new DataController(this);
+    private DataController dc = new SQLiteController(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

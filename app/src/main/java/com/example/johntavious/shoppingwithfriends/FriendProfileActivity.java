@@ -10,14 +10,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 /**
- * Activity that represents the profile of a User not signed in on the device
- * Can be a friend or nonfriend
+ * Activity that represents the profile of a User not signed in on the device.
+ * Can be a friend or nonfriend.
  */
-public class FriendProfileActivity extends ActionBarActivity {
+public final class FriendProfileActivity extends ActionBarActivity {
     private User user;
     private User otherUser;
     private Button friendshipButton;
-    private DataController dc = new DataController(this);
+    private DataController dc = new SQLiteController(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

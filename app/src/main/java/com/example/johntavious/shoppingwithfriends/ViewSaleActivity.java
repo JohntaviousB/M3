@@ -9,22 +9,27 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class ViewSaleActivity extends FragmentActivity {
+/**
+ * Represents the screen where Users can view location of Sales.
+ * Will either appear with a marker at the location, or at a
+ * default location if the poster was unable to include his location.
+ */
+public final class ViewSaleActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play
                         // services APK is not available.
-    private User user;
     private double lat;
     private double lon;
     private String location;
-    private DataController dc = new DataController(this);
+    private final int zoom = 17;
+    private final double latOfLocation = 25.197170;
+    private final double lonOfLocation = 55.2745;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_sale);
         Bundle extras = this.getIntent().getExtras();
         if (extras != null) {
-            user = dc.getUser(extras.getString("user"));
             location = extras.getString("location");
             if (location == null) {
                 lat = extras.getDouble("lat");
@@ -64,7 +69,7 @@ public class ViewSaleActivity extends FragmentActivity {
     /**
      * This is where we can add markers or lines, add listeners
      * or move the camera. In this case, we add a marker at the Burj Khalifa
-     * if no lat/long was retrieved when the sale was posted
+     * if no lat/long was retrieved when the sale was posted.
      */
     private void setUpMap() {
         if (location == null) {
@@ -72,13 +77,13 @@ public class ViewSaleActivity extends FragmentActivity {
                     .title(getString(R.string.FoundItemGoogleMaps)));
         } else {
             //location of the Burj Khalifa in Dubai
-            lat = 25.197170;
-            lon = 55.2745;
+            lat = latOfLocation;
+            lon = lonOfLocation;
             mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lon))
                     .title(getString(R.string.Friend)
                             + getString(R.string.GoogleMapsNoLocation)));
         }
         mMap.moveCamera(CameraUpdateFactory
-                .newLatLngZoom(new LatLng(lat, lon), 18));
+                .newLatLngZoom(new LatLng(lat, lon), zoom));
     }
 }
