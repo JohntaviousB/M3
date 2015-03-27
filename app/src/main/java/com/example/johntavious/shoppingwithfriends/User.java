@@ -193,6 +193,18 @@ public final class User {
         return friends;
     }
 
+    /**
+     * Rates another friend
+     * @param u the friend to rate
+     * @param rating the rating to give the friend
+     */
+    public void rate(User u, int rating) {
+        if (isFriendsWith(u)) {
+            u.totalOfRatings += rating;
+            u.numOfRatings++;
+        }
+    }
+
     @Override
     public boolean equals(Object other) {
         if (this == other) {

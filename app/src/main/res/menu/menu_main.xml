@@ -4,16 +4,14 @@
     tools:context="com.example.johntavious.shoppingwithfriends.RegisterInterestActivity">
     <item android:id="@+id/action_home" android:title="@string/action_home"
         android:orderInCategory="100" app:showAsAction="always" />
-    <item android:id="@+id/action_notifications" android:title="@string/action_notifications"
-        android:orderInCategory="100" app:showAsAction="always" />
     <item android:id="@+id/action_post_sale" android:title="@string/action_post_sale"
         android:orderInCategory="100" app:showAsAction="always" />
     <item android:id="@+id/action_interests" android:title="Interests"
+        android:orderInCategory="100" app:showAsAction="always" />
+    <item android:id="@+id/action_register_interest" android:title="@string/action_new_interest"
         android:orderInCategory="100" app:showAsAction="ifRoom" />
     <item android:id="@+id/action_logout" android:title="@string/action_logout"
         android:orderInCategory="100" app:showAsAction="ifRoom" />
     <item android:id="@+id/action_friendslist" android:title="@string/action_friendslist"
-        android:orderInCategory="100" app:showAsAction="ifRoom" />
-    <item android:id="@+id/action_register_interest" android:title="@string/action_new_interest"
-        android:orderInCategory="100" app:showAsAction="never" />
+        android:orderInCategory="100" app:showAsAction="always" />
 </menu>

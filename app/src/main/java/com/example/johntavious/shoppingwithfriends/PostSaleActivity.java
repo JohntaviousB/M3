@@ -85,7 +85,8 @@ public final class PostSaleActivity extends ActionBarActivity {
         Switch locationSwitch = (Switch) findViewById(
                 R.id.retrieveLocationSwitch);
         String itemName = itemText.getText().toString().trim();
-        boolean useLatLng = false;
+        boolean useLatLng = false; //keeps track of whether the location
+                                //will be auto retrieved
         double price = 0;
         try {
             price = Double.parseDouble(priceText.getText().toString());
@@ -95,6 +96,7 @@ public final class PostSaleActivity extends ActionBarActivity {
         }
         String location = locationText.getText().toString().trim();
         if (locationSwitch.isChecked()) {
+            //checks to see if it is possible to retrieve the location
             LocationManager locMan =
                     (LocationManager) this.getSystemService(
                             Context.LOCATION_SERVICE);
@@ -127,7 +129,7 @@ public final class PostSaleActivity extends ActionBarActivity {
                 frenchToast.show();
             }
         }
-        if (itemName.length() < 2 && !useLatLng) {
+        if (itemName.length() < 2) {
             itemText.setError(getString(R.string.invalidSaleItem));
             itemText.requestFocus();
         } else if (price <= 0) {

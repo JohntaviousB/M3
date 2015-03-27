@@ -17,7 +17,6 @@ import java.util.ArrayList;
 /**
  * Represents the screen that will be displayed when a User wants to
  * view a list of his/her friends.
- * @version 1.0
  */
 public final class FriendList extends ActionBarActivity {
     private User user;
