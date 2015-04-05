@@ -3,12 +3,18 @@ package com.example.johntavious.shoppingwithfriends;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 /**
@@ -16,14 +22,40 @@ import android.widget.Toast;
  */
 
 public final class RegistrationActivity extends Activity {
-
+    private ImageView imgView;
+    private String imgPath;
     private final DataController sqlHandler = new SQLiteController(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+        imgView = (ImageView) findViewById(R.id.imageView);
+        imgView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent().setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Profile Picture"), 1);
+            }
+        });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1) {
+//                Bitmap bm = (Bitmap) data.getExtras().get("data");
+                imgView.setImageURI(data.getData());
+//                imgView.setImageBitmap(bm);
+                imgPath = data.getData().toString();
+                Log.d("path tostring", ""+data.getData().toString());
+                Log.d("path", ""+imgPath);
+                Log.d("path2", ""+data.getData().getPath());
+                Log.d("encoded path", ""+data.getData().getEncodedPath());
+            }
+        }
+    }
     /**
      * Cancels the Registration Activity and returns User
      * to the opening page.
@@ -100,6 +132,7 @@ public final class RegistrationActivity extends Activity {
             User user = new User(name, email, password);
             user.setLatitude(lat);
             user.setLongitude(lon);
+            user.setProfilePic(imgPath);
             sqlHandler.addUser(user);
             Intent intent = new Intent(this, WelcomeActivity.class);
             intent.putExtra("user", user.getEmail());

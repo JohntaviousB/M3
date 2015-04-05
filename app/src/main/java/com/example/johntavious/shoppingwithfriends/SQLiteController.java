@@ -93,6 +93,11 @@ public final class SQLiteController implements DataController {
     }
 
     @Override
+    public void updateUser(User u) {
+        liteHandler.updateUser(u);
+    }
+
+    @Override
     public List<User> getUsers() {
         return liteHandler.syncRegisteredUsers();
     }

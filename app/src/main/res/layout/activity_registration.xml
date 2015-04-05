@@ -17,14 +17,23 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:id="@+id/imageView"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/registration_text"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/default_profile_pic" />
+
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/name_field"
-        android:layout_marginTop="99dp"
-        android:layout_below="@+id/registration_text"
+        android:layout_marginTop="25dp"
+        android:layout_below="@+id/imageView"
         android:layout_toEndOf="@+id/registration_button" />
 
     <EditText

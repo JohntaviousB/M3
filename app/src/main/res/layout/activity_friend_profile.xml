@@ -20,34 +20,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="You are friends"
-        android:id="@+id/friendship_text"
-        android:layout_below="@+id/user_email_text"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Unfriend"
-        android:id="@+id/friendship_button"
-        android:onClick="onFriendshipClick"
-        android:layout_below="@+id/sales_shared_to_user_text"
-        android:layout_alignStart="@+id/friendship_text" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Email"
-        android:id="@+id/user_email_text"
-        android:layout_below="@+id/otherUser_profile_header"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="0/0"
         android:id="@+id/averge_rating"
         android:layout_alignBottom="@+id/otherUser_profile_header"
@@ -58,10 +30,51 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Email"
+        android:id="@+id/user_email_text"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/otherUser_profile_header"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="You are friends"
+        android:id="@+id/friendship_text"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/user_email_text"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Sales given to you"
         android:id="@+id/sales_shared_to_user_text"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/friendship_text"
         android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:id="@+id/imageViewProfile"
+        android:layout_below="@id/sales_shared_to_user_text"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/default_profile_pic" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Unfriend"
+        android:id="@+id/friendship_button"
+        android:onClick="onFriendshipClick"
+        android:layout_below="@id/imageViewProfile"
+        android:layout_alignStart="@+id/friendship_text"
+        android:layout_marginTop="10dp" />
 
 </RelativeLayout>

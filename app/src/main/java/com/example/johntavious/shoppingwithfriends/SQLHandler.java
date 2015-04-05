@@ -17,7 +17,7 @@ import java.util.List;
  */
 final class SQLHandler extends SQLiteOpenHelper {
     // Constants used in construction of database
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 13;
     private static final String DATABASE_NAME = "ShopWFriends.db";
 
     // Constants used in construction of main table
@@ -27,6 +27,7 @@ final class SQLHandler extends SQLiteOpenHelper {
     private static final String COLUMN_PASSWORD = "password";
     private static final String COLUMN_LATITUDE = "latitude";
     private static final String COLUMN_LONGITUDE = "longitude";
+    private static final String COLUMN_PICTURE = "picture";
 
     // Constants used in construction of friends table
     private static final String TABLE_FRIENDS = "Friends";
@@ -71,7 +72,8 @@ final class SQLHandler extends SQLiteOpenHelper {
                 + COLUMN_EMAIL + " TEXT,"
                 + COLUMN_PASSWORD + " TEXT,"
                 + COLUMN_LATITUDE + " REAL,"
-                + COLUMN_LONGITUDE + " REAL)";
+                + COLUMN_LONGITUDE + " REAL, "
+                + COLUMN_PICTURE + " TEXT)";
         String createTableFriends = "CREATE TABLE " + TABLE_FRIENDS + "("
                 + COLUMN_USER_NAME + " TEXT,"
                 + COLUMN_FRIEND_NAME + " TEXT,"
@@ -128,6 +130,7 @@ final class SQLHandler extends SQLiteOpenHelper {
         values.put(COLUMN_PASSWORD, user.getPassword());
         values.put(COLUMN_LATITUDE, user.getLatitude());
         values.put(COLUMN_LONGITUDE, user.getLongitude());
+        values.put(COLUMN_PICTURE, user.getProfilePic());
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert(TABLE_MAIN, null, values);
@@ -289,7 +292,6 @@ final class SQLHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         User user = new User();
-
         if (cursor.moveToFirst()) {
             user.setName(cursor.getString(0));
             user.setEmail(cursor.getString(1));
@@ -300,6 +302,9 @@ final class SQLHandler extends SQLiteOpenHelper {
             if (cursor.getString(4) != null) {
                 user.setLongitude(Double.parseDouble(cursor.getString(4)));
             }
+            if (cursor.getString(5) != null) {
+                user.setProfilePic(cursor.getString(5));
+            }
             cursor.close();
             includeFriends(user, db);
             includeInterests(user, db);
@@ -309,6 +314,7 @@ final class SQLHandler extends SQLiteOpenHelper {
         }
 
         db.close();
+        Log.d("USER", "" + user);
         return user;
     }
     /**
@@ -332,6 +338,9 @@ final class SQLHandler extends SQLiteOpenHelper {
             }
             if (cursor.getString(4) != null) {
                 user.setLongitude(Double.parseDouble(cursor.getString(4)));
+            }
+            if (cursor.getString(5) != null) {
+                user.setProfilePic(cursor.getString(5));
             }
             cursor.close();
             includeFriends(user, db);
@@ -529,7 +538,22 @@ final class SQLHandler extends SQLiteOpenHelper {
                 + COLUMN_FRIEND_NAME + " = ?", new String[]{friend.getName(),
                                                         user.getName()});
     }
+    /**
+     * Updates the User's profile.
+     * @param u the User to be updated.
+     */
+    public void updateUser(User u) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_NAME, u.getName());
+        values.put(COLUMN_EMAIL, u.getEmail());
+        values.put(COLUMN_PASSWORD, u.getPassword());
+        values.put(COLUMN_LATITUDE, u.getLatitude());
+        values.put(COLUMN_LONGITUDE, u.getLongitude());
+        values.put(COLUMN_PICTURE, u.getProfilePic());
 
+        db.update(TABLE_MAIN, values, COLUMN_NAME + " = ?", new String[]{u.getName()} );
+    }
     /**
      * Reports how many sales f has shared with u.
      * @param u the user logged in

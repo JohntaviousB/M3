@@ -1,6 +1,9 @@
 package com.example.johntavious.shoppingwithfriends;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Button;
@@ -20,6 +24,7 @@ import java.util.List;
 public final class WelcomeActivity extends ActionBarActivity {
     private User user;
     private final DataController dc = new SQLiteController(this);
+    private ImageView imgView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +36,18 @@ public final class WelcomeActivity extends ActionBarActivity {
         TextView welcomeText = (TextView) findViewById(R.id.welcome_text);
         welcomeText.setText("Welcome, " + user.getName());
 
+        imgView = (ImageView) findViewById(R.id.profileImage);
+        if (user.getProfilePic() != null) {
+            imgView.setImageURI(Uri.parse(user.getProfilePic()));
+        }
+        imgView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent().setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Profile Picture"), 1);
+            }
+        });
         // Friend's List
         Button friendListButton = (Button) findViewById(
                 R.id.friend_list_button);
@@ -72,6 +89,15 @@ public final class WelcomeActivity extends ActionBarActivity {
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1) {
+                imgView.setImageURI(data.getData());
+                dc.updateUser(user);
+            }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

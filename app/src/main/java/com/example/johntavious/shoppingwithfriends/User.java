@@ -18,7 +18,7 @@ public final class User {
     private int numOfRatings;
     private Double lat;
     private Double lon;
-
+    private String profilePic;
     /**
      * A no arg constructor for a User.
      */
@@ -162,7 +162,6 @@ public final class User {
     }
     public Double getLongitude() {
         return lon;
-
     }
     public void setLatitude(Double lat) {
         this.lat = lat;
@@ -178,7 +177,12 @@ public final class User {
     public List<String> getFriends() {
         return friends;
     }
-
+    public void setProfilePic(String image) {
+        this.profilePic = image;
+    }
+    public String getProfilePic() {
+        return profilePic;
+    }
     @Override
     public boolean equals(Object other) {
         if (this == other) {

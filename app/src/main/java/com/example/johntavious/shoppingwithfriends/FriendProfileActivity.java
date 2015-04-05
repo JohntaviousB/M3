@@ -1,12 +1,14 @@
 package com.example.johntavious.shoppingwithfriends;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -34,7 +36,10 @@ public final class FriendProfileActivity extends ActionBarActivity {
                 + "/5.0");
         ((TextView) findViewById(R.id.user_email_text))
                 .setText(otherUser.getEmail());
-
+        if (otherUser.getProfilePic() != null) {
+            ((ImageView) findViewById(R.id.imageViewProfile))
+                    .setImageURI(Uri.parse(otherUser.getProfilePic()));
+        }
         friendshipButton = ((Button) findViewById(R.id.friendship_button));
         updateViewContents(); //see private method below
 

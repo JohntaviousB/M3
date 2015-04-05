@@ -70,6 +70,11 @@ public interface DataController {
      */
     int getSalesShared(User u, User f);
     /**
+     * Updates the User's profile.
+     * @param u the User to be updated.
+     */
+    void updateUser(User u);
+    /**
      * Makes sure password is of valid length.
      * @param password the password to check
      * @return true if the password is long enough, false otherwise
