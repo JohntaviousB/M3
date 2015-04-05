@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public final class FriendList extends ActionBarActivity {
     private User user;
     private ArrayAdapter<User> adapter;
-    private DataController dc = new SQLiteController(this);
+    private final DataController dc = new SQLiteController(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +35,7 @@ public final class FriendList extends ActionBarActivity {
         header.setText(user.getName() + "'s Friends");
 
         List<String> friends = user.getFriends();
-        List<User> friendsList = new ArrayList<User>();
+        List<User> friendsList = new ArrayList<>();
 
         for (String each : friends) {
             friendsList.add(dc.getUserByName(each));

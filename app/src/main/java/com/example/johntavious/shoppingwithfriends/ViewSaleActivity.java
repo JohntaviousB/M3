@@ -21,9 +21,6 @@ public final class ViewSaleActivity extends FragmentActivity {
     private double lat;
     private double lon;
     private String location;
-    private final int zoom = 17;
-    private final double latOfLocation = 25.197170;
-    private final double lonOfLocation = 55.2745;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +69,9 @@ public final class ViewSaleActivity extends FragmentActivity {
      * if no lat/long was retrieved when the sale was posted.
      */
     private void setUpMap() {
+        final int zoom = 17;
+        final double latOfLocation = 25.197170;
+        final double lonOfLocation = 55.2745;
         if (location == null) {
             mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lon))
                     .title(getString(R.string.FoundItemGoogleMaps)));

@@ -10,7 +10,7 @@ import java.util.List;
  * Currently directs data to and from the SQLite database
  */
 public final class SQLiteController implements DataController {
-    private SQLHandler liteHandler;
+    private final SQLHandler liteHandler;
 
     /**
      * Constructor for the data controller to be connected to a database.
@@ -85,6 +85,11 @@ public final class SQLiteController implements DataController {
     @Override
     public void addSale(Sale sale) {
         liteHandler.addSale(sale);
+    }
+
+    @Override
+    public int getSalesShared(User u, User f) {
+        return liteHandler.getSalesShared(u, f);
     }
 
     @Override

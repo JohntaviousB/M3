@@ -13,5 +13,5 @@
     <item android:id="@+id/action_logout" android:title="@string/action_logout"
         android:orderInCategory="100" app:showAsAction="ifRoom" />
     <item android:id="@+id/action_friendslist" android:title="@string/action_friendslist"
-        android:orderInCategory="100" app:showAsAction="always" />
+        android:orderInCategory="100" app:showAsAction="ifRoom" />
 </menu>

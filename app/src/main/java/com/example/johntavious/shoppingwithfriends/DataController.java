@@ -60,8 +60,15 @@ public interface DataController {
      * Adds a sale to the database.
      * @param sale the sale to add
      */
-    void addSale(Sale sale);
 
+    void addSale(Sale sale);
+    /**
+     * Reports how many sales f has shared with u.
+     * @param u the user logged in
+     * @param f the friend of u
+     * @return the number of such sales.
+     */
+    int getSalesShared(User u, User f);
     /**
      * Makes sure password is of valid length.
      * @param password the password to check

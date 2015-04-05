@@ -13,12 +13,14 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import javax.xml.datatype.Duration;
+
 
 public final class PostSaleActivity extends ActionBarActivity {
     private User user;
-    private DataController dc = new SQLiteController(this);
-    private double lat;
-    private double lon;
+    private final DataController dc = new SQLiteController(this);
+    private Double lat = null;
+    private Double lon = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,8 +82,10 @@ public final class PostSaleActivity extends ActionBarActivity {
                 R.id.postSaleEditText);
         EditText priceText = (EditText) findViewById(
                 R.id.postSalePriceEditText);
-        EditText locationText = (EditText) findViewById(
-                R.id.postSaleLocationEditText);
+        EditText latitudeText = (EditText) findViewById(
+                R.id.postSaleLatitudeEditText);
+        EditText longitudeText = (EditText) findViewById(
+                R.id.postSaleLongitudeEditText);
         Switch locationSwitch = (Switch) findViewById(
                 R.id.retrieveLocationSwitch);
         String itemName = itemText.getText().toString().trim();
@@ -94,7 +98,6 @@ public final class PostSaleActivity extends ActionBarActivity {
             priceText.setError(getString(R.string.invalidSalePrice));
             priceText.requestFocus();
         }
-        String location = locationText.getText().toString().trim();
         if (locationSwitch.isChecked()) {
             //checks to see if it is possible to retrieve the location
             LocationManager locMan =
@@ -129,25 +132,26 @@ public final class PostSaleActivity extends ActionBarActivity {
                 frenchToast.show();
             }
         }
+        if (!useLatLng) {
+            try {
+                lat = Double.parseDouble(latitudeText.getText().toString());
+                lon = Double.parseDouble(longitudeText.getText().toString());
+            } catch (NumberFormatException e) {
+                latitudeText.setError("Enter valid coordinates!");
+                latitudeText.requestFocus();
+            }
+        }
         if (itemName.length() < 2) {
             itemText.setError(getString(R.string.invalidSaleItem));
             itemText.requestFocus();
         } else if (price <= 0) {
             priceText.setError(getString(R.string.invalidSalePrice));
             priceText.requestFocus();
-        } else if (locationText.length() >= 2 && !useLatLng) {
-            dc.addSale(new Sale(user.getName(), itemName, price, location));
+        } else if (lat != null && lon != null) {
+            dc.addSale(new Sale(user.getName(), itemName.toLowerCase(), price, lat, lon));
             Intent intent = new Intent(this, WelcomeActivity.class);
             intent.putExtra("user", user.getEmail());
             startActivity(intent);
-        } else if (useLatLng) {
-            dc.addSale(new Sale(user.getName(), itemName, price, lat, lon));
-            Intent intent = new Intent(this, WelcomeActivity.class);
-            intent.putExtra("user", user.getEmail());
-            startActivity(intent);
-        } else {
-            locationText.setError(getString(R.string.invalidSaleLocation));
-            locationText.requestFocus();
         }
     }
 

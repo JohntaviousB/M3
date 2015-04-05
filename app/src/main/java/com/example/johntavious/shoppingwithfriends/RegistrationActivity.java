@@ -1,10 +1,15 @@
 package com.example.johntavious.shoppingwithfriends;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * Represents the registration activity of the application.
@@ -12,7 +17,7 @@ import android.widget.EditText;
 
 public final class RegistrationActivity extends Activity {
 
-    private DataController sqlHandler = new SQLiteController(this);
+    private final DataController sqlHandler = new SQLiteController(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +41,7 @@ public final class RegistrationActivity extends Activity {
      */
 
     public void onDoneClick(View view) {
+        CheckBox checkBox = (CheckBox) findViewById(R.id.checkBox);
         String name = ((EditText) findViewById(R.id.name_field))
                         .getText().toString().trim();
         String email = ((EditText) findViewById(R.id.email_field))
@@ -55,7 +61,45 @@ public final class RegistrationActivity extends Activity {
             passwordView.setError(getString(R.string.validPasswordFormat));
             passwordView.requestFocus();
         } else if (sqlHandler.emailValid(email)) {
+            Double lat = null;
+            Double lon = null;
+            if (checkBox.isChecked()) {
+                boolean useLatLng = false;
+                LocationManager locMan =
+                        (LocationManager) this.getSystemService(
+                                Context.LOCATION_SERVICE);
+                boolean isGPSEnabled = locMan.isProviderEnabled(
+                        LocationManager.GPS_PROVIDER);
+                boolean isNetworkEnabled =
+                        locMan.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+                Location loc;
+                if (isGPSEnabled) {
+                    loc = locMan.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    if (loc != null) {
+                        lat = loc.getLatitude();
+                        lon = loc.getLongitude();
+                        useLatLng = true;
+                    }
+                }
+                if (isNetworkEnabled && !useLatLng) {
+                    loc = locMan.getLastKnownLocation(
+                            LocationManager.NETWORK_PROVIDER);
+                    if (loc != null) {
+                        lat = loc.getLatitude();
+                        lon = loc.getLongitude();
+                        useLatLng = true;
+                    }
+                }
+                if (!useLatLng) {
+                    Toast frenchToast = Toast.makeText(this,
+                            getString(R.string.unableToRetreiveLocation),
+                            Toast.LENGTH_SHORT);
+                    frenchToast.show();
+                }
+            }
             User user = new User(name, email, password);
+            user.setLatitude(lat);
+            user.setLongitude(lon);
             sqlHandler.addUser(user);
             Intent intent = new Intent(this, WelcomeActivity.class);
             intent.putExtra("user", user.getEmail());

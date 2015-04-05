@@ -6,8 +6,7 @@ import java.text.NumberFormat;
  * Represents a User's interest in the application.
  * @version 1.0
  */
-public final class Interest {
-    private int id;
+final class Interest {
     private String itemName;
     private double thresholdPrice;
     private int distance; //the max distance willing to travel
@@ -54,13 +53,6 @@ public final class Interest {
     }
 
     /**
-     * Gets the id, primary key in SQLite table.
-     * @return the id for the interest
-     */
-    public int getId() {
-        return id;
-    }
-    /**
      * Sets the threshold price.
      * @param price the new threshold price
      */
@@ -94,13 +86,6 @@ public final class Interest {
         }
     }
 
-    /**
-     * Sets the id of the Interest.
-     * @param id the Interest id
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
 
     @Override
     public String toString() {

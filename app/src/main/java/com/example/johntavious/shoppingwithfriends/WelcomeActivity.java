@@ -19,7 +19,7 @@ import java.util.List;
  */
 public final class WelcomeActivity extends ActionBarActivity {
     private User user;
-    private DataController dc = new SQLiteController(this);
+    private final DataController dc = new SQLiteController(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

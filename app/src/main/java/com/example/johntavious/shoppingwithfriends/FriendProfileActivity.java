@@ -17,16 +17,16 @@ public final class FriendProfileActivity extends ActionBarActivity {
     private User user;
     private User otherUser;
     private Button friendshipButton;
-    private DataController dc = new SQLiteController(this);
+    private final DataController dc = new SQLiteController(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_profile);
         Bundle extras = getIntent().getExtras();
-        user = dc.getUser(extras.getString("user"));
-
-        otherUser = dc.getUser(extras.getString("otherUser"));
-
+        if (extras != null) {
+            user = dc.getUser(extras.getString("user"));
+            otherUser = dc.getUser(extras.getString("otherUser"));
+        }
         ((TextView) findViewById(R.id.otherUser_profile_header))
                 .setText(otherUser.getName() + "'s Profile");
         ((TextView) findViewById(R.id.averge_rating))
@@ -61,25 +61,25 @@ public final class FriendProfileActivity extends ActionBarActivity {
      * Sets the content of the screen based on friendship
      */
     private void updateViewContents() {
+        TextView salesShared = (TextView)
+                findViewById(R.id.sales_shared_to_user_text);
         if (user.isFriendsWith(otherUser)) {
             ((TextView) findViewById(R.id.friendship_text))
                     .setText(getString(R.string.friendship_text));
 
             ((TextView) findViewById(R.id.sales_shared_to_user_text))
                     .setText(otherUser.getName()
-                    + " has shared " + user.getSalesReceivedByUser(otherUser)
+                    + " has shared " + dc.getSalesShared(user, otherUser)
                     + " sales with you");
 
-            ((TextView) findViewById(R.id.sales_shared_to_user_text))
-                    .setVisibility(View.VISIBLE);
+            salesShared.setVisibility(View.VISIBLE);
 
             friendshipButton.setText("Unfriend");
         } else {
             ((TextView) findViewById(R.id.friendship_text))
                     .setText(getString(R.string.nonfriendship_text));
 
-            ((TextView) findViewById(R.id.sales_shared_to_user_text))
-                    .setVisibility(View.GONE);
+            salesShared.setVisibility(View.GONE);
 
             friendshipButton.setText("Add Friend");
         }

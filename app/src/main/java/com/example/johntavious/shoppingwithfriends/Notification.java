@@ -6,12 +6,9 @@ package com.example.johntavious.shoppingwithfriends;
  */
 import java.text.NumberFormat;
 
-public final class Notification {
+final class Notification {
     private String message;
-    private String user;
     private String location;
-    private String item;
-    private double price;
     private Double latitude = null;
     private Double longitude = null;
 
@@ -25,10 +22,7 @@ public final class Notification {
      */
     public Notification(String user, String location,
                         String item, double price) {
-        this.user = user;
         this.location = location;
-        this.item = item;
-        this.price = price;
         createMessage(user, location, item, price);
     }
 
@@ -43,9 +37,6 @@ public final class Notification {
      */
     public Notification(String user, String item, double price,
                         double lat, double lon) {
-        this.user = user;
-        this.item = item;
-        this.price = price;
         this.latitude = lat;
         this.longitude = lon;
         createMessage(user, item, price, lat, lon);

@@ -5,6 +5,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 import android.content.Context;
 import android.database.Cursor;
+import android.location.Location;
+import android.location.LocationManager;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,44 +15,47 @@ import java.util.List;
 /**
  * Represents the database used by the application.
  */
-public final class SQLHandler extends SQLiteOpenHelper {
+final class SQLHandler extends SQLiteOpenHelper {
     // Constants used in construction of database
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 9;
     private static final String DATABASE_NAME = "ShopWFriends.db";
 
     // Constants used in construction of main table
-    public static final String TABLE_MAIN = "Users";
-    public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_NAME = "name";
-    public static final String COLUMN_EMAIL = "email";
-    public static final String COLUMN_PASSWORD = "password";
+    private static final String TABLE_MAIN = "Users";
+    private static final String COLUMN_NAME = "name";
+    private static final String COLUMN_EMAIL = "email";
+    private static final String COLUMN_PASSWORD = "password";
+    private static final String COLUMN_LATITUDE = "latitude";
+    private static final String COLUMN_LONGITUDE = "longitude";
 
     // Constants used in construction of friends table
-    public static final String TABLE_FRIENDS = "Friends";
-    public static final String COLUMN_FRIEND_LIST_ID = "friend_list_id";
-    public static final String COLUMN_USER_NAME = "user_id";
-    public static final String COLUMN_FRIEND_NAME = "friend_id";
+    private static final String TABLE_FRIENDS = "Friends";
+    private static final String COLUMN_USER_NAME = "user_id";
+    private static final String COLUMN_FRIEND_NAME = "friend_id";
 
     // Constants used in construction of Interests table
-    public static final String TABLE_INTERESTS = "Interests";
-    public static final String COLUMN_INTEREST_ID = "interest_id";
-    public static final String COLUMN_INTEREST_USER_NAME = "interest_user_name";
-    public static final String COLUMN_ITEM_NAME = "item_name";
-    public static final String COLUMN_THRESHOLD_PRICE = "threshold_price";
-    public static final String COLUMN_DISTANCE = "distance";
+    private static final String TABLE_INTERESTS = "Interests";
+    private static final String COLUMN_INTEREST_USER_NAME = "interest_user_name";
+    private static final String COLUMN_ITEM_NAME = "item_name";
+    private static final String COLUMN_THRESHOLD_PRICE = "threshold_price";
+    private static final String COLUMN_DISTANCE = "distance";
 
     // Constants used in construction of Sales table
-    public static final String TABLE_SALES = "Sales";
-    public static final String COLUMN_SALE_ID = "sale_id";
-    public static final String COLUMN_SALE_USER = "sale_user";
-    public static final String COLUMN_SALE_ITEM = "sale_item";
-    public static final String COLUMN_SALE_PRICE = "sale_price";
-    public static final String COLUMN_SALE_LOCATION = "sale_location";
-    public static final String COLUMN_SALE_LATITUDE = "sale_latitude";
-    public static final String COLUMN_SALE_LONGITUDE = "sale_longitude";
+    private static final String TABLE_SALES = "Sales";
+    private static final String COLUMN_SALE_ID = "_id";
+    private static final String COLUMN_SALE_USER = "sale_user";
+    private static final String COLUMN_SALE_ITEM = "sale_item";
+    private static final String COLUMN_SALE_PRICE = "sale_price";
+    private static final String COLUMN_SALE_LOCATION = "sale_location";
+    private static final String COLUMN_SALE_LATITUDE = "sale_latitude";
+    private static final String COLUMN_SALE_LONGITUDE = "sale_longitude";
 
-    public static final String TABLE_NOTIFICATIONS = "Notifications";
+    // Constants used in construction of Notifications table
+    private static final String TABLE_NOTIFICATIONS = "Notifications";
+    private static final String COLUMN_NOTIFICATION_USER = "user";
+    private static final String COLUMN_NOTIFICATION_SALE = "sale_id";
 
+    private static int numOfSales; //used to help generate surrogate keys for Sales
     /**
      * Constructor to initialize our database helper.
      * @param context the context of the database
@@ -60,20 +66,22 @@ public final class SQLHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableMain = "CREATE TABLE " + TABLE_MAIN
-                + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
-                + COLUMN_NAME + " TEXT," + COLUMN_EMAIL + " TEXT,"
-                + COLUMN_PASSWORD + " TEXT)";
+        String createTableMain = "CREATE TABLE " + TABLE_MAIN + "("
+                + COLUMN_NAME + " TEXT PRIMARY KEY,"
+                + COLUMN_EMAIL + " TEXT,"
+                + COLUMN_PASSWORD + " TEXT,"
+                + COLUMN_LATITUDE + " REAL,"
+                + COLUMN_LONGITUDE + " REAL)";
         String createTableFriends = "CREATE TABLE " + TABLE_FRIENDS + "("
-                + COLUMN_FRIEND_LIST_ID + " INTEGER PRIMARY KEY,"
                 + COLUMN_USER_NAME + " TEXT,"
-                + COLUMN_FRIEND_NAME + " TEXT)";
+                + COLUMN_FRIEND_NAME + " TEXT,"
+                + "PRIMARY KEY (" + COLUMN_USER_NAME + ", " + COLUMN_FRIEND_NAME + "))";
         String createTableInterests = "CREATE TABLE " + TABLE_INTERESTS + "("
-                + COLUMN_INTEREST_ID + " INTEGER PRIMARY KEY,"
                 + COLUMN_INTEREST_USER_NAME + " TEXT, "
                 + COLUMN_ITEM_NAME + " TEXT,"
                 + COLUMN_THRESHOLD_PRICE + " REAL, "
-                + COLUMN_DISTANCE + " INTEGER)";
+                + COLUMN_DISTANCE + " INTEGER,"
+                + "PRIMARY KEY (" + COLUMN_INTEREST_USER_NAME + ", " + COLUMN_ITEM_NAME + "))";
         String createTableSales = "CREATE TABLE " + TABLE_SALES + "("
                 + COLUMN_SALE_ID + " INTEGER PRIMARY KEY,"
                 + COLUMN_SALE_USER + " TEXT, "
@@ -81,12 +89,22 @@ public final class SQLHandler extends SQLiteOpenHelper {
                 + COLUMN_SALE_PRICE + " REAL, "
                 + COLUMN_SALE_LOCATION + " TEXT, "
                 + COLUMN_SALE_LATITUDE + " REAL, "
-                + COLUMN_SALE_LONGITUDE + " REAL)";
+                + COLUMN_SALE_LONGITUDE + " REAL, "
+                + "FOREIGN KEY (" + COLUMN_SALE_USER + ") "
+                + "REFERENCES " + TABLE_MAIN + "(" + COLUMN_NAME + "))";
+        String createTableNotifications = "CREATE TABLE " + TABLE_NOTIFICATIONS + "("
+                + COLUMN_NOTIFICATION_USER + " TEXT,"
+                + COLUMN_NOTIFICATION_SALE + " INTEGER, "
+                + "PRIMARY KEY (" + COLUMN_NOTIFICATION_USER + ", "
+                + COLUMN_NOTIFICATION_SALE + "), "
+                + "FOREIGN KEY (" + COLUMN_NOTIFICATION_SALE + ") "
+                + "REFERENCES " + TABLE_SALES + "(" + COLUMN_SALE_ID + "))";
 
         db.execSQL(createTableMain);
         db.execSQL(createTableFriends);
         db.execSQL(createTableInterests);
         db.execSQL(createTableSales);
+        db.execSQL(createTableNotifications);
     }
 
     @Override
@@ -108,6 +126,8 @@ public final class SQLHandler extends SQLiteOpenHelper {
         values.put(COLUMN_NAME, user.getName());
         values.put(COLUMN_EMAIL, user.getEmail());
         values.put(COLUMN_PASSWORD, user.getPassword());
+        values.put(COLUMN_LATITUDE, user.getLatitude());
+        values.put(COLUMN_LONGITUDE, user.getLongitude());
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert(TABLE_MAIN, null, values);
@@ -161,20 +181,98 @@ public final class SQLHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Adds a Sale into the database.
+     * Adds a Sale into the database and generates appropriate notifications.
      * @param sale the sale to be added
      */
     public void addSale(Sale sale) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        if (numOfSales == 0) {
+            String query = "SELECT COUNT(*) FROM " + TABLE_SALES;
+            Cursor cursor1 = db.rawQuery(query, null);
+            if (cursor1.moveToFirst()) {
+                numOfSales = Integer.parseInt(cursor1.getString(0));
+            }
+        }
         ContentValues values = new ContentValues();
+        values.put(COLUMN_SALE_ID, ++numOfSales);
         values.put(COLUMN_SALE_USER, sale.getUserName());
         values.put(COLUMN_SALE_ITEM,   sale.getItem());
         values.put(COLUMN_SALE_PRICE, sale.getPrice());
         values.put(COLUMN_SALE_LOCATION, sale.getLocation());
         values.put(COLUMN_SALE_LATITUDE, sale.getLatitude());
         values.put(COLUMN_SALE_LONGITUDE, sale.getLongitude());
-
-        SQLiteDatabase db = this.getWritableDatabase();
         db.insert(TABLE_SALES, null, values);
+        sale.setId(numOfSales);
+        Log.d("SALE_INSERTION:", "Sale Id: " + sale.getId() + " User: " + sale.getUserName() + " Item: " + sale.getItem());
+
+
+        //FRIENDS WITH NO LOCATION STORED NOTIFIED AUTOMATICALLY
+        String friendsToNotify = "SELECT " + COLUMN_FRIEND_NAME
+                + " FROM " + TABLE_FRIENDS + " f, "
+                + TABLE_INTERESTS + " i, "
+                + TABLE_MAIN + " u "
+                + "WHERE f." + COLUMN_FRIEND_NAME + " = i." + COLUMN_INTEREST_USER_NAME
+                + " AND i." + COLUMN_ITEM_NAME + " = '" + sale.getItem() + "'"
+                + " AND i." + COLUMN_THRESHOLD_PRICE + " >= " + sale.getPrice()
+                + " AND f." + COLUMN_USER_NAME + " = '" + sale.getUserName() + "'"
+                + " AND u." + COLUMN_NAME + " = " + "i." + COLUMN_INTEREST_USER_NAME
+                + " AND u." + COLUMN_LATITUDE + " IS NULL";
+        Cursor cursor2 = db.rawQuery(friendsToNotify, null);
+        if (cursor2.moveToFirst()) {
+            do {
+                ContentValues notificationValues = new ContentValues();
+                notificationValues.put(COLUMN_NOTIFICATION_SALE, sale.getId());
+                notificationValues.put(COLUMN_NOTIFICATION_USER, cursor2.getString(0));
+                Log.d("Notification_INSERTION::", " Sale id: " + sale.getId() + " User: " + cursor2.getString(0));
+                db.insert(TABLE_NOTIFICATIONS, null, notificationValues);
+            } while (cursor2.moveToNext());
+            cursor2.close();
+        }
+        String otherFriendsToNotify = "SELECT " + COLUMN_FRIEND_NAME
+                + ", " + COLUMN_LATITUDE
+                + ", " + COLUMN_LONGITUDE
+                + ", " + COLUMN_DISTANCE
+                + " FROM " + TABLE_FRIENDS + " f, "
+                + TABLE_INTERESTS + " i, "
+                + TABLE_MAIN + " u "
+                + "WHERE f." + COLUMN_FRIEND_NAME + " = i." + COLUMN_INTEREST_USER_NAME
+                + " AND i." + COLUMN_ITEM_NAME + " = '" + sale.getItem() + "'"
+                + " AND i." + COLUMN_THRESHOLD_PRICE + " >= " + sale.getPrice()
+                + " AND f." + COLUMN_USER_NAME + " = '" + sale.getUserName() + "'"
+                + " AND u." + COLUMN_NAME + " = " + "i." + COLUMN_INTEREST_USER_NAME
+                + " AND u." + COLUMN_LATITUDE + " IS NOT NULL"
+                + " AND u." + COLUMN_LONGITUDE + " IS NOT NULL";
+        Cursor newCursor = db.rawQuery(otherFriendsToNotify, null);
+        if (newCursor.moveToFirst()) {
+            do {
+                double metersToMiles = 0.000621371;
+                double lat = sale.getLatitude();
+                double lon = sale.getLongitude();
+                double distance = Double.parseDouble(newCursor.getString(3));
+                double userLat = Double.parseDouble(newCursor.getString(1));
+                double userLon = Double.parseDouble(newCursor.getString(2));
+                Location saleLocation = new Location(LocationManager.GPS_PROVIDER);
+                saleLocation.setLatitude(lat);
+                saleLocation.setLongitude(lon);
+                float[] result = new float[1];
+                Location.distanceBetween(lat, lon, userLat, userLon, result);
+                Log.d("LAT:", "sale lat " + lat);
+                Log.d("LON:", "sale lon " + lon);
+                Log.d("LAT:", "user lat " + userLat);
+                Log.d("Lon:", "user lon " + userLon);
+                Log.d("ARRAY:", "distance in meters: " + result[0]);
+                Log.d("ARRAY:", "distance in miles: " + (metersToMiles * result[0]));
+                if (result[0] * metersToMiles <= distance) {
+                    ContentValues notificationValues = new ContentValues();
+                    notificationValues.put(COLUMN_NOTIFICATION_SALE, sale.getId());
+                    notificationValues.put(COLUMN_NOTIFICATION_USER, newCursor.getString(0));
+                    db.insert(TABLE_NOTIFICATIONS, null, notificationValues);
+                    Log.d("Notification_INSERTION with Lat:",
+                            " Sale id: " + sale.getId() + " User: " + newCursor.getString(0));
+                }
+            } while (newCursor.moveToNext());
+            newCursor.close();
+        }
         db.close();
     }
 
@@ -193,10 +291,11 @@ public final class SQLHandler extends SQLiteOpenHelper {
         User user = new User();
 
         if (cursor.moveToFirst()) {
-            user.setId(Integer.parseInt(cursor.getString(0)));
-            user.setName(cursor.getString(1));
-            user.setEmail(cursor.getString(2));
-            user.setPassword(cursor.getString(3));
+            user.setName(cursor.getString(0));
+            user.setEmail(cursor.getString(1));
+            user.setPassword(cursor.getString(2));
+            user.setLatitude(Double.parseDouble(cursor.getString(3)));
+            user.setLongitude(Double.parseDouble(cursor.getString(4)));
             cursor.close();
             includeFriends(user, db);
             includeInterests(user, db);
@@ -208,7 +307,6 @@ public final class SQLHandler extends SQLiteOpenHelper {
         db.close();
         return user;
     }
-
     /**
      * Retrieves a User from the database with the given Username
      * along with his friends, notifications, and interests.
@@ -222,10 +320,11 @@ public final class SQLHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
         User user = new User();
         if (cursor.moveToFirst()) {
-            user.setId(Integer.parseInt(cursor.getString(0)));
-            user.setName(cursor.getString(1));
-            user.setEmail(cursor.getString(2));
-            user.setPassword(cursor.getString(3));
+            user.setName(cursor.getString(0));
+            user.setEmail(cursor.getString(1));
+            user.setPassword(cursor.getString(2));
+            user.setLatitude(Double.parseDouble(cursor.getString(3)));
+            user.setLongitude(Double.parseDouble(cursor.getString(4)));
             cursor.close();
             includeFriends(user, db);
             includeInterests(user, db);
@@ -250,11 +349,10 @@ public final class SQLHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 Interest interest = new Interest();
-                interest.setId(Integer.parseInt(cursor.getString(0)));
-                interest.setItemName(cursor.getString(2));
+                interest.setItemName(cursor.getString(1));
                 interest.setThresholdPrice(
-                        Double.parseDouble(cursor.getString(3)));
-                interest.setDistance(Integer.parseInt(cursor.getString(4)));
+                        Double.parseDouble(cursor.getString(2)));
+                interest.setDistance(Integer.parseInt(cursor.getString(3)));
                 user.registerInterest(interest);
             } while (cursor.moveToNext());
             cursor.close();
@@ -275,7 +373,7 @@ public final class SQLHandler extends SQLiteOpenHelper {
         String name;
         if (cursor.moveToFirst()) {
             do {
-                name = cursor.getString(2);
+                name = cursor.getString(1);
                 boolean areFriends = false;
                 List<String> friends = user.getFriends();
                 for (String element : friends) {
@@ -307,10 +405,10 @@ public final class SQLHandler extends SQLiteOpenHelper {
                 + ", " + COLUMN_SALE_LONGITUDE
                 + " FROM "
                 + TABLE_SALES + " s, "
-                + TABLE_FRIENDS + " f "
-                + "WHERE s." + COLUMN_SALE_USER
-                + " = " + "f." + COLUMN_FRIEND_NAME
-                + " AND f." + COLUMN_USER_NAME
+                + TABLE_NOTIFICATIONS + " n "
+                + "WHERE s." + COLUMN_SALE_ID
+                + " = " + "n." + COLUMN_NOTIFICATION_SALE
+                + " AND n." + COLUMN_NOTIFICATION_USER
                 + " = \"" + user.getName() + "\"";
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
@@ -327,23 +425,14 @@ public final class SQLHandler extends SQLiteOpenHelper {
                 if (cursor.getString(5) != null) {
                     lon = Double.parseDouble((cursor.getString(5)));
                 }
-                List<Interest> interests = user.getInterests();
-                for (Interest interest : interests) {
-                    if (interest.getItemName().equalsIgnoreCase(itemName)) {
-                        if (interest.getThresholdPrice() >= price) {
-                            if (location != null) {
-                                //unable to retrieve lat/lng
-                                user.addNotification(
-                                        new Notification(friend, location,
-                                                itemName, price));
-                            } else {
-                                //able to retrieve lat/lng
-                                user.addNotification(
-                                        new Notification(friend, itemName,
-                                                price, lat, lon));
-                            }
-                        }
-                    }
+                if (location != null) {
+                    //unable to retrieve lat/lng
+                    user.addNotification(new Notification(friend, location,
+                                    itemName, price));
+                } else {
+                    //able to retrieve lat/lng
+                    user.addNotification(new Notification(friend, itemName,
+                                    price, lat, lon));
                 }
             } while (cursor.moveToNext());
         }
@@ -434,6 +523,22 @@ public final class SQLHandler extends SQLiteOpenHelper {
     }
 
     /**
+     * Reports how many sales f has shared with u.
+     * @param u the user logged in
+     * @param f the friend of u
+     * @return the number of such sales.
+     */
+    public int getSalesShared(User u, User f) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT COUNT(*) FROM "
+                + TABLE_NOTIFICATIONS + " n, " + TABLE_SALES + " s "
+                + "WHERE n." + COLUMN_NOTIFICATION_SALE + " = s." + COLUMN_SALE_ID
+                + " AND n." + COLUMN_NOTIFICATION_USER + " = '" + u.getName() + "'"
+                + " AND s." + COLUMN_SALE_USER + " = '" + f.getName() + "'";
+        Cursor cursor = db.rawQuery(query, null);
+        return cursor.moveToFirst() ? Integer.parseInt(cursor.getString(0)) : 0;
+    }
+    /**
      * Generates a List of all Users in the database.
      * @return a List of all Users in the database
      */
@@ -446,10 +551,9 @@ public final class SQLHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 User user = new User();
-                user.setId(Integer.parseInt(cursor.getString(0)));
-                user.setName(cursor.getString(1));
-                user.setEmail(cursor.getString(2));
-                user.setPassword(cursor.getString(3));
+                user.setName(cursor.getString(0));
+                user.setEmail(cursor.getString(1));
+                user.setPassword(cursor.getString(2));
                 registeredUsers.add(user);
             } while (cursor.moveToNext());
             cursor.close();

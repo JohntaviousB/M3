@@ -1,10 +1,8 @@
 package com.example.johntavious.shoppingwithfriends;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Represents a non-admin user of the application.
@@ -13,14 +11,13 @@ public final class User {
     private String name;
     private String email;
     private String password;
-    private int id;
-    private List<String> friends = new ArrayList<>();
-    private Map<User, Integer> salesSharedByUser = new HashMap<>();
-    private List<Interest> interests = new ArrayList<>();
-                    // a map of friends who shared sales with this User
-    private LinkedList<Notification> notifications = new LinkedList<>();
+    private final List<String> friends = new ArrayList<>();
+    private final List<Interest> interests = new ArrayList<>();
+    private final LinkedList<Notification> notifications = new LinkedList<>();
     private int totalOfRatings;
     private int numOfRatings;
+    private Double lat;
+    private Double lon;
 
     /**
      * A no arg constructor for a User.
@@ -65,14 +62,6 @@ public final class User {
     }
 
     /**
-     * Sets the id of the user.
-     * @param id the new id of the user
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    /**
      * Returns the User's username.
      * @return the User's username
      */
@@ -96,13 +85,6 @@ public final class User {
         return this.password;
     }
 
-    /**
-     * Gets the id of this User.
-     * @return the id of this user
-     */
-    public int getId() {
-        return id;
-    }
 
     /**
      * Adds friend to the user's list of friends.
@@ -151,15 +133,6 @@ public final class User {
         }
         return (double) totalOfRatings / numOfRatings;
     }
-    /**
-     * Returns the number of sales a friend has shared with this User.
-     * @param u the friend we wish to determine the
-     *          number of sales shared with this User
-     * @return the number of such sales
-     */
-    public int getSalesReceivedByUser(User u) {
-        return 0;
-    }
 
     /**
      * Adds a new notification to the User's list of notifications.
@@ -184,6 +157,19 @@ public final class User {
     public boolean registerInterest(Interest interest) {
         return interests.add(interest);
     }
+    public Double getLatitude() {
+        return lat;
+    }
+    public Double getLongitude() {
+        return lon;
+
+    }
+    public void setLatitude(Double lat) {
+        this.lat = lat;
+    }
+    public void setLongitude(Double lon) {
+        this.lon = lon;
+    }
 
     /**
      * Returns the user's list of friends.
@@ -191,18 +177,6 @@ public final class User {
      */
     public List<String> getFriends() {
         return friends;
-    }
-
-    /**
-     * Rates another friend.
-     * @param u the friend to rate
-     * @param rating the rating to give the friend
-     */
-    public void rate(User u, int rating) {
-        if (isFriendsWith(u)) {
-            u.totalOfRatings += rating;
-            u.numOfRatings++;
-        }
     }
 
     @Override

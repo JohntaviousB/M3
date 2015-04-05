@@ -114,7 +114,7 @@ public final class LoginActivity
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    public void attemptLogin() {
+    void attemptLogin() {
         if (mAuthTask != null) {
             return;
         }
@@ -167,7 +167,7 @@ public final class LoginActivity
      * @param password the password to check
      * @return true if formatted properly, false otherwise
      */
-    public boolean isPasswordValid(String password) {
+    boolean isPasswordValid(String password) {
         return password != null && password.length() >= MIN_PASSWORD_LENGTH;
     }
 
@@ -176,7 +176,7 @@ public final class LoginActivity
      * @param show to determine if progress is shown or not
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    public void showProgress(final boolean show) {
+    void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
@@ -254,7 +254,6 @@ public final class LoginActivity
         };
 
         int ADDRESS = 0;
-        int IS_PRIMARY = 1;
     }
 
     /**

@@ -7,14 +7,14 @@ package com.example.johntavious.shoppingwithfriends;
  * the latitude and longitude can be retrieved for the sale.
  */
 
-public final class Sale {
-    private int id;
-    private String userName; // User who posted sale
-    private String item;
-    private double price;
+final class Sale {
+    private final String userName; // User who posted sale
+    private final String item;
+    private final double price;
     private String location;
     private Double latitude = null;
     private Double longitude = null;
+    private int id;
     /**
      * Constructor to initialize a Sale when lat/lng was
      * unable to be retrieved.
@@ -46,17 +46,8 @@ public final class Sale {
         this.latitude = lat;
         this.longitude = lon;
     }
-    /**
-     * No arg constructor for a Sale.
-     */
-    public Sale() { }
-    /**
-     * Gets the sale id.
-     * @return the sale id
-     */
-    public int getId() {
-        return id;
-    }
+
+
     /**
      * Gets the item name.
      * @return the item name
@@ -88,20 +79,7 @@ public final class Sale {
         return location;
     }
 
-    /**
-     * Sets the Sale's id.
-     * @param id the id of the Sale
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-    /**
-     * Sets the item name.
-     * @param item the name of the item
-     */
-    public void setItem(String item) {
-        this.item = item;
-    }
+
     /**
      * Gets the latitude of the Sale.
      * @return the latitude of the Sale, null if no latitude was given
@@ -116,5 +94,21 @@ public final class Sale {
      */
     public Double getLongitude() {
         return longitude;
+    }
+
+    /**
+     * Sets the sale's id.
+     * @param id the id to be set
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
+     * Retrieves this sale instance's id.
+     * @return the id.
+     */
+    public int getId() {
+        return this.id;
     }
 }

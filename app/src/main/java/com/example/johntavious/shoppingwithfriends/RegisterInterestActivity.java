@@ -19,9 +19,10 @@ public final class RegisterInterestActivity extends ActionBarActivity {
     private User user;
     private Spinner distance;
     private int maxDistance = 0;
-    private String[] distances = {"5", "10", "20", "35", "50", "75", "100+"};
+    private final String[] distances =
+            {"5", "10", "20", "35", "50", "75", "100+"};
     private final int MAX_DISTANCE = 100;
-    private DataController dc = new SQLiteController(this);
+    private final DataController dc = new SQLiteController(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,7 +109,7 @@ public final class RegisterInterestActivity extends ActionBarActivity {
             distance.requestFocus();
         } else if (thresholdPrice > 0) {
             dc.addInterest(user, new Interest(
-                     itemName, thresholdPrice, maxDistance));
+                     itemName.toLowerCase(), thresholdPrice, maxDistance));
             Intent intent = new Intent(this, WelcomeActivity.class);
             intent.putExtra("user", user.getEmail());
             startActivity(intent);
