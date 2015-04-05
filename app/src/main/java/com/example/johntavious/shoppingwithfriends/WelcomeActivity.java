@@ -94,6 +94,7 @@ public final class WelcomeActivity extends ActionBarActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == 1) {
                 imgView.setImageURI(data.getData());
+                user.setProfilePic(data.getData().toString());
                 dc.updateUser(user);
             }
         }
