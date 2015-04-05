@@ -1,14 +1,21 @@
 package com.example.johntavious.shoppingwithfriends;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 import android.content.Context;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,13 +63,16 @@ final class SQLHandler extends SQLiteOpenHelper {
     private static final String COLUMN_NOTIFICATION_USER = "user";
     private static final String COLUMN_NOTIFICATION_SALE = "sale_id";
 
+    private Context context;
     private static int numOfSales; //used to help generate surrogate keys for Sales
+    private int numNotifications = 0;
     /**
      * Constructor to initialize our database helper.
      * @param context the context of the database
      */
     public SQLHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
     }
 
     @Override
@@ -265,11 +275,14 @@ final class SQLHandler extends SQLiteOpenHelper {
                 Log.d("Lon:", "user lon " + userLon);
                 Log.d("ARRAY:", "distance in meters: " + result[0]);
                 Log.d("ARRAY:", "distance in miles: " + (metersToMiles * result[0]));
-                if (result[0] * metersToMiles <= distance) {
+                double distanceDifference = metersToMiles * result[0];
+                if (distanceDifference <= distance) {
                     ContentValues notificationValues = new ContentValues();
                     notificationValues.put(COLUMN_NOTIFICATION_SALE, sale.getId());
                     notificationValues.put(COLUMN_NOTIFICATION_USER, newCursor.getString(0));
                     db.insert(TABLE_NOTIFICATIONS, null, notificationValues);
+                    sendPushNotifications(sale, distanceDifference,
+                            distance, newCursor.getString(0));
                     Log.d("Notification_INSERTION with Lat:",
                             " Sale id: " + sale.getId() + " User: " + newCursor.getString(0));
                 }
@@ -277,6 +290,55 @@ final class SQLHandler extends SQLiteOpenHelper {
             newCursor.close();
         }
         db.close();
+    }
+
+    /**
+     * Sends push notification to phone.
+     * @param sale the sale found
+     * @param distanceDifference the difference between the threshold
+     *                           distance and the actual distance
+     * @param distance the threshold distance
+     * @param username the name of the User
+     */
+    private void sendPushNotifications(Sale sale, double distanceDifference,
+                                       double distance, String username) {
+        NumberFormat fmt = NumberFormat.getCurrencyInstance();
+        DecimalFormat fmt2 = new DecimalFormat("0.##");
+        String itemname = sale.getItem();
+        String threshdist = fmt2.format(distance);
+        String poster = sale.getUserName();
+        String dist = fmt2.format(distanceDifference);
+        String price = fmt.format(sale.getPrice());
+        String message = String.format("%s, you requested a(n) %s only %s miles away. \n%s found one " +
+                "that's %s miles away for only %s!", username, itemname, threshdist, poster, dist, price);
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this.context)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle("Your friend found a sale!")
+                        .setContentText(message)
+                        .setAutoCancel(true);
+// Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(this.context, LoginActivity.class);
+
+// The stack builder object will contain an artificial back stack for the
+// started Activity.
+// This ensures that navigating backward from the Activity leads out of
+// your application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this.context);
+// Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(LoginActivity.class);
+// Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+// mId allows you to update the notification later on.
+        mNotificationManager.notify(numNotifications++, mBuilder.build());
     }
 
     /**
