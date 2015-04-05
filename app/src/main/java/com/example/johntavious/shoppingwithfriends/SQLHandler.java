@@ -294,8 +294,12 @@ final class SQLHandler extends SQLiteOpenHelper {
             user.setName(cursor.getString(0));
             user.setEmail(cursor.getString(1));
             user.setPassword(cursor.getString(2));
-            user.setLatitude(Double.parseDouble(cursor.getString(3)));
-            user.setLongitude(Double.parseDouble(cursor.getString(4)));
+            if (cursor.getString(3) != null) {
+                user.setLatitude(Double.parseDouble(cursor.getString(3)));
+            }
+            if (cursor.getString(4) != null) {
+                user.setLongitude(Double.parseDouble(cursor.getString(4)));
+            }
             cursor.close();
             includeFriends(user, db);
             includeInterests(user, db);
@@ -323,8 +327,12 @@ final class SQLHandler extends SQLiteOpenHelper {
             user.setName(cursor.getString(0));
             user.setEmail(cursor.getString(1));
             user.setPassword(cursor.getString(2));
-            user.setLatitude(Double.parseDouble(cursor.getString(3)));
-            user.setLongitude(Double.parseDouble(cursor.getString(4)));
+            if (cursor.getString(3) != null) {
+                user.setLatitude(Double.parseDouble(cursor.getString(3)));
+            }
+            if (cursor.getString(4) != null) {
+                user.setLongitude(Double.parseDouble(cursor.getString(4)));
+            }
             cursor.close();
             includeFriends(user, db);
             includeInterests(user, db);
