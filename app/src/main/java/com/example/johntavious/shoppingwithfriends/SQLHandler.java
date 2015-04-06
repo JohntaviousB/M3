@@ -11,6 +11,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -313,7 +314,7 @@ final class SQLHandler extends SQLiteOpenHelper {
                 "that's %s miles away for only %s!", username, itemname, threshdist, poster, dist, price);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this.context)
-                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setSmallIcon(R.drawable.cart)
                         .setContentTitle("Your friend found a sale!")
                         .setContentText(message)
                         .setAutoCancel(true);
@@ -339,6 +340,8 @@ final class SQLHandler extends SQLiteOpenHelper {
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 // mId allows you to update the notification later on.
         mNotificationManager.notify(numNotifications++, mBuilder.build());
+        Vibrator v = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(750);
     }
 
     /**
