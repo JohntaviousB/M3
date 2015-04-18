@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +30,7 @@ public final class FriendProfileActivity extends ActionBarActivity {
             user = dc.getUser(extras.getString("user"));
             otherUser = dc.getUser(extras.getString("otherUser"));
         }
+        Log.d("FRIENDPROFILE", user.getFriends()+"");
         ((TextView) findViewById(R.id.otherUser_profile_header))
                 .setText(otherUser.getName() + "'s Profile");
         ((TextView) findViewById(R.id.averge_rating))
@@ -52,9 +54,11 @@ public final class FriendProfileActivity extends ActionBarActivity {
                 if (user.isFriendsWith(otherUser)) {
                     user.unfriend(otherUser);
                     dc.unfriend(user, otherUser);
+                    Log.d("FRIENDPROFILEUNFRIENDCLICK", user.getFriends() + "");
                 } else {
                     user.addFriend(otherUser.getName());
                     dc.addFriend(user, otherUser);
+                    Log.d("FRIENDPROFILEADDFRIENDCLICK", user.getFriends() + "");
                 }
                 updateViewContents();
             }

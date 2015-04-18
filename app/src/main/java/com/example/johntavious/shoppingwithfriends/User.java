@@ -19,6 +19,8 @@ public final class User {
     private Double lat;
     private Double lon;
     private String profilePic;
+    private NotificationMethod notificationMethod;
+    private String phoneNumber;
     /**
      * A no arg constructor for a User.
      */
@@ -84,14 +86,28 @@ public final class User {
     public String getPassword() {
         return this.password;
     }
-
-
+    public NotificationMethod getNotificationMethod() {
+        return this.notificationMethod;
+    }
+    public void setNotificationMethod(NotificationMethod method) {
+        this.notificationMethod = method;
+    }
+    public String getPhoneNumber() {
+        return this.phoneNumber;
+    }
+    public void setPhoneNumber(String num) {
+        this.phoneNumber = num;
+    }
     /**
      * Adds friend to the user's list of friends.
      * @param friend the username of the friend to add
      */
-    public void addFriend(String friend) {
-        friends.add(friend);
+    public boolean addFriend(String friend) {
+        if (!friend.equals(this.name) && !friends.contains(friend)) {
+            friends.add(friend);
+            return true;
+        }
+        return false;
     }
 
     /**

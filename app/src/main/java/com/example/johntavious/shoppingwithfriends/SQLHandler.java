@@ -13,6 +13,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
+import android.telephony.SmsManager;
 import android.util.Log;
 
 import java.text.DecimalFormat;
@@ -25,7 +26,7 @@ import java.util.List;
  */
 final class SQLHandler extends SQLiteOpenHelper {
     // Constants used in construction of database
-    private static final int DATABASE_VERSION = 13;
+    private static final int DATABASE_VERSION = 16;
     private static final String DATABASE_NAME = "ShopWFriends.db";
 
     // Constants used in construction of main table
@@ -36,6 +37,8 @@ final class SQLHandler extends SQLiteOpenHelper {
     private static final String COLUMN_LATITUDE = "latitude";
     private static final String COLUMN_LONGITUDE = "longitude";
     private static final String COLUMN_PICTURE = "picture";
+    private static final String COLUMN_NUMBER = "phone_number";
+    private static final String COLUMN_NOTIFICATION_METHOD = "notification_method";
 
     // Constants used in construction of friends table
     private static final String TABLE_FRIENDS = "Friends";
@@ -84,7 +87,9 @@ final class SQLHandler extends SQLiteOpenHelper {
                 + COLUMN_PASSWORD + " TEXT,"
                 + COLUMN_LATITUDE + " REAL,"
                 + COLUMN_LONGITUDE + " REAL, "
-                + COLUMN_PICTURE + " TEXT)";
+                + COLUMN_PICTURE + " TEXT, "
+                + COLUMN_NUMBER + " TEXT, "
+                + COLUMN_NOTIFICATION_METHOD + " TEXT)";
         String createTableFriends = "CREATE TABLE " + TABLE_FRIENDS + "("
                 + COLUMN_USER_NAME + " TEXT,"
                 + COLUMN_FRIEND_NAME + " TEXT,"
@@ -142,6 +147,8 @@ final class SQLHandler extends SQLiteOpenHelper {
         values.put(COLUMN_LATITUDE, user.getLatitude());
         values.put(COLUMN_LONGITUDE, user.getLongitude());
         values.put(COLUMN_PICTURE, user.getProfilePic());
+        values.put(COLUMN_NUMBER, user.getPhoneNumber());
+        values.put(COLUMN_NOTIFICATION_METHOD, user.getNotificationMethod().toString());
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert(TABLE_MAIN, null, values);
@@ -158,7 +165,7 @@ final class SQLHandler extends SQLiteOpenHelper {
         List<String> friendsList = user.getFriends();
         if (!friendsList.contains(friend.getName())
                 && !user.equals(friend)) {
-            friendsList.add(friend.getName());
+            user.addFriend(friend.getName());
             ContentValues values = new ContentValues();
             values.put(COLUMN_USER_NAME, user.getName());
             values.put(COLUMN_FRIEND_NAME, friend.getName());
@@ -246,6 +253,8 @@ final class SQLHandler extends SQLiteOpenHelper {
                 + ", " + COLUMN_LATITUDE
                 + ", " + COLUMN_LONGITUDE
                 + ", " + COLUMN_DISTANCE
+                + ", " + COLUMN_NUMBER
+                + ", " + COLUMN_NOTIFICATION_METHOD
                 + " FROM " + TABLE_FRIENDS + " f, "
                 + TABLE_INTERESTS + " i, "
                 + TABLE_MAIN + " u "
@@ -282,8 +291,9 @@ final class SQLHandler extends SQLiteOpenHelper {
                     notificationValues.put(COLUMN_NOTIFICATION_SALE, sale.getId());
                     notificationValues.put(COLUMN_NOTIFICATION_USER, newCursor.getString(0));
                     db.insert(TABLE_NOTIFICATIONS, null, notificationValues);
-                    sendPushNotifications(sale, distanceDifference,
-                            distance, newCursor.getString(0));
+                    sendNotification(sale, distanceDifference,
+                            distance, newCursor.getString(0),
+                            newCursor.getString(5), newCursor.getString(4));
                     Log.d("Notification_INSERTION with Lat:",
                             " Sale id: " + sale.getId() + " User: " + newCursor.getString(0));
                 }
@@ -301,8 +311,9 @@ final class SQLHandler extends SQLiteOpenHelper {
      * @param distance the threshold distance
      * @param username the name of the User
      */
-    private void sendPushNotifications(Sale sale, double distanceDifference,
-                                       double distance, String username) {
+    private void sendNotification(Sale sale, double distanceDifference,
+                                  double distance, String username, String method,
+                                  String phoneNumber) {
         NumberFormat fmt = NumberFormat.getCurrencyInstance();
         DecimalFormat fmt2 = new DecimalFormat("0.##");
         String itemname = sale.getItem();
@@ -310,38 +321,42 @@ final class SQLHandler extends SQLiteOpenHelper {
         String poster = sale.getUserName();
         String dist = fmt2.format(distanceDifference);
         String price = fmt.format(sale.getPrice());
-        String message = String.format("%s, you requested a(n) %s only %s miles away. \n%s found one " +
+        String message = String.format("%s, you requested an item (%s) only %s miles away. \n%s found one " +
                 "that's %s miles away for only %s!", username, itemname, threshdist, poster, dist, price);
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this.context)
-                        .setSmallIcon(R.drawable.cart)
-                        .setContentTitle("Your friend found a sale!")
-                        .setContentText(message)
-                        .setAutoCancel(true);
-// Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(this.context, LoginActivity.class);
+        if (method.equals("PUSH")) {
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(this.context)
+                            .setSmallIcon(R.drawable.cart)
+                            .setContentTitle("Your friend found a sale!")
+                            .setContentText(message)
+                            .setAutoCancel(true);
+            // Creates an explicit intent for an Activity in your app
+            Intent resultIntent = new Intent(this.context, LoginActivity.class);
 
-// The stack builder object will contain an artificial back stack for the
-// started Activity.
-// This ensures that navigating backward from the Activity leads out of
-// your application to the Home screen.
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this.context);
-// Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(LoginActivity.class);
-// Adds the Intent that starts the Activity to the top of the stack
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-// mId allows you to update the notification later on.
-        mNotificationManager.notify(numNotifications++, mBuilder.build());
-        Vibrator v = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
-        v.vibrate(750);
+            // The stack builder object will contain an artificial back stack for the
+            // started Activity.
+            // This ensures that navigating backward from the Activity leads out of
+            // your application to the Home screen.
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this.context);
+            // Adds the back stack for the Intent (but not the Intent itself)
+            stackBuilder.addParentStack(LoginActivity.class);
+            // Adds the Intent that starts the Activity to the top of the stack
+            stackBuilder.addNextIntent(resultIntent);
+            PendingIntent resultPendingIntent =
+                    stackBuilder.getPendingIntent(
+                            0,
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                    );
+            mBuilder.setContentIntent(resultPendingIntent);
+            NotificationManager mNotificationManager =
+                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            // mId allows you to update the notification later on.
+            mNotificationManager.notify(numNotifications++, mBuilder.build());
+            Vibrator v = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
+            v.vibrate(750);
+        } else if (method.equals("SMS")) {
+            SmsManager.getDefault().sendTextMessage(phoneNumber, null, message, null,null);
+        }
     }
 
     /**
@@ -455,17 +470,10 @@ final class SQLHandler extends SQLiteOpenHelper {
         String name;
         if (cursor.moveToFirst()) {
             do {
+                Log.d("INCLUDEFRIENDSBEFOREADD", user.getFriends()+"");
                 name = cursor.getString(1);
-                boolean areFriends = false;
-                List<String> friends = user.getFriends();
-                for (String element : friends) {
-                    if (element.equalsIgnoreCase(name)) {
-                        areFriends = true;
-                    }
-                }
-                if (!areFriends) {
-                    user.addFriend(name);
-                }
+                user.addFriend(name);
+                Log.d("INCLUDEFRIENDSAFTERADD", user.getFriends()+"");
             } while (cursor.moveToNext());
             cursor.close();
         }
@@ -595,6 +603,7 @@ final class SQLHandler extends SQLiteOpenHelper {
      * @param friend the other member of the friendship
      */
     public void unfriend(User user, User friend) {
+        user.unfriend(friend);
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_FRIENDS, COLUMN_USER_NAME + " = ? AND "
                 + COLUMN_FRIEND_NAME + " = ?", new String[]{user.getName(),

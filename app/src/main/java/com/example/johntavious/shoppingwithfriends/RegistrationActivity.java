@@ -12,9 +12,12 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 /**
@@ -24,6 +27,8 @@ import android.widget.Toast;
 public final class RegistrationActivity extends Activity {
     private ImageView imgView;
     private String imgPath;
+    private String methods[] = {"SMS", "PUSH"};
+    String howToNotify;
     private final DataController sqlHandler = new SQLiteController(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +43,24 @@ public final class RegistrationActivity extends Activity {
                 startActivityForResult(Intent.createChooser(intent, "Select Profile Picture"), 1);
             }
         });
+        Spinner methodSpinner = (Spinner) findViewById(R.id.spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, methods);
+        methodSpinner.setAdapter(adapter);
+        methodSpinner.setOnItemSelectedListener(
+                new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent,
+                                               View view, int position, long id) {
+                        if (position == 0) {
+                            howToNotify = methods[0];
+                        } else {
+                            howToNotify = methods[1];
+                        }
+                    }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) { }
+                });
     }
 
     @Override
@@ -80,6 +103,8 @@ public final class RegistrationActivity extends Activity {
                         .getText().toString().trim();
         String password = ((EditText) findViewById(R.id.password_field))
                         .getText().toString();
+        String phoneNumber = ((EditText) findViewById(R.id.PhoneNumberEditText))
+                        .getText().toString();
         if (!sqlHandler.isValidUsername(name)) {
             EditText nameView = (EditText) findViewById(R.id.name_field);
             nameView.setError(getString(R.string.InvalidUsername)
@@ -92,6 +117,10 @@ public final class RegistrationActivity extends Activity {
                     (EditText) findViewById(R.id.password_field);
             passwordView.setError(getString(R.string.validPasswordFormat));
             passwordView.requestFocus();
+        } else if (phoneNumber.length() != 10) {
+            EditText phoneView = (EditText) findViewById(R.id.PhoneNumberEditText);
+            phoneView.setError("Please enter phone number with no dashes.");
+            phoneView.requestFocus();
         } else if (sqlHandler.emailValid(email)) {
             Double lat = null;
             Double lon = null;
@@ -133,6 +162,9 @@ public final class RegistrationActivity extends Activity {
             user.setLatitude(lat);
             user.setLongitude(lon);
             user.setProfilePic(imgPath);
+            user.setNotificationMethod(howToNotify.equals("SMS") ?
+                    NotificationMethod.SMS : NotificationMethod.PUSH);
+            user.setPhoneNumber(phoneNumber);
             sqlHandler.addUser(user);
             Intent intent = new Intent(this, WelcomeActivity.class);
             intent.putExtra("user", user.getEmail());

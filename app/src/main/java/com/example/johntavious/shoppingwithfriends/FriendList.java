@@ -1,11 +1,15 @@
 package com.example.johntavious.shoppingwithfriends;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,6 +39,7 @@ public final class FriendList extends ActionBarActivity {
         header.setText(user.getName() + "'s Friends");
 
         List<String> friends = user.getFriends();
+        Log.d("FriendList", friends + "");
         List<User> friendsList = new ArrayList<>();
 
         for (String each : friends) {
@@ -118,6 +123,10 @@ public final class FriendList extends ActionBarActivity {
     public void onAddFriendClick(View view) {
         EditText addFriendText = (EditText) findViewById(R.id.add_friend_text);
         String searchName = addFriendText.getText().toString();
+        addFriendText.setText("");
+        InputMethodManager imm = (InputMethodManager)getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(addFriendText.getWindowToken(), 0);
         User friend = dc.getUserByName(searchName);
         if (friend != null) {
             if (dc.addFriend(user, friend)) {

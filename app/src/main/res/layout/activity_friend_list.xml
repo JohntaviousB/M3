@@ -23,7 +23,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="User's Friends"
         android:id="@+id/friend_list_header_text"
-        android:layout_marginTop="42dp"
+        android:layout_marginTop="15dp"
         android:layout_below="@+id/add_friend_button"
         android:layout_centerHorizontal="true" />
 
@@ -33,7 +33,7 @@
         android:id="@+id/list_of_friends"
         android:layout_below="@+id/friend_list_header_text"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="48dp" />
+        android:layout_marginTop="15dp" />
 
     <EditText
         android:layout_width="wrap_content"
