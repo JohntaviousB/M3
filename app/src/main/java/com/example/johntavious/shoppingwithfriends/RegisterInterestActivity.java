@@ -80,7 +80,11 @@ public final class RegisterInterestActivity extends ActionBarActivity {
             returnHome.putExtra("user", user.getEmail());
             startActivity(returnHome);
         }
-
+        if (id == R.id.action_update_profile) {
+            Intent intent = new Intent(this, UpdateProfile.class);
+            intent.putExtra("user", user.getEmail());
+            startActivity(intent);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -108,8 +112,8 @@ public final class RegisterInterestActivity extends ActionBarActivity {
             distanceText.setError("Please select a maximum distance");
             distance.requestFocus();
         } else if (thresholdPrice > 0) {
-            dc.addInterest(user, new Interest(
-                     itemName.toLowerCase(), thresholdPrice, maxDistance));
+            dc.addInterest(new Interest(
+                     itemName.toLowerCase(), thresholdPrice, maxDistance, user.getName()));
             Intent intent = new Intent(this, WelcomeActivity.class);
             intent.putExtra("user", user.getEmail());
             startActivity(intent);

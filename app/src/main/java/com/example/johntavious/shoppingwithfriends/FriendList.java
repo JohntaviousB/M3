@@ -37,13 +37,11 @@ public final class FriendList extends ActionBarActivity {
         }
         TextView header = (TextView) findViewById(R.id.friend_list_header_text);
         header.setText(user.getName() + "'s Friends");
-
         List<String> friends = user.getFriends();
-        Log.d("FriendList", friends + "");
         List<User> friendsList = new ArrayList<>();
-
         for (String each : friends) {
-            friendsList.add(dc.getUserByName(each));
+            User u = dc.getUserByName(each);
+            friendsList.add(u);
         }
 
         // Populating the ListView with an adapter
@@ -112,6 +110,11 @@ public final class FriendList extends ActionBarActivity {
             Intent postSale = new Intent(this, PostSaleActivity.class);
             postSale.putExtra("user", user.getEmail());
             startActivity(postSale);
+        }
+        if (id == R.id.action_update_profile) {
+            Intent intent = new Intent(this, UpdateProfile.class);
+            intent.putExtra("user", user.getEmail());
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

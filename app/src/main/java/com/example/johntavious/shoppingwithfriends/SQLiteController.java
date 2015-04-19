@@ -63,12 +63,11 @@ public final class SQLiteController implements DataController {
 
     /**
      * Adds an interest to the database and associates it with a given user.
-     * @param user the user whose interest is to be added to the database
      * @param interest the interest of the user to add to the database
      */
     @Override
-    public void addInterest(User user, Interest interest) {
-        liteHandler.addInterest(user, interest);
+    public void addInterest(Interest interest) {
+        liteHandler.addInterest(interest);
     }
 
     /**
@@ -93,8 +92,8 @@ public final class SQLiteController implements DataController {
     }
 
     @Override
-    public void updateUser(User u) {
-        liteHandler.updateUser(u);
+    public void updateUser(User u, String oldName) {
+        liteHandler.updateUser(u, oldName);
     }
 
     @Override

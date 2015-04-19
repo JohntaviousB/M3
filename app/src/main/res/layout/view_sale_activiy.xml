@@ -10,6 +10,7 @@
             android:id="@+id/viewSaleImageView"
             android:layout_marginTop="5dp"
             android:visibility="gone"
+            android:layout_centerHorizontal="true"
             android:focusableInTouchMode="false" />
 
 
@@ -23,6 +24,7 @@
             android:layout_marginTop="5dp"
             android:onClick="imageButtonClick"
             android:visibility="gone"
+            android:layout_centerHorizontal="true"
             android:nestedScrollingEnabled="false" />
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"

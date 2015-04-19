@@ -39,5 +39,6 @@
     <string name="validPasswordFormat">Passwords must be at least 4 characters</string>
     <string name="unableToRetreiveLocation">Unable to retrieve Location!</string>
     <string name="title_activity_sale_details">SaleDetails</string>
+    <string name="title_activity_update_profile">UpdateProfile</string>
 
 </resources>

@@ -26,7 +26,7 @@ import java.util.List;
  */
 final class SQLHandler extends SQLiteOpenHelper {
     // Constants used in construction of database
-    private static final int DATABASE_VERSION = 18;
+    private static final int DATABASE_VERSION = 21;
     private static final String DATABASE_NAME = "ShopWFriends.db";
 
     // Constants used in construction of main table
@@ -82,6 +82,10 @@ final class SQLHandler extends SQLiteOpenHelper {
     }
 
     @Override
+    public void onConfigure(SQLiteDatabase db){
+        db.setForeignKeyConstraintsEnabled(true);
+    }
+    @Override
     public void onCreate(SQLiteDatabase db) {
         String createTableMain = "CREATE TABLE " + TABLE_MAIN + "("
                 + COLUMN_NAME + " TEXT PRIMARY KEY,"
@@ -95,13 +99,19 @@ final class SQLHandler extends SQLiteOpenHelper {
         String createTableFriends = "CREATE TABLE " + TABLE_FRIENDS + "("
                 + COLUMN_USER_NAME + " TEXT,"
                 + COLUMN_FRIEND_NAME + " TEXT,"
-                + "PRIMARY KEY (" + COLUMN_USER_NAME + ", " + COLUMN_FRIEND_NAME + "))";
+                + "PRIMARY KEY (" + COLUMN_USER_NAME + ", " + COLUMN_FRIEND_NAME + ")"
+                + ", FOREIGN KEY (" + COLUMN_USER_NAME + ") REFERENCES " + TABLE_MAIN + "(" + COLUMN_NAME + ")" +
+                " ON UPDATE CASCADE ON DELETE CASCADE, "
+                + "FOREIGN KEY (" + COLUMN_FRIEND_NAME + ") REFERENCES " + TABLE_MAIN + "(" + COLUMN_NAME + ")"
+                + " ON DELETE CASCADE ON UPDATE CASCADE)";
         String createTableInterests = "CREATE TABLE " + TABLE_INTERESTS + "("
                 + COLUMN_INTEREST_USER_NAME + " TEXT, "
                 + COLUMN_ITEM_NAME + " TEXT,"
                 + COLUMN_THRESHOLD_PRICE + " REAL, "
                 + COLUMN_DISTANCE + " INTEGER,"
-                + "PRIMARY KEY (" + COLUMN_INTEREST_USER_NAME + ", " + COLUMN_ITEM_NAME + "))";
+                + "PRIMARY KEY (" + COLUMN_INTEREST_USER_NAME + ", " + COLUMN_ITEM_NAME + ")," +
+                " FOREIGN KEY (" + COLUMN_INTEREST_USER_NAME + ") REFERENCES " + TABLE_MAIN + "(" + COLUMN_NAME + ")" +
+                " ON UPDATE CASCADE ON DELETE CASCADE)";
         String createTableSales = "CREATE TABLE " + TABLE_SALES + "("
                 + COLUMN_SALE_ID + " INTEGER PRIMARY KEY,"
                 + COLUMN_SALE_USER + " TEXT, "
@@ -112,7 +122,7 @@ final class SQLHandler extends SQLiteOpenHelper {
                 + COLUMN_SALE_LONGITUDE + " REAL, "
                 + COLUMN_SALE_IMAGE + " TEXT, "
                 + "FOREIGN KEY (" + COLUMN_SALE_USER + ") "
-                + "REFERENCES " + TABLE_MAIN + "(" + COLUMN_NAME + "))";
+                + "REFERENCES " + TABLE_MAIN + "(" + COLUMN_NAME + ") ON UPDATE CASCADE ON DELETE CASCADE)";
         String createTableNotifications = "CREATE TABLE " + TABLE_NOTIFICATIONS + "("
                 + COLUMN_NOTIFICATION_USER + " TEXT,"
                 + COLUMN_NOTIFICATION_SALE + " INTEGER, "
@@ -120,7 +130,9 @@ final class SQLHandler extends SQLiteOpenHelper {
                 + "PRIMARY KEY (" + COLUMN_NOTIFICATION_USER + ", "
                 + COLUMN_NOTIFICATION_SALE + "), "
                 + "FOREIGN KEY (" + COLUMN_NOTIFICATION_SALE + ") "
-                + "REFERENCES " + TABLE_SALES + "(" + COLUMN_SALE_ID + "))";
+                + "REFERENCES " + TABLE_SALES + "(" + COLUMN_SALE_ID + ")"
+                + " ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (" + COLUMN_NOTIFICATION_USER + ")"
+                + " REFERENCES " + TABLE_MAIN + "(" + COLUMN_NAME + ") ON UPDATE CASCADE ON DELETE CASCADE)";
 
         db.execSQL(createTableMain);
         db.execSQL(createTableFriends);
@@ -131,11 +143,11 @@ final class SQLHandler extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_MAIN);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTIFICATIONS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SALES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FRIENDS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_INTERESTS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SALES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTIFICATIONS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_MAIN);
         onCreate(db);
     }
 
@@ -189,13 +201,11 @@ final class SQLHandler extends SQLiteOpenHelper {
 
     /**
      * Creates an interest in the database associated with a given User.
-     * @param user the User whose interest is to be added
      * @param interest the interest to add
      */
-    public void addInterest(User user, Interest interest) {
-        user.registerInterest(interest);
+    public void addInterest(Interest interest) {
         ContentValues values = new ContentValues();
-        values.put(COLUMN_INTEREST_USER_NAME, user.getName());
+        values.put(COLUMN_INTEREST_USER_NAME, interest.getUser());
         values.put(COLUMN_ITEM_NAME, interest.getItemName());
         values.put(COLUMN_THRESHOLD_PRICE, interest.getThresholdPrice());
         values.put(COLUMN_DISTANCE, interest.getDistance());
@@ -477,10 +487,8 @@ final class SQLHandler extends SQLiteOpenHelper {
         String name;
         if (cursor.moveToFirst()) {
             do {
-                Log.d("INCLUDEFRIENDSBEFOREADD", user.getFriends()+"");
                 name = cursor.getString(1);
                 user.addFriend(name);
-                Log.d("INCLUDEFRIENDSAFTERADD", user.getFriends()+"");
             } while (cursor.moveToNext());
             cursor.close();
         }
@@ -621,12 +629,27 @@ final class SQLHandler extends SQLiteOpenHelper {
         db.delete(TABLE_FRIENDS, COLUMN_USER_NAME + " = ? AND "
                 + COLUMN_FRIEND_NAME + " = ?", new String[]{friend.getName(),
                                                         user.getName()});
+        db.close();
+    }
+    public void deleteUser(User u) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_MAIN, COLUMN_NAME + " = ?", new String[]{u.getName()});
+        db.close();
+    }
+    public void deleteSale(Sale s) {
+        this.getWritableDatabase().delete(TABLE_SALES, COLUMN_SALE_ID + " = ?",
+                new String[]{String.valueOf(s.getId())});
+    }
+    public void deleteInterest(Interest i) {
+        this.getWritableDatabase().delete(TABLE_INTERESTS, COLUMN_INTEREST_USER_NAME + " = ? " +
+                        "AND " + COLUMN_ITEM_NAME + " = ?",
+                new String[]{i.getUser(), i.getItemName()});
     }
     /**
      * Updates the User's profile.
      * @param u the User to be updated.
      */
-    public void updateUser(User u) {
+    public void updateUser(User u, String oldUsername) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME, u.getName());
@@ -635,8 +658,10 @@ final class SQLHandler extends SQLiteOpenHelper {
         values.put(COLUMN_LATITUDE, u.getLatitude());
         values.put(COLUMN_LONGITUDE, u.getLongitude());
         values.put(COLUMN_PICTURE, u.getProfilePic());
+        values.put(COLUMN_NUMBER, u.getPhoneNumber());
 
-        db.update(TABLE_MAIN, values, COLUMN_NAME + " = ?", new String[]{u.getName()} );
+        db.update(TABLE_MAIN, values, COLUMN_NAME + " = ?", new String[]{oldUsername} );
+        db.close();
     }
     /**
      * Reports how many sales f has shared with u.

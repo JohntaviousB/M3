@@ -10,6 +10,7 @@ final class Interest {
     private String itemName;
     private double thresholdPrice;
     private int distance; //the max distance willing to travel
+    private String user;
 
     /**
      * No arg constructor for an Interest.
@@ -22,10 +23,11 @@ final class Interest {
      * @param price the threshold price of the interest
      * @param dist the maximum distance willing to travel for the item
      */
-    public Interest(String item, double price, int dist) {
+    public Interest(String item, double price, int dist, String u) {
         this.itemName = item;
         this.thresholdPrice = price;
         this.distance = dist;
+        this.user = u;
     }
 
     /**
@@ -74,6 +76,12 @@ final class Interest {
         } else {
             this.distance = dist;
         }
+    }
+    public String getUser() {
+        return user;
+    }
+    public void setUser(String u) {
+        this.user = u;
     }
 
     /**

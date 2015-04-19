@@ -185,7 +185,7 @@ public final class LoginActivity extends Activity {
                     // Account exists, return true if the password matches.
                     email = possibleUser.getEmail();
                     return possibleUser.getPassword()
-                            .equalsIgnoreCase(mPassword);
+                            .equals(mPassword);
                 }
             }
             return false;

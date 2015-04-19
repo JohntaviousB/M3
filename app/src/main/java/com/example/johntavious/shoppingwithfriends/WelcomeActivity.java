@@ -96,7 +96,7 @@ public final class WelcomeActivity extends ActionBarActivity {
             if (requestCode == 1) {
                 imgView.setImageURI(data.getData());
                 user.setProfilePic(data.getData().toString());
-                dc.updateUser(user);
+                dc.updateUser(user, user.getName());
             }
         }
     }
@@ -139,7 +139,11 @@ public final class WelcomeActivity extends ActionBarActivity {
             postSale.putExtra("user", user.getEmail());
             startActivity(postSale);
         }
-
+        if (id == R.id.action_update_profile) {
+            Intent intent = new Intent(this, UpdateProfile.class);
+            intent.putExtra("user", user.getEmail());
+            startActivity(intent);
+        }
         return super.onOptionsItemSelected(item);
     }
 

@@ -82,7 +82,11 @@ public final class PostSaleActivity extends ActionBarActivity {
             home.putExtra("user", user.getEmail());
             startActivity(home);
         }
-
+        if (id == R.id.action_update_profile) {
+            Intent intent = new Intent(this, UpdateProfile.class);
+            intent.putExtra("user", user.getEmail());
+            startActivity(intent);
+        }
         return super.onOptionsItemSelected(item);
     }
 

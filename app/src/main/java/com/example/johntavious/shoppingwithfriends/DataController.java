@@ -41,12 +41,10 @@ public interface DataController {
 
     /**
      * Adds an interest to the database and associates it with a given user.
-     * @param user the user whose interest is to be
-     *             added to the persistent structure
      * @param interest the interest of the user to add
      *                 to the persistent structure
      */
-    void addInterest(User user, Interest interest);
+    void addInterest(Interest interest);
 
     /**
      * Terminates a friendship between two users.
@@ -73,7 +71,7 @@ public interface DataController {
      * Updates the User's profile.
      * @param u the User to be updated.
      */
-    void updateUser(User u);
+    void updateUser(User u, String oldName);
     /**
      * Makes sure password is of valid length.
      * @param password the password to check
