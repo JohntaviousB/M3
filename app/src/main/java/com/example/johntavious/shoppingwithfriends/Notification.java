@@ -11,6 +11,7 @@ final class Notification {
     private String location;
     private Double latitude = null;
     private Double longitude = null;
+    private String imgURI;
 
     /**
      * Constructor to initialize a Notification when lat/lng was
@@ -56,7 +57,12 @@ final class Notification {
                 + "A(n) " + item + " at " + location + "\n For only "
                 + fmt.format(price) + "!";
     }
-
+    public void setImgURI(String s) {
+        imgURI = s;
+    }
+    public String getImgURI() {
+        return imgURI;
+    }
     /**
      * Creates a message that uses the associated lat/lon of the Sale
      * @param user the name of the User who posted the sale.

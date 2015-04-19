@@ -38,5 +38,6 @@
     <string name="invalidUsername3">and must be more than 2 characters</string>
     <string name="validPasswordFormat">Passwords must be at least 4 characters</string>
     <string name="unableToRetreiveLocation">Unable to retrieve Location!</string>
+    <string name="title_activity_sale_details">SaleDetails</string>
 
 </resources>

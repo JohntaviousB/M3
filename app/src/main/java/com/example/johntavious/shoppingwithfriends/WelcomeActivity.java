@@ -82,6 +82,7 @@ public final class WelcomeActivity extends ActionBarActivity {
                             intent.putExtra("lat", note.getLatitude());
                             intent.putExtra("lon", note.getLongitude());
                         }
+                        intent.putExtra("img", note.getImgURI());
                         WelcomeActivity.this.startActivity(intent);
                     }
                 }

@@ -90,7 +90,7 @@
             android:text="Post"
             android:id="@+id/postSaleButton"
             android:onClick="onPostClick"
-            android:layout_below="@+id/takePictureButton"
+            android:layout_below="@+id/saleImageView"
             android:layout_alignStart="@+id/retrieveLocationSwitch"
             android:layout_marginTop="20dp"/>
 
@@ -111,7 +111,16 @@
             android:id="@+id/takePictureButton"
             android:layout_below="@+id/retrieveLocationSwitch"
             android:layout_marginTop="15dp"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:onClick="takePicture" />
+
+        <ImageView
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:id="@+id/saleImageView"
+            android:layout_below="@+id/takePictureButton"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone" />
 
     </RelativeLayout>
 </ScrollView>

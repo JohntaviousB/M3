@@ -2,16 +2,27 @@ package com.example.johntavious.shoppingwithfriends;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.xml.datatype.Duration;
 
@@ -21,6 +32,8 @@ public final class PostSaleActivity extends ActionBarActivity {
     private final DataController dc = new SQLiteController(this);
     private Double lat = null;
     private Double lon = null;
+    String imageURI;
+    ImageView mImageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +42,7 @@ public final class PostSaleActivity extends ActionBarActivity {
         if (extras != null) {
             user = dc.getUser(extras.getString("user"));
         }
+        mImageView = (ImageView)findViewById(R.id.saleImageView);
     }
 
     @Override
@@ -148,13 +162,56 @@ public final class PostSaleActivity extends ActionBarActivity {
             priceText.setError(getString(R.string.invalidSalePrice));
             priceText.requestFocus();
         } else if (lat != null && lon != null) {
-            dc.addSale(new Sale(user.getName(), itemName.toLowerCase(), price, lat, lon));
+            Sale sale = new Sale(user.getName(), itemName.toLowerCase(), price, lat, lon);
+            sale.setImageURI(imageURI);
+            dc.addSale(sale);
             Intent intent = new Intent(this, WelcomeActivity.class);
             intent.putExtra("user", user.getEmail());
             startActivity(intent);
         }
     }
 
+    public void takePicture(View view) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (photoFile != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                        Uri.fromFile(photoFile));
+                imageURI = photoFile.toURI().toString();
+                Log.d("PSA_IMAGEURI", imageURI +"");
+                startActivityForResult(takePictureIntent, 1);
+            }
+        }
+    }
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        return image;
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            mImageView.setImageURI(Uri.parse(imageURI));
+            mImageView.setVisibility(View.VISIBLE);
+        }
+    }
     /**
      * Cancels the Sale Post and returns the user home.
      * @param view the Cancel button click

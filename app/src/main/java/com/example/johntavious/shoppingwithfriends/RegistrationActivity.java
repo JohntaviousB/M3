@@ -68,9 +68,7 @@ public final class RegistrationActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == 1) {
-//                Bitmap bm = (Bitmap) data.getExtras().get("data");
                 imgView.setImageURI(data.getData());
-//                imgView.setImageBitmap(bm);
                 imgPath = data.getData().toString();
                 Log.d("path tostring", ""+data.getData().toString());
                 Log.d("path", ""+imgPath);

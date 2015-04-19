@@ -1,7 +1,16 @@
 package com.example.johntavious.shoppingwithfriends;
 
-import android.support.v4.app.FragmentActivity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,16 +30,28 @@ public final class ViewSaleActivity extends FragmentActivity {
     private double lat;
     private double lon;
     private String location;
+    private User user;
+    private DataController dc = new SQLiteController(this);
+    ImageView imgView;
+    String imgURI;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_sale);
+        setContentView(R.layout.view_sale_activiy);
         Bundle extras = this.getIntent().getExtras();
+        imgView = (ImageView) findViewById(R.id.viewSaleImageView);
         if (extras != null) {
+            user = dc.getUser(extras.getString("user"));
             location = extras.getString("location");
             if (location == null) {
                 lat = extras.getDouble("lat");
                 lon = extras.getDouble("lon");
+            }
+            imgURI = extras.getString("img");
+            if (imgURI != null) {
+                imgView.setImageURI(Uri.parse(imgURI));
+                Button button = (Button) findViewById(R.id.showHideImage);
+                button.setVisibility(View.VISIBLE);
             }
         }
         setUpMapIfNeeded();
@@ -40,6 +61,51 @@ public final class ViewSaleActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_logout) {
+            Intent logout = new Intent(this, LoginActivity.class);
+            startActivity(logout);
+        }
+        if (id == R.id.action_friendslist) {
+            Intent friendsList = new Intent(this, FriendList.class);
+            friendsList.putExtra("user", user.getEmail());
+            startActivity(friendsList);
+        }
+        if (id == R.id.action_register_interest) {
+            Intent interest = new Intent(this, RegisterInterestActivity.class);
+            interest.putExtra("user", user.getEmail());
+            startActivity(interest);
+        }
+        if (id == R.id.action_interests) {
+            Intent interests = new Intent(this, InterestsListActivity.class);
+            interests.putExtra("user", user.getEmail());
+            startActivity(interests);
+        }
+        if (id == R.id.action_home) {
+            Intent home = new Intent(this, WelcomeActivity.class);
+            home.putExtra("user", user.getEmail());
+            startActivity(home);
+        }
+        if (id == R.id.action_post_sale){
+            Intent intent = new Intent(this, PostSaleActivity.class);
+            intent.putExtra("user", user.getEmail());
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -85,5 +151,16 @@ public final class ViewSaleActivity extends FragmentActivity {
         }
         mMap.moveCamera(CameraUpdateFactory
                 .newLatLngZoom(new LatLng(lat, lon), zoom));
+    }
+
+    public void imageButtonClick(View view) {
+        Log.d("Visibility", ""+ (imgView.getVisibility() == View.GONE));
+        if (imgView.getVisibility() == View.GONE && imgURI != null) {
+            Log.d("Inside if", "inside if");
+            imgView.setVisibility(View.VISIBLE);
+        } else {
+            Log.d("inside else", "inside else");
+            imgView.setVisibility(View.GONE);
+        }
     }
 }

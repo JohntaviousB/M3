@@ -26,7 +26,7 @@ import java.util.List;
  */
 final class SQLHandler extends SQLiteOpenHelper {
     // Constants used in construction of database
-    private static final int DATABASE_VERSION = 16;
+    private static final int DATABASE_VERSION = 18;
     private static final String DATABASE_NAME = "ShopWFriends.db";
 
     // Constants used in construction of main table
@@ -61,11 +61,13 @@ final class SQLHandler extends SQLiteOpenHelper {
     private static final String COLUMN_SALE_LOCATION = "sale_location";
     private static final String COLUMN_SALE_LATITUDE = "sale_latitude";
     private static final String COLUMN_SALE_LONGITUDE = "sale_longitude";
+    private static final String COLUMN_SALE_IMAGE = "image_uri";
 
     // Constants used in construction of Notifications table
     private static final String TABLE_NOTIFICATIONS = "Notifications";
     private static final String COLUMN_NOTIFICATION_USER = "user";
     private static final String COLUMN_NOTIFICATION_SALE = "sale_id";
+    private static final String COLUMN_NOTIFICATION_IMAGE = "image_uri";
 
     private Context context;
     private static int numOfSales; //used to help generate surrogate keys for Sales
@@ -108,11 +110,13 @@ final class SQLHandler extends SQLiteOpenHelper {
                 + COLUMN_SALE_LOCATION + " TEXT, "
                 + COLUMN_SALE_LATITUDE + " REAL, "
                 + COLUMN_SALE_LONGITUDE + " REAL, "
+                + COLUMN_SALE_IMAGE + " TEXT, "
                 + "FOREIGN KEY (" + COLUMN_SALE_USER + ") "
                 + "REFERENCES " + TABLE_MAIN + "(" + COLUMN_NAME + "))";
         String createTableNotifications = "CREATE TABLE " + TABLE_NOTIFICATIONS + "("
                 + COLUMN_NOTIFICATION_USER + " TEXT,"
                 + COLUMN_NOTIFICATION_SALE + " INTEGER, "
+                + COLUMN_NOTIFICATION_IMAGE + " TEXT, "
                 + "PRIMARY KEY (" + COLUMN_NOTIFICATION_USER + ", "
                 + COLUMN_NOTIFICATION_SALE + "), "
                 + "FOREIGN KEY (" + COLUMN_NOTIFICATION_SALE + ") "
@@ -222,6 +226,7 @@ final class SQLHandler extends SQLiteOpenHelper {
         values.put(COLUMN_SALE_LOCATION, sale.getLocation());
         values.put(COLUMN_SALE_LATITUDE, sale.getLatitude());
         values.put(COLUMN_SALE_LONGITUDE, sale.getLongitude());
+        values.put(COLUMN_SALE_IMAGE, sale.getImageURI());
         db.insert(TABLE_SALES, null, values);
         sale.setId(numOfSales);
         Log.d("SALE_INSERTION:", "Sale Id: " + sale.getId() + " User: " + sale.getUserName() + " Item: " + sale.getItem());
@@ -244,6 +249,7 @@ final class SQLHandler extends SQLiteOpenHelper {
                 ContentValues notificationValues = new ContentValues();
                 notificationValues.put(COLUMN_NOTIFICATION_SALE, sale.getId());
                 notificationValues.put(COLUMN_NOTIFICATION_USER, cursor2.getString(0));
+                notificationValues.put(COLUMN_NOTIFICATION_IMAGE, sale.getImageURI());
                 Log.d("Notification_INSERTION::", " Sale id: " + sale.getId() + " User: " + cursor2.getString(0));
                 db.insert(TABLE_NOTIFICATIONS, null, notificationValues);
             } while (cursor2.moveToNext());
@@ -290,6 +296,7 @@ final class SQLHandler extends SQLiteOpenHelper {
                     ContentValues notificationValues = new ContentValues();
                     notificationValues.put(COLUMN_NOTIFICATION_SALE, sale.getId());
                     notificationValues.put(COLUMN_NOTIFICATION_USER, newCursor.getString(0));
+                    notificationValues.put(COLUMN_NOTIFICATION_IMAGE, sale.getImageURI());
                     db.insert(TABLE_NOTIFICATIONS, null, notificationValues);
                     sendNotification(sale, distanceDifference,
                             distance, newCursor.getString(0),
@@ -493,6 +500,7 @@ final class SQLHandler extends SQLiteOpenHelper {
                 + ", " + COLUMN_SALE_LOCATION
                 + ", " + COLUMN_SALE_LATITUDE
                 + ", " + COLUMN_SALE_LONGITUDE
+                + ", n." + COLUMN_NOTIFICATION_IMAGE
                 + " FROM "
                 + TABLE_SALES + " s, "
                 + TABLE_NOTIFICATIONS + " n "
@@ -517,12 +525,14 @@ final class SQLHandler extends SQLiteOpenHelper {
                 }
                 if (location != null) {
                     //unable to retrieve lat/lng
-                    user.addNotification(new Notification(friend, location,
-                                    itemName, price));
+                    Notification notification = new Notification(friend, location, itemName, price);
+                    notification.setImgURI(cursor.getString(6));
+                    user.addNotification(notification);
                 } else {
                     //able to retrieve lat/lng
-                    user.addNotification(new Notification(friend, itemName,
-                                    price, lat, lon));
+                    Notification notification = new Notification(friend, itemName, price, lat, lon);
+                    notification.setImgURI(cursor.getString(6));
+                    user.addNotification(notification);
                 }
             } while (cursor.moveToNext());
         }

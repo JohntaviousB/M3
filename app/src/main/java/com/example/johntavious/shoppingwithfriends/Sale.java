@@ -14,6 +14,7 @@ final class Sale {
     private String location;
     private Double latitude = null;
     private Double longitude = null;
+    private String imageURI;
     private int id;
     /**
      * Constructor to initialize a Sale when lat/lng was
@@ -95,7 +96,12 @@ final class Sale {
     public Double getLongitude() {
         return longitude;
     }
-
+    public String getImageURI() {
+        return imageURI;
+    }
+    public void setImageURI(String s) {
+        imageURI = s;
+    }
     /**
      * Sets the sale's id.
      * @param id the id to be set

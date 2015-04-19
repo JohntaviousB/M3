@@ -54,11 +54,9 @@ public final class FriendProfileActivity extends ActionBarActivity {
                 if (user.isFriendsWith(otherUser)) {
                     user.unfriend(otherUser);
                     dc.unfriend(user, otherUser);
-                    Log.d("FRIENDPROFILEUNFRIENDCLICK", user.getFriends() + "");
                 } else {
                     user.addFriend(otherUser.getName());
                     dc.addFriend(user, otherUser);
-                    Log.d("FRIENDPROFILEADDFRIENDCLICK", user.getFriends() + "");
                 }
                 updateViewContents();
             }
@@ -133,6 +131,11 @@ public final class FriendProfileActivity extends ActionBarActivity {
             Intent interests = new Intent(this, InterestsListActivity.class);
             interests.putExtra("user", user.getEmail());
             startActivity(interests);
+        }
+        if (id == R.id.action_post_sale){
+            Intent intent = new Intent(this, PostSaleActivity.class);
+            intent.putExtra("user", user.getEmail());
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
