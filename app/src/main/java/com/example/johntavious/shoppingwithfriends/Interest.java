@@ -99,8 +99,8 @@ final class Interest {
     public String toString() {
         NumberFormat fmt = NumberFormat.getCurrencyInstance();
         return String.format("Item Name%15s\nUp To%21s\nUp"
-               + " To %d Miles Away", itemName,
-                fmt.format(thresholdPrice), distance);
+               + " To %d Miles Away\n%s", itemName,
+                fmt.format(thresholdPrice), distance, getUser());
     }
 
     @Override

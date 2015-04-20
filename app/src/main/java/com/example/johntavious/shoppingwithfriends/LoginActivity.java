@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -39,6 +40,7 @@ public final class LoginActivity extends Activity {
     private DataController sqlHandler;
 
     private List<User> registeredUsers;
+    private Map<String, String> admins;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -58,6 +60,8 @@ public final class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         sqlHandler = new SQLiteController(this);
         registeredUsers = sqlHandler.getUsers();
+        admins = sqlHandler.getAdmins();
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
@@ -132,8 +136,8 @@ public final class LoginActivity extends Activity {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!sqlHandler.isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
+        } else if (sqlHandler.isValidUsername(email)) {
+            mEmailView.setError("Invalid Username");
             focusView = mEmailView;
             cancel = true;
         }
@@ -167,6 +171,7 @@ public final class LoginActivity extends Activity {
 
         private final String mEmail;
         private final String mPassword;
+        private boolean usingAdmin = false;
 
         /**
          * Creates a User Login Task.
@@ -181,11 +186,17 @@ public final class LoginActivity extends Activity {
         @Override
         protected Boolean doInBackground(Void... params) {
             for (User possibleUser : registeredUsers) {
-                if (possibleUser.getEmail().equalsIgnoreCase(mEmail)) {
+                if (possibleUser.getName().equalsIgnoreCase(mEmail)) {
                     // Account exists, return true if the password matches.
                     email = possibleUser.getEmail();
                     return possibleUser.getPassword()
                             .equals(mPassword);
+                }
+            }
+            for (Map.Entry<String, String> e: admins.entrySet()) {
+                if (e.getKey().equalsIgnoreCase(mEmail)) {
+                    usingAdmin = true;
+                    return e.getValue().equals(mPassword);
                 }
             }
             return false;
@@ -197,9 +208,14 @@ public final class LoginActivity extends Activity {
 
             if (success) {
                 finish();
-                intent = new Intent(LoginActivity.this, WelcomeActivity.class);
-                intent.putExtra("user", email);
-                startActivity(intent);
+                if (!usingAdmin) {
+                    intent = new Intent(LoginActivity.this, WelcomeActivity.class);
+                    intent.putExtra("user", email);
+                    startActivity(intent);
+                } else {
+                    Intent admin = new Intent(LoginActivity.this, AdminWelcome.class);
+                    startActivity(admin);
+                }
             } else {
                 mPasswordView.setError(
                         getString(R.string.error_incorrect_password));

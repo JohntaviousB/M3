@@ -3,17 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.johntavious.shoppingwithfriends.RegisterInterestActivity">
     <item android:id="@+id/action_home" android:title="@string/action_home"
-        android:orderInCategory="1" app:showAsAction="always" />
+        android:orderInCategory="1" app:showAsAction="never" />
     <item android:id="@+id/action_post_sale" android:title="@string/action_post_sale"
-        android:orderInCategory="2" app:showAsAction="always" />
+        android:orderInCategory="2" app:showAsAction="never" />
     <item android:id="@+id/action_interests" android:title="Interests"
-        android:orderInCategory="3" app:showAsAction="always" />
+        android:orderInCategory="3" app:showAsAction="never" />
     <item android:id="@+id/action_register_interest" android:title="@string/action_new_interest"
-        android:orderInCategory="4" app:showAsAction="ifRoom" />
+        android:orderInCategory="4" app:showAsAction="never" />
     <item android:id="@+id/action_logout" android:title="@string/action_logout"
-        android:orderInCategory="5" app:showAsAction="ifRoom" />
+        android:orderInCategory="5" app:showAsAction="never" />
     <item android:id="@+id/action_friendslist" android:title="@string/action_friendslist"
-        android:orderInCategory="6" app:showAsAction="ifRoom" />
+        android:orderInCategory="6" app:showAsAction="never" />
     <item android:id="@+id/action_update_profile" android:title="Update Profile"
-        android:orderInCategory="7" app:showAsAction="ifRoom" />
+        android:orderInCategory="7" app:showAsAction="never" />
 </menu>

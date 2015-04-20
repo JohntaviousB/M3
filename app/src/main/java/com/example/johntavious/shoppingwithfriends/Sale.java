@@ -1,5 +1,8 @@
 package com.example.johntavious.shoppingwithfriends;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 /**
  * Represents a Sale in the application.
  * Note that Sales can have an explicit location included
@@ -116,5 +119,11 @@ final class Sale {
      */
     public int getId() {
         return this.id;
+    }
+
+    @Override
+    public String toString() {
+        NumberFormat fmt = NumberFormat.getCurrencyInstance();
+        return String.format("User:\t%s\nItem:\t%s\nPrice:\t%s", userName, item, fmt.format(price));
     }
 }

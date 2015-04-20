@@ -6,7 +6,6 @@
     tools:context=".LoginActivity"
     android:orientation="horizontal">
 
-    <!-- Login progress -->
     <ProgressBar android:id="@+id/login_progress" style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_marginBottom="8dp" android:visibility="gone" />
@@ -16,8 +15,8 @@
         android:gravity="center_vertical">
 
         <AutoCompleteTextView android:id="@+id/email" android:layout_width="@dimen/abc_panel_menu_list_width"
-            android:layout_height="wrap_content" android:hint="@string/prompt_email"
-            android:inputType="textEmailAddress" android:maxLines="1"
+            android:layout_height="wrap_content" android:hint="Username"
+            android:inputType="text" android:maxLines="1"
             android:singleLine="true"
             android:layout_gravity="center" />
 

@@ -19,14 +19,16 @@ import android.util.Log;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents the database used by the application.
  */
 final class SQLHandler extends SQLiteOpenHelper {
     // Constants used in construction of database
-    private static final int DATABASE_VERSION = 21;
+    private static final int DATABASE_VERSION = 23;
     private static final String DATABASE_NAME = "ShopWFriends.db";
 
     // Constants used in construction of main table
@@ -68,6 +70,14 @@ final class SQLHandler extends SQLiteOpenHelper {
     private static final String COLUMN_NOTIFICATION_USER = "user";
     private static final String COLUMN_NOTIFICATION_SALE = "sale_id";
     private static final String COLUMN_NOTIFICATION_IMAGE = "image_uri";
+
+    //CONSTANTS USED IN CONSTRUCTION OF ADMIN TABLE
+    private static final String TABLE_ADMIN = "Admins";
+    private static final String ADMIN_NAME = "name";
+    private static final String ADMIN_PASSWORD = "password";
+
+    private static final String ADMIN_ONE = "Barkley";
+    private static final String ADMIN_PW = "admin";
 
     private Context context;
     private static int numOfSales; //used to help generate surrogate keys for Sales
@@ -133,12 +143,20 @@ final class SQLHandler extends SQLiteOpenHelper {
                 + "REFERENCES " + TABLE_SALES + "(" + COLUMN_SALE_ID + ")"
                 + " ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (" + COLUMN_NOTIFICATION_USER + ")"
                 + " REFERENCES " + TABLE_MAIN + "(" + COLUMN_NAME + ") ON UPDATE CASCADE ON DELETE CASCADE)";
+        String createTableAdmin = "CREATE TABLE " + TABLE_ADMIN + "(" + ADMIN_NAME + " TEXT PRIMARY KEY, "
+                + ADMIN_PASSWORD + " TEXT)";
 
         db.execSQL(createTableMain);
         db.execSQL(createTableFriends);
         db.execSQL(createTableInterests);
         db.execSQL(createTableSales);
         db.execSQL(createTableNotifications);
+        db.execSQL(createTableAdmin);
+
+        ContentValues values1 = new ContentValues();
+        values1.put(ADMIN_NAME, ADMIN_ONE);
+        values1.put(ADMIN_PASSWORD, ADMIN_PW);
+        db.insert(TABLE_ADMIN, null, values1);
     }
 
     @Override
@@ -148,6 +166,7 @@ final class SQLHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FRIENDS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_INTERESTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MAIN);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ADMIN);
         onCreate(db);
     }
 
@@ -295,11 +314,6 @@ final class SQLHandler extends SQLiteOpenHelper {
                 saleLocation.setLongitude(lon);
                 float[] result = new float[1];
                 Location.distanceBetween(lat, lon, userLat, userLon, result);
-                Log.d("LAT:", "sale lat " + lat);
-                Log.d("LON:", "sale lon " + lon);
-                Log.d("LAT:", "user lat " + userLat);
-                Log.d("Lon:", "user lon " + userLon);
-                Log.d("ARRAY:", "distance in meters: " + result[0]);
                 Log.d("ARRAY:", "distance in miles: " + (metersToMiles * result[0]));
                 double distanceDifference = metersToMiles * result[0];
                 if (distanceDifference <= distance) {
@@ -311,8 +325,6 @@ final class SQLHandler extends SQLiteOpenHelper {
                     sendNotification(sale, distanceDifference,
                             distance, newCursor.getString(0),
                             newCursor.getString(5), newCursor.getString(4));
-                    Log.d("Notification_INSERTION with Lat:",
-                            " Sale id: " + sale.getId() + " User: " + newCursor.getString(0));
                 }
             } while (newCursor.moveToNext());
             newCursor.close();
@@ -402,6 +414,9 @@ final class SQLHandler extends SQLiteOpenHelper {
             if (cursor.getString(5) != null) {
                 user.setProfilePic(cursor.getString(5));
             }
+            if (cursor.getString(6) != null) {
+                user.setPhoneNumber(cursor.getString(6));
+            }
             cursor.close();
             includeFriends(user, db);
             includeInterests(user, db);
@@ -411,7 +426,6 @@ final class SQLHandler extends SQLiteOpenHelper {
         }
 
         db.close();
-        Log.d("USER", "" + user);
         return user;
     }
     /**
@@ -438,6 +452,9 @@ final class SQLHandler extends SQLiteOpenHelper {
             }
             if (cursor.getString(5) != null) {
                 user.setProfilePic(cursor.getString(5));
+            }
+            if (cursor.getString(6) != null) {
+                user.setPhoneNumber(cursor.getString(6));
             }
             cursor.close();
             includeFriends(user, db);
@@ -467,6 +484,7 @@ final class SQLHandler extends SQLiteOpenHelper {
                 interest.setThresholdPrice(
                         Double.parseDouble(cursor.getString(2)));
                 interest.setDistance(Integer.parseInt(cursor.getString(3)));
+                interest.setUser(cursor.getString(0));
                 user.registerInterest(interest);
             } while (cursor.moveToNext());
             cursor.close();
@@ -595,8 +613,8 @@ final class SQLHandler extends SQLiteOpenHelper {
      * @return true if the name is available, false otherwise
      */
     public boolean isValidUsername(String name) {
-        if (name != null && !name.contains(" ")
-                && !name.contains("@") && name.length() > 2) {
+        if (name != null && !name.contains(" ") && !name.contains("\"")
+                && !name.contains("@") && !name.contains("'") && name.length() > 2) {
             String query = "SELECT * FROM "
                     + TABLE_MAIN + " WHERE " + COLUMN_NAME
                     + " = \"" + name + "\"";
@@ -607,6 +625,16 @@ final class SQLHandler extends SQLiteOpenHelper {
                 cursor.close();
                 return false;  //return false b/c the name is taken
             } else {
+                String query2 = "SELECT * FROM "
+                        + TABLE_ADMIN + " WHERE " + ADMIN_NAME
+                        + " = \"" + name + "\"";
+                Cursor cursor2 = db.rawQuery(query2, null);
+                Log.d("query", "executing query");
+                if (cursor2.moveToFirst()) {
+                    Log.d("query", "inside if");
+                    cursor2.close();
+                    return false;
+                }
                 return true;  //we've searched all names and no one is using it
             }
         }
@@ -675,7 +703,7 @@ final class SQLHandler extends SQLiteOpenHelper {
                 + TABLE_NOTIFICATIONS + " n, " + TABLE_SALES + " s "
                 + "WHERE n." + COLUMN_NOTIFICATION_SALE + " = s." + COLUMN_SALE_ID
                 + " AND n." + COLUMN_NOTIFICATION_USER + " = '" + u.getName() + "'"
-                + " AND s." + COLUMN_SALE_USER + " = '" + f.getName() + "'";
+                + " AND s." + COLUMN_SALE_USER + " = \"" + f.getName() + "\"";
         Cursor cursor = db.rawQuery(query, null);
         return cursor.moveToFirst() ? Integer.parseInt(cursor.getString(0)) : 0;
     }
@@ -701,5 +729,55 @@ final class SQLHandler extends SQLiteOpenHelper {
         }
         db.close();
         return registeredUsers;
+    }
+    public Map<String, String> syncAdmins() {
+        Map<String, String> toReturn = new HashMap<>();
+        String query = "SELECT * FROM " + TABLE_ADMIN;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                toReturn.put(cursor.getString(0), cursor.getString(1));
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        db.close();
+        return toReturn;
+    }
+    public List<Sale> getSales() {
+        List<Sale> sales = new ArrayList<>();
+        String query = "SELECT * FROM " + TABLE_SALES;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                Sale sale = new Sale(cursor.getString(1),
+                            cursor.getString(2),
+                            Double.parseDouble(cursor.getString(3)),
+                            null); // don't really care about the location
+                sale.setId(Integer.parseInt(cursor.getString(0)));
+                sales.add(sale);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        db.close();
+        return sales;
+    }
+    public List<Interest> getInterests() {
+        List<Interest> interests = new ArrayList<>();
+        String query = "SELECT * FROM " + TABLE_INTERESTS;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                interests.add(new Interest(cursor.getString(1),
+                        Double.parseDouble(cursor.getString(2)),
+                        Integer.parseInt(cursor.getString(3)),
+                        cursor.getString(0)));
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        db.close();
+        return interests;
     }
 }

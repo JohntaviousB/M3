@@ -3,6 +3,7 @@ package com.example.johntavious.shoppingwithfriends;
 import android.content.Context;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class directs the retrieval, saving, and
@@ -100,6 +101,22 @@ public final class SQLiteController implements DataController {
     public List<User> getUsers() {
         return liteHandler.syncRegisteredUsers();
     }
+
+    @Override
+    public Map<String, String> getAdmins() {
+        return liteHandler.syncAdmins();
+    }
+
+    @Override
+    public List<Sale> getSales() {
+        return liteHandler.getSales();
+    }
+
+    @Override
+    public List<Interest> getInterests() {
+        return liteHandler.getInterests();
+    }
+
     @Override
     public boolean isEmailValid(String email) {
         return liteHandler.isEmailValid(email);
@@ -116,6 +133,15 @@ public final class SQLiteController implements DataController {
     }
     public boolean isPasswordValid(String password) {
         return password.length() >= MIN_PASSWORD_LENGTH;
+    }
+    public void deleteUser(User u) {
+        liteHandler.deleteUser(u);
+    }
+    public void deleteInterest(Interest i) {
+        liteHandler.deleteInterest(i);
+    }
+    public void deleteSale(Sale s) {
+        liteHandler.deleteSale(s);
     }
 }
 

@@ -70,10 +70,6 @@ public final class RegistrationActivity extends Activity {
             if (requestCode == 1) {
                 imgView.setImageURI(data.getData());
                 imgPath = data.getData().toString();
-                Log.d("path tostring", ""+data.getData().toString());
-                Log.d("path", ""+imgPath);
-                Log.d("path2", ""+data.getData().getPath());
-                Log.d("encoded path", ""+data.getData().getEncodedPath());
             }
         }
     }

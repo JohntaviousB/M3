@@ -21,7 +21,7 @@ public class InterestsListActivity extends ActionBarActivity {
         }
         // Populating the ListView with an adapter
         ArrayAdapter<Interest> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, user.getInterests());
+                android.R.layout.simple_expandable_list_item_1, user.getInterests());
         ListView listView = (ListView) findViewById(R.id.interests_list);
         listView.setAdapter(adapter);
 

@@ -30,7 +30,6 @@ public final class FriendProfileActivity extends ActionBarActivity {
             user = dc.getUser(extras.getString("user"));
             otherUser = dc.getUser(extras.getString("otherUser"));
         }
-        Log.d("FRIENDPROFILE", user.getFriends()+"");
         ((TextView) findViewById(R.id.otherUser_profile_header))
                 .setText(otherUser.getName() + "'s Profile");
         ((TextView) findViewById(R.id.averge_rating))

@@ -22,7 +22,6 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".LoginActivity"
-            android:label="Login"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <activity android:name=".MainActivity" >
@@ -33,26 +32,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Welcome"
-            android:label="@string/title_activity_welcome" >
+            android:name=".Welcome" >
         </activity>
         <activity android:name=".WelcomeActivity" >
         </activity>
         <activity
-            android:name=".RegistrationActivity"
-            android:label="Register" >
+            android:name=".RegistrationActivity">
         </activity>
         <activity android:name=".FriendList" >
         </activity>
         <activity android:name=".FriendProfileActivity" >
         </activity>
         <activity
-            android:name=".RegisterInterestActivity"
-            android:label="@string/title_activity_register_interest" >
+            android:name=".RegisterInterestActivity" >
         </activity>
         <activity
-            android:name=".InterestsListActivity"
-            android:label="@string/title_activity_interests_list" >
+            android:name=".InterestsListActivity">
         </activity>
         <activity
             android:name=".Tester"
@@ -67,8 +62,7 @@
             android:label="@string/title_activity_temp_for_testing" >
         </activity>
         <activity
-            android:name=".PostSaleActivity"
-            android:label="@string/title_activity_post_sale" >
+            android:name=".PostSaleActivity" >
         </activity>
 
         <meta-data
@@ -79,11 +73,22 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".ViewSaleActivity"
-            android:label="@string/title_activity_view_sale" >
+            android:name=".ViewSaleActivity">
+        </activity>
+        <activity android:name=".UpdateProfile" >
+            android:windowSoftInputMode="stateAlwaysHidden"
+        </activity>
+        <activity android:name=".AdminWelcome"
+            android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
         <activity
-            android:name=".UpdateProfile">
+            android:name=".ViewUsers" >
+        </activity>
+        <activity
+            android:name=".ViewInterests" >
+        </activity>
+        <activity
+            android:name=".ViewSales" >
         </activity>
     </application>
 

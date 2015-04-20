@@ -1,6 +1,7 @@
 package com.example.johntavious.shoppingwithfriends;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Classes implementing this interface should handle
@@ -105,4 +106,8 @@ public interface DataController {
      * @return the list of all users.
      */
     List<User> getUsers();
+
+    Map<String, String> getAdmins();
+    List<Sale> getSales();
+    List<Interest> getInterests();
 }
